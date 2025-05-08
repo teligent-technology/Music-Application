@@ -29,15 +29,27 @@ function Login() {
   
 
   return (
-    <>    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
+    <>
+    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+      <div className="card shadow p-4" style={{ width: "100%", maxWidth: "400px" }}>
+        <h2 className="text-center mb-4">Login</h2>    
+    <form onSubmit={handleSubmit}>
+    <div className="mb-3">
+    <label className="form-label">Username</label>
+
       <input name="username" type="text" placeholder="username" onChange={handleChange} />
+      </div>
+      <div className="mb-3">
+      <label className="form-label">Password</label>
       <input name="password" type="password" placeholder="Password" onChange={handleChange} />
+      </div>
       <button type="submit">Login</button>
     </form>
     <p>
         Don't have an account? <Link to="/signup">Signup</Link>
       </p>
+      </div>
+      </div>
     </>
 
   );

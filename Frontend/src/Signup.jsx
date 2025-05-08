@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-
-
-
-
-
+import { Link, useNavigate } from 'react-router-dom';
 
 function Signup() {
   const [form, setForm] = useState({
@@ -17,7 +11,7 @@ function Signup() {
     password: ''
   });
 
-  const Navigate=useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,54 +21,98 @@ function Signup() {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:3000/person/', form);
-      console.log('Raw response:', res);
-
       if (res.status === 200) {
-        console.log("Status is 200 OK");
-        Navigate('/login')
-        console.log("Success:", res.data);
-        alert(res.data.message); // Now this will work
+        alert(res.data.message || "Signup successful");
+        navigate('/login');
       } else {
         console.warn("Received non-200 response:", res.status);
       }
-
-      console.log('Success:', res.data);
     } catch (err) {
       console.error('Error:', err);
-      const error = err.response?.data?.error || err.message || 'Signup failed';
+      const error = err.response?.data?.error || 'Signup failed';
       alert(error);
     }
   };
-  
 
   return (
+    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+      <div className="card shadow p-4" style={{ width: "100%", maxWidth: "500px" }}>
+        <h2 className="text-center mb-4">Sign Up</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label className="form-label">Full Name</label>
+            <input
+              name="name"
+              type="text"
+              className="form-control"
+              placeholder="Enter your name"
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
+          <div className="mb-3">
+            <label className="form-label">Mobile</label>
+            <input
+              name="Mobile"
+              type="number"
+              className="form-control"
+              placeholder="Enter mobile number"
+              value={form.Mobile}
+              onChange={handleChange}
+            />
+          </div>
 
-  <form onSubmit={handleSubmit}>
-  <h2>Sign Up</h2>
+          <div className="mb-3">
+            <label className="form-label">Favorite Song Type</label>
+            <select
+              name="Song"
+              className="form-select"
+              value={form.Song}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Song</option>
+              <option value="Punjabi">Punjabi</option>
+              <option value="bhojpuri">Bhojpuri</option>
+              <option value="Haryanvi">Haryanvi</option>
+            </select>
+          </div>
 
-  <input name="name" type="text" onChange={handleChange} placeholder="Enter Your name" value={form.name} required/>
-      
+          <div className="mb-3">
+            <label className="form-label">Username</label>
+            <input
+              name="username"
+              type="text"
+              className="form-control"
+              placeholder="Enter username"
+              value={form.username}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-      <input name="Mobile" placeholder="Mobile" type="number" value={form.Mobile} onChange={handleChange} />
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+            <input
+              name="password"
+              type="password"
+              className="form-control"
+              placeholder="Enter password"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-      <select name="Song" value={form.Song} onChange={handleChange} required>
-        <option value="">Select Song</option>
-        <option value="Punjabi">Punjabi</option>
-        <option value="bhojpuri">Bhojpuri</option>
-        <option value="Haryanvi">Haryanvi</option>
-      </select>
-
-    <input name="username" placeholder="Username" value={form.username} onChange={handleChange} required />
-
-    <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-    <button type="submit" >Sign Up</button>
-    <p>Already have an account? <Link to="/login">Login</Link></p>
-
-    </form>
-  
-
-  
+          <button type="submit" className="btn btn-primary w-100">Sign Up</button>
+        </form>
+        <p className="mt-3 text-center">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+      </div>
+    </div>
   );
 }
 

@@ -170,7 +170,7 @@ const AudioPlayer = ({ songsList }) => {
             
           <button   className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded shadow-sm"
           onClick={handleSearchClick} 
-          style={{ position: 'fixed', top: '100px', right: '50px' }}>Search</button>
+          style={{ position: 'fixed', top: '200px', right: '400px' }}>Search</button>
           
 
         </div>

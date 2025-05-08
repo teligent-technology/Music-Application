@@ -5,7 +5,16 @@ import AudioPlayer from "../Components/AudioPlayer";
 
 const Punjabi = () => {
   return (
-    <div> 
+    <div
+      className="bg-dark text-white"
+      style={{
+        backgroundImage: "url(''/public/background.jpg'cd')", // Make sure this path is correct
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+        paddingTop: "40px",
+        paddingBottom: "40px"
+      }} >
      <h2 className="text-white"> PUNJABI SONGS</h2>
      
     
