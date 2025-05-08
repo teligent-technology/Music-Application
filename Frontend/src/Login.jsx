@@ -37,16 +37,17 @@ function Login() {
     <div className="mb-3">
     <label className="form-label">Username</label>
 
-      <input name="username" type="text" placeholder="username" onChange={handleChange} />
+      <input name="username" type="text" placeholder="username" onChange={handleChange} value={form.username} />
       </div>
       <div className="mb-3">
       <label className="form-label">Password</label>
-      <input name="password" type="password" placeholder="Password" onChange={handleChange} />
+      <input name="password" type="password" placeholder="Password" onChange={handleChange}   value={form.password}
+ />
       </div>
-      <button type="submit">Login</button>
+      <button type="submit" className="btn btn-primary w-100">Login</button>
     </form>
     <p>
-        Don't have an account? <Link to="/signup">Signup</Link>
+        Don't have an account? <Link to="/">Signup</Link>
       </p>
       </div>
       </div>

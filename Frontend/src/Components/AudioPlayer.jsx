@@ -170,7 +170,7 @@ const AudioPlayer = ({ songsList }) => {
             
           <button   className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded shadow-sm"
           onClick={handleSearchClick} 
-          style={{ position: 'fixed', top: '200px', right: '400px' }}>Search</button>
+          style={{ position: 'fixed', top: '200px', right: '515px' }}>Search</button>
           
 
         </div>
@@ -229,7 +229,7 @@ const AudioPlayer = ({ songsList }) => {
               </button>
             </div>
 
-            <div className="d-flex align-items-center gap-2 w-100">
+            <div className="d-flex align-items-center gap-2">
               <span className="text-white">{formatTime(currentTime)}</span>
               <input
                 type="range"
