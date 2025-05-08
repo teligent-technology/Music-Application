@@ -17,7 +17,7 @@ const BhojPuri = () => {
     paddingTop: "40px",
     paddingBottom: "40px"
   }} >
-     <h2 className="text-white"> BHOJPURI SONGS</h2>
+     <h2 className="text-white" style={{marginLeft: "120px"}}> BHOJPURI SONGS</h2>
    
   
     <nav style={{ marginBottom: "20px" }}>

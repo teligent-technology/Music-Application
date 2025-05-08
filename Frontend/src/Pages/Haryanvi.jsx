@@ -17,7 +17,7 @@ const Haryanvi = () => {
     paddingTop: "40px",
     paddingBottom: "40px"
   }} >
-     <h2 className="text-white mb-2"> HARYANVI SONGS</h2>
+     <h2 className="text-white mb-2" style={{marginLeft: "120px"}}> HARYANVI SONGS</h2>
  
 
   <nav style={{ marginBottom: "20px" }}>
