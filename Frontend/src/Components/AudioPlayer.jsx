@@ -152,6 +152,22 @@ const AudioPlayer = ({ songsList }) => {
     return `${minutes}:${seconds}`;
   };
 
+
+  useEffect(() => {
+  if (currentSong && currentSong.img) {
+    document.body.style.backgroundImage = `url(${currentSong.img})`;
+    document.body.style.backgroundSize = "contain";
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundRepeat = "no-repeat";
+    document.body.style.transition = "background-image 0.5s ease-in-out";
+  }
+
+  return () => {
+    document.body.style.backgroundImage = "";
+  };
+}, [currentSong]);
+
+
   return (
     <>
       <div className="d-flex flex-column justify-content-center align-items-center" >
@@ -165,7 +181,6 @@ const AudioPlayer = ({ songsList }) => {
             style={{width: "500px", height: "45px"}}
             className="form-control W-75"
             
-            // style={{ position: 'fixed', top: 0, left: 0, width: '50%', marginLeft: 350, marginTop: 150 }} 
           />
             
           <button   className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded shadow-sm"
@@ -188,6 +203,7 @@ const AudioPlayer = ({ songsList }) => {
 
 
 <h5  className={`fs-6 mb-0 fw-bold ${currentSong.Id === item.Id ? 'text-primary' : 'text-white'}`}
+
               >{item.Id}. {item.song}</h5>
 <small className="text-white">{item.artist}</small>
 </div>

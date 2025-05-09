@@ -7,7 +7,7 @@ export const punjabiSongs = [
     { Id: 4,song: "Young G.O.A.T", img: "/HaryanviImg/song4img.jpg",artist: "Gur Sidhu", src: "/punjabi/songs4.mp3", playIcon: <FaPlay />, pauseIcon: <FaPause />, downloadIcon: <FaDownload /> },
     { Id: 5,song: "Lahore", img: "/HaryanviImg/song5img.jpg",artist: "Ok Hoye Paye Haan", src: "/punjabi/songs5.mp3", playIcon: <FaPlay />, pauseIcon: <FaPause />, downloadIcon: <FaDownload /> },
     {  Id: 6,song: "LEHNGA", img: "/HaryanviImg/song6img.jpg",artist: "Diljit Dosanjh", src: "/punjabi/songs6.mp3", playIcon: <FaPlay />, pauseIcon: <FaPause />, downloadIcon: <FaDownload /> },
-    {  Id: 7,song: "Taskar ", img: "/HaryanviImg/son71img.jpg",artist: "Shree Brar", src: "/punjabi/songs7.mp3", playIcon: <FaPlay />, pauseIcon: <FaPause />, downloadIcon: <FaDownload /> },
+    {  Id: 7,song: "Taskar ", img: "/HaryanviImg/song7img.jpg",artist: "Shree Brar", src: "/punjabi/songs7.mp3", playIcon: <FaPlay />, pauseIcon: <FaPause />, downloadIcon: <FaDownload /> },
     { Id:8,song: "QATAL ", img: "/HaryanviImg/song8img.jpg",artist: "Guru Randhawa ", src: "/punjabi/songs8.mp3", playIcon: <FaPlay />, pauseIcon: <FaPause />, downloadIcon: <FaDownload /> },
     { Id: 9,song: "SNAPCHAT", img: "/HaryanviImg/song9img.jpg",artist: "Surjit Bhullar & Gurlez Akhtar ", src: "/punjabi/songs9.mp3", playIcon: <FaPlay />, pauseIcon: <FaPause />, downloadIcon: <FaDownload /> },
     {  Id: 10,song: "Jutti Jharhke", img: "/HaryanviImg/song10img.jpg",artist: "Gurnam Bhullar", src: "/punjabi/songs10.mp3", playIcon: <FaPlay />, pauseIcon: <FaPause />, downloadIcon: <FaDownload /> },
