@@ -13,15 +13,21 @@ function Login() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3000/person/login', form);
+      const res = await axios.post('http://localhost:3000/person/login', form,  {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
       if (res.status === 200) {
+              localStorage.setItem("token", res.data.token); // Store token
+
         alert(res.data.message || "Login successful");
-        navigate('/punjabi'); // 👈 redirect after login
+        navigate('/punjabi'); //  redirect after login
       } else {
         console.warn("Received non-200 response:", res.status);
       }
     } catch (err) {
-      console.error(err.response?.data); // ✅ Logs server error
+      console.error(err.response?.data); // Logs server error
       const error = err.response?.data?.error || 'Login failed';
       alert(error);
     }

@@ -23,7 +23,7 @@ const AudioPlayer = ({ songsList }) => {
     setFilteredSongs(filtered);
     setCurrentIndex(0);
     setCurrentTime(0);
-    setIsPlaying(false); // stop playback first
+    setIsPlaying(false); 
   };
 
   const currentSong = filteredSongs.length > 0 ? filteredSongs[currentIndex] : null;
