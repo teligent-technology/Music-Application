@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { FaPlay, FaPause, FaDownload, FaStepForward, FaStepBackward, FaSlideshare } from "react-icons/fa";
+import { FaPlay, FaPause, FaDownload, FaStepForward, FaStepBackward, FaSlideshare, FaPlus } from "react-icons/fa";
 
 const AudioPlayer = ({ songsList }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -8,10 +8,17 @@ const AudioPlayer = ({ songsList }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [filteredSongs, setFilteredSongs] = useState(songsList);
+  const [showPlaylist, setShowPlaylist] = useState(false);
+  const [playlist, setPlaylist] = useState([]);
+
   const audioRef = useRef(null);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  const togglePlaylist = () => {
+    setShowPlaylist((prev) => !prev);
   };
 
   const handleSearchClick = () => {
@@ -23,35 +30,53 @@ const AudioPlayer = ({ songsList }) => {
     setFilteredSongs(filtered);
     setCurrentIndex(0);
     setCurrentTime(0);
-    setIsPlaying(false); 
+    setIsPlaying(false);
   };
 
-  const currentSong = filteredSongs.length > 0 ? filteredSongs[currentIndex] : null;
+const currentList = showPlaylist ? playlist : filteredSongs;
+const currentSong = currentList.length > 0 ? currentList[currentIndex] : null;
 
   const handlePlayPause = () => {
     const audio = audioRef.current;
     if (!audio) return;
     if (audio.paused) {
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => setIsPlaying(true))
-          .catch((error) => console.error("Playback error:", error));
-      }
+      audio.play().then(() => setIsPlaying(true)).catch((error) => console.error("Playback error:", error));
     } else {
       audio.pause();
       setIsPlaying(false);
     }
   };
 
-  const handleSongClick = (Id) => {
-    const index = songsList.findIndex(song => song.Id === Id);
-    setCurrentIndex(index);  
+  const handleDeleteSong = (idToDelete) => {
+    const audio = audioRef.current;
+    if (audio && currentSong && currentSong.Id === idToDelete) {
+      audio.pause();
+      setIsPlaying(false);
+    }
 
-    setCurrentTime(0);       
-    setIsPlaying(true);     
+    const updatedPlaylist = playlist.filter(song => song.Id !== idToDelete);
+    setPlaylist(updatedPlaylist);
+
+    if (currentIndex >= updatedPlaylist.length) {
+      setCurrentIndex(0);
+      setIsPlaying(false);
+      setCurrentTime(0);
+    }
   };
 
+  const handleSongClick = (Id) => {
+  const index = songsList.findIndex(song => song.Id === Id);
+  setCurrentIndex(index);
+  setCurrentTime(0);
+  setIsPlaying(true);
+};
+
+
+  const handleAddToPlaylist = (song) => {
+    if (!playlist.some(s => s.Id === song.Id)) {
+      setPlaylist([...playlist, song]);
+    }
+  };
 
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
@@ -75,54 +100,53 @@ const AudioPlayer = ({ songsList }) => {
     }
   };
 
-  const handleEnded = () => {
-    if (filteredSongs.length === 0) return;
+ const handleEnded = () => {
+  const currentList = showPlaylist ? playlist : filteredSongs;
+  if (currentList.length === 0) return;
 
-    if (currentIndex < filteredSongs.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-      setIsPlaying(true);
-    } else {
-      setIsPlaying(false);
-      setCurrentTime(0);
-    }
-  };
+  if (currentIndex < currentList.length - 1) {
+    setCurrentIndex(currentIndex + 1);
+    setIsPlaying(true);
+  } else {
+    setIsPlaying(false);
+    setCurrentTime(0);
+  }
+};
+
 
   const handleNext = () => {
-    if (filteredSongs.length === 0) return;
+  const currentList = showPlaylist ? playlist : filteredSongs;
+  if (currentList.length === 0) return;
 
-    const nextIndex = (currentIndex + 1) % filteredSongs.length;
-    setCurrentIndex(nextIndex);
-    setIsPlaying(true);
-    setCurrentTime(0);
-  };
-
-
+  const nextIndex = (currentIndex + 1) % currentList.length;
+  setCurrentIndex(nextIndex);
+  setIsPlaying(true);
+  setCurrentTime(0);
+};
 
 
   const handlePrevious = () => {
-    if (filteredSongs.length === 0) return;
+  const currentList = showPlaylist ? playlist : filteredSongs;
+  if (currentList.length === 0) return;
 
-    const prevIndex = (currentIndex - 1 + filteredSongs.length) % filteredSongs.length;
-    setCurrentIndex(prevIndex);
-    setIsPlaying(true);
-    setCurrentTime(0);
-  };
-
-
+  const prevIndex = (currentIndex - 1 + currentList.length) % currentList.length;
+  setCurrentIndex(prevIndex);
+  setIsPlaying(true);
+  setCurrentTime(0);
+};
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !currentSong) return;
 
-    audio.src = currentSong.src; // force re-assign
-    audio.load();                // important: reload audio
+    audio.src = currentSong.src;
+    audio.load();
     setCurrentTime(0);
 
     if (isPlaying) {
       audio.play().catch((error) => {
         console.error("Auto-play failed:", error);
         setIsPlaying(true);
-
       });
     }
   }, [currentIndex, currentSong]);
@@ -134,138 +158,163 @@ const AudioPlayer = ({ songsList }) => {
   };
 
   useEffect(() => {
-    // When category changes (i.e., songsList prop changes)
-    setFilteredSongs(songsList); // Reset to full category song list
-    setCurrentIndex(0);          // Start from first song
-    setSearchTerm("");           // Clear search input
+    setFilteredSongs(songsList);
+    setCurrentIndex(0);
+    setSearchTerm("");
     setCurrentTime(0);
-    setIsPlaying(false);         // Stop auto playback
+    setIsPlaying(false);
   }, [songsList]);
-
-
 
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60)
-      .toString()
-      .padStart(2, "0");
+    const seconds = Math.floor(time % 60).toString().padStart(2, "0");
     return `${minutes}:${seconds}`;
   };
 
-
   useEffect(() => {
-  if (currentSong && currentSong.img) {
-    document.body.style.backgroundImage = `url(${currentSong.img})`;
-    document.body.style.backgroundSize = "contain";
-    document.body.style.backgroundPosition = "center";
-    document.body.style.backgroundRepeat = "no-repeat";
-    document.body.style.transition = "background-image 0.5s ease-in-out";
-  }
+    if (currentSong && currentSong.img) {
+      document.body.style.backgroundImage = `url(${currentSong.img})`;
+      document.body.style.backgroundSize = "contain";
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundRepeat = "no-repeat";
+      document.body.style.transition = "background-image 0.5s ease-in-out";
+    }
 
-  return () => {
-    document.body.style.backgroundImage = "";
-  };
-}, [currentSong]);
-
+    return () => {
+      document.body.style.backgroundImage = "";
+    };
+  }, [currentSong]);
 
   return (
     <>
-      <div className="d-flex flex-column justify-content-center align-items-center" >
+      <div className="d-flex flex-column justify-content-center align-items-center">
         <div className="d-flex mt-3">
-          
-          <input onKeyDown={handleKeyDown}
+          <input
+            onKeyDown={handleKeyDown}
             type="text"
             value={searchTerm}
             onChange={handleSearchChange}
             placeholder="Search by song or artist"
-            style={{width: "500px", height: "45px"}}
+            style={{ width: "500px", height: "45px" }}
             className="form-control W-75"
-            
           />
-            
-          <button   className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded shadow-sm"
-          onClick={handleSearchClick} 
-          style={{ position: 'fixed', top: '200px', right: '515px' }}>Search</button>
-          
-
+          <button
+            className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded shadow-sm"
+            onClick={handleSearchClick}
+          >
+            Search
+          </button>
         </div>
 
-        {filteredSongs.length === 0 || !currentSong ? (
-          <p style={{ color: "red", fontWeight: "bold" }}>No songs found.</p>
-        ) : (
-          <div>
-            <div>
-            <br />
-
-            {filteredSongs.map((item)=>(
-                <div key={item.Id} onClick={() => handleSongClick(item.Id)} style={{cursor: "pointer"}}>
-                    <div className="d-flex align-items-center gap-2">
-
-
-<h5  className={`fs-6 mb-0 fw-bold ${currentSong.Id === item.Id ? 'text-primary' : 'text-white'}`}
-
-              >{item.Id}. {item.song}</h5>
-<small className="text-white">{item.artist}</small>
-</div>
-
-              </div>
-
-
-              ))}
-            </div>
-            <div style={{ marginTop: "40px" }} className="text-center">
-              <h3 className="text-white">{currentSong.song}</h3>
-              <h4 className="text-white">Artist: {currentSong.artist}</h4>
-            </div>
-
-
-
-            <audio
-              ref={audioRef}
-              src={currentSong.src}
-              onEnded={handleEnded}
-              onTimeUpdate={handleTimeUpdate}
-              onLoadedMetadata={handleLoadedMetadata}
-              preload="metadata" />
-            <div className="my-3">
-              <button onClick={handlePrevious} title="Previous" className="btn btn-secondary me-2">
-                <FaStepBackward />
-              </button>
-
-              <button onClick={handlePlayPause} title={isPlaying ? "Pause" : "Play"} className="btn btn-secondary me-2">
-                {isPlaying ? <FaPause /> : <FaPlay />}
-              </button>
-
-              <button
-                onClick={handleNext}
-                title="Next"
-                className="btn btn-secondary me-2"
-              >
-                <FaStepForward />
-              </button>
-            </div>
-
-            <div className="d-flex align-items-center gap-2">
-              <span className="text-white">{formatTime(currentTime)}</span>
-              <input
-                type="range"
-                className="form-range flex-grow-1"
-                min="0"
-                max={duration}
-                value={currentTime}
-                onChange={handleSeek}
-                style={{  height: "8px",           
-                    }}
-                
-              />
-              <span>{formatTime(duration)}</span>
-
-              <a href={currentSong.src} download title="Download" className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded">
-                <FaDownload />
-              </a>
-            </div>
+        {showPlaylist && (
+          <div className="mt-4 bg-dark text-white p-3 rounded" style={{ maxHeight: "250px", overflowY: "auto", width: "300px" }}>
+            <h5 className="mb-3">Playlist</h5>
+            {playlist.length === 0 ? (
+              <p>No songs in playlist.</p>
+            ) : (
+              playlist.map((song) => (
+                <div key={song.Id} className="d-flex justify-content-between align-items-center mb-2">
+                  <span
+                    onClick={() => handleSongClick(song.Id)}
+                    style={{ cursor: "pointer" }}
+                    className={currentSong?.Id === song.Id ? "text-primary fw-bold" : ""}
+                  >
+                    {song.song}
+                  </span>
+                  <span
+                    onClick={() => handleDeleteSong(song.Id)}
+                    style={{ cursor: "pointer", color: "red", marginLeft: "10px" }}
+                    title="Remove from playlist"
+                  >
+                    ❌
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         )}
+
+        {!showPlaylist && filteredSongs.length === 0 || !currentSong ? (
+          <p style={{ color: "red", fontWeight: "bold" }}>No songs found.</p>
+        ) : (
+          !showPlaylist && (
+            <div>
+              <br />
+              {filteredSongs.map((item) => (
+                <div key={item.Id} className="d-flex align-items-center justify-content-between" style={{ cursor: "pointer" }}>
+                  <div className="d-flex align-items-center gap-2" onClick={() => handleSongClick(item.Id)}>
+                    <h5 className={`fs-6 mb-0 fw-bold ${currentSong.Id === item.Id ? 'text-primary' : 'text-white'}`}>
+                      {item.Id}. {item.song}
+                    </h5>
+                    <small className="text-white">{item.artist}</small>
+                  </div>
+                  <button onClick={() => handleAddToPlaylist(item)} className="btn btn-sm text-success" title="Add to Playlist">
+                    <FaPlus />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )
+        )}
+
+        {currentSong && (
+          <div style={{ marginTop: "40px" }} className="text-center">
+            <h3 className="text-white">{currentSong.song}</h3>
+            <h4 className="text-white">Artist: {currentSong.artist}</h4>
+          </div>
+        )}
+
+        <audio
+          ref={audioRef}
+          src={currentSong?.src}
+          onEnded={handleEnded}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          preload="metadata"
+        />
+
+        <div className="my-3">
+          <button onClick={handlePrevious} className="btn btn-secondary me-2" title="Previous">
+            <FaStepBackward />
+          </button>
+          <button onClick={handlePlayPause} className="btn btn-secondary me-2" title={isPlaying ? "Pause" : "Play"}>
+            {isPlaying ? <FaPause /> : <FaPlay />}
+          </button>
+          <button onClick={handleNext} className="btn btn-secondary me-2" title="Next">
+            <FaStepForward />
+          </button>
+        </div>
+
+        <div className="d-flex align-items-center gap-2">
+          <span className="text-white">{formatTime(currentTime)}</span>
+          <input
+            type="range"
+            className="form-range flex-grow-1"
+            min="0"
+            max={duration}
+            value={currentTime}
+            onChange={handleSeek}
+            style={{ height: "8px" }}
+          />
+          <span>{formatTime(duration)}</span>
+
+          <a
+            href={currentSong?.src}
+            download
+            title="Download"
+            className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded"
+          >
+            <FaDownload />
+          </a>
+
+          <button
+            onClick={togglePlaylist}
+            title="Toggle Playlist"
+            className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded"
+          >
+            <FaSlideshare />
+          </button>
+        </div>
       </div>
     </>
   );
