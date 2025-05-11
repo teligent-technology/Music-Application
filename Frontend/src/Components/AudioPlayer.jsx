@@ -188,23 +188,24 @@ const currentSong = currentList.length > 0 ? currentList[currentIndex] : null;
   return (
     <>
       <div className="d-flex flex-column justify-content-center align-items-center">
-        <div className="d-flex mt-3">
-          <input
-            onKeyDown={handleKeyDown}
-            type="text"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            placeholder="Search by song or artist"
-            style={{ width: "500px", height: "45px" }}
-            className="form-control W-75"
-          />
-          <button
-            className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded shadow-sm"
-            onClick={handleSearchClick}
-          >
-            Search
-          </button>
-        </div>
+        <div className="d-flex flex-column flex-sm-row gap-2 mt-3 w-100 px-3">
+  <input
+    onKeyDown={handleKeyDown}
+    type="text"
+    value={searchTerm}
+    onChange={handleSearchChange}
+    placeholder="Search by song or artist"
+    className="form-control w-100"
+    style={{ height: "45px" }}
+  />
+  <button
+    className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded shadow-sm"
+    onClick={handleSearchClick}
+  >
+    Search
+  </button>
+</div>
+
 
         {showPlaylist && (
           <div className="mt-4 bg-dark text-white p-3 rounded" style={{ maxHeight: "250px", overflowY: "auto", width: "300px" }}>
