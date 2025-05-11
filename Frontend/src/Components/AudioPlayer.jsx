@@ -171,19 +171,20 @@ const currentSong = currentList.length > 0 ? currentList[currentIndex] : null;
     return `${minutes}:${seconds}`;
   };
 
-  useEffect(() => {
-    if (currentSong && currentSong.img) {
-      document.body.style.backgroundImage = `url(${currentSong.img})`;
-      document.body.style.backgroundSize = "contain";
-      document.body.style.backgroundPosition = "center";
-      document.body.style.backgroundRepeat = "no-repeat";
-      document.body.style.transition = "background-image 0.5s ease-in-out";
-    }
+ useEffect(() => {
+  if (currentSong?.img) {
+    const isMobile = window.innerWidth < 576; // define isMobile here
+    document.body.style.backgroundImage = `url(${currentSong.img})`;
+    document.body.style.backgroundSize = isMobile ? "cover" : "contain";
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundRepeat = "no-repeat";
+    document.body.style.transition = "background-image 0.5s ease-in-out";
+  }
 
-    return () => {
-      document.body.style.backgroundImage = "";
-    };
-  }, [currentSong]);
+  return () => {
+    document.body.style.backgroundImage = "";
+  };
+}, [currentSong]);
 
   return (
     <>
