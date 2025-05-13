@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { punjabiSongs } from "../data/song";
+import { Songs } from "../data/song";
 import AudioPlayer from "../Components/AudioPlayer";
 
 const Punjabi = () => {
@@ -15,21 +15,24 @@ const Punjabi = () => {
         paddingTop: "40px",
         paddingBottom: "40px"
       }} >
-     <h2 className="text-white" style={{marginLeft: "120px"}}> PUNJABI SONGS</h2>
      
     
       <nav style={{ marginBottom: "20px" }}>
       <div 
       style={{ marginTop: 60 }} className="d-flex justify-content-center gap-5"
       >
-      <Link to="/punjabi" style={{ color: "white", textDecoration: "none" }}>PUNJABI</Link>
-      <Link to="/bhojpuri" style={{ color: "white", textDecoration: "none" }}>BHOJPURI</Link>
-      <Link to="/haryanvi" style={{ color: "white", textDecoration: "none" }}>HARYANVI</Link>
+<Link
+              to="/playlist"
+              className="btn btn-light text-dark"
+              style={{ fontSize: "1.1rem" }}
+            >
+              Create Custom Playlist
+            </Link>  
     </div>
     
           </nav>
 
-      <AudioPlayer songsList={punjabiSongs} />
+      <AudioPlayer songsList={Songs} />
   
     </div>
   );
