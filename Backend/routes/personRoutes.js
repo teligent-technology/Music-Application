@@ -45,21 +45,6 @@ console.log(payLoad);
 })
 
 
-router.get('/:song', async(req,res)=>{
-    try {
-     const song=req.params.song
- 
-     if(song=="Punjabi" || song=="bhojpuri" || song=="Haryanvi"){
-         const response=await person.find({Song: song})
-         console.log("response Fetched")
-         res.status(200).json(response)
-     }else{
-         res.status(400).json({error: "Ivalid song Type"})
-     }
-    } catch (error) {
-     res.status(500).json({error: "Internal Server error"})
-    }
- })
 
  router.put('/:id', async(req,res)=>{
     try {

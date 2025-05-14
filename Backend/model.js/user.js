@@ -12,12 +12,7 @@ const userSchema=mongoose.Schema({
         required: true
     },
 
-    Song: {
-        type: String,
-        enum:["Punjabi", "bhojpuri", "Haryanvi"],
-        required: true
-    },
-
+ 
     username:{
         type: String,
         required: true,

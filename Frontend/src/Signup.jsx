@@ -6,7 +6,6 @@ function Signup() {
   const [form, setForm] = useState({
     name: '',
     Mobile: '',
-    Song: '',
     username: '',
     password: ''
   });
@@ -64,21 +63,7 @@ function Signup() {
             />
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Favorite Song Type</label>
-            <select
-              name="Song"
-              className="form-select"
-              value={form.Song}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select Song</option>
-              <option value="Punjabi">Punjabi</option>
-              <option value="bhojpuri">Bhojpuri</option>
-              <option value="Haryanvi">Haryanvi</option>
-            </select>
-          </div>
+         
 
           <div className="mb-3">
             <label className="form-label">Username</label>
