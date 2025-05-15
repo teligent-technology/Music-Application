@@ -16,14 +16,15 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
   );
 
   const toggleSelect = (song) => {
-    const isSelected = selectedSongs.some((s) => s.Id === song.Id);
+  const isSelected = selectedSongs.some((s) => s.src === song.src);
 
-    if (isSelected) {
-      setSelectedSongs(selectedSongs.filter((s) => s.Id !== song.Id));
-    } else {
-      setSelectedSongs([...selectedSongs, song]);
-    }
-  };
+  if (isSelected) {
+    setSelectedSongs(selectedSongs.filter((s) => s.src !== song.src));
+  } else {
+    setSelectedSongs([...selectedSongs, song]);
+  }
+};
+
 
   return (
     <div>
@@ -55,7 +56,7 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
             <div key={index} style={{ marginBottom: "10px" }}>
               <input
                 type="checkbox"
-                checked={selectedSongs.some((s) => s.Id === song.Id)}
+checked={selectedSongs.some((s) => s.src === song.src)}
                 onChange={() => toggleSelect(song)}
               />
               {song.song} - {song.artist}

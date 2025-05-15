@@ -3,19 +3,17 @@ import { Songs } from '../data/song';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const PlaylistViewer = () => {
-  const { name } = useParams();  // This will get the playlist name from the URL
-  const navigate = useNavigate();  // For navigation after deleting playlist
+  const { name } = useParams();
+  const navigate = useNavigate();
   const [playlists, setPlaylists] = useState({});
   const [matchedSongs, setMatchedSongs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(null);
   const audioRef = useRef(null);
 
-  // Load playlists from localStorage
   useEffect(() => {
     loadPlaylists();
   }, []);
 
-  // Load songs based on the selected playlist
   useEffect(() => {
     if (name && playlists[name]) {
       const savedFilenames = playlists[name];
@@ -32,19 +30,16 @@ const PlaylistViewer = () => {
     setPlaylists(storedPlaylists);
   };
 
-  // Play the selected song
   const handlePlay = (index) => {
-    setCurrentIndex(index);  // Update the current song index
+    setCurrentIndex(index);
   };
 
-  // Go to next song
   const handleNext = () => {
     if (currentIndex < matchedSongs.length - 1) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
     }
   };
 
-  // Go to previous song
   const handlePrev = () => {
     if (currentIndex > 0) {
       setCurrentIndex((prevIndex) => prevIndex - 1);
@@ -60,16 +55,37 @@ const PlaylistViewer = () => {
       localStorage.setItem('playlists', JSON.stringify(updatedPlaylists));
       setPlaylists(updatedPlaylists);
       setMatchedSongs([]);
-      navigate('/playlist');  // Redirect to the playlist selection page after deletion
+      navigate('/playlist');
       alert(`"${name}" playlist has been deleted.`);
     }
   };
 
-  // Trigger the audio to play when currentIndex changes
+  const removeSongFromPlaylist = (songToRemove) => {
+    const filename = songToRemove.src.split('/').pop();
+    const updatedFilenames = playlists[name].filter(f => f !== filename);
+
+    const updatedPlaylists = {
+      ...playlists,
+      [name]: updatedFilenames
+    };
+
+    localStorage.setItem('playlists', JSON.stringify(updatedPlaylists));
+    setPlaylists(updatedPlaylists);
+
+    const updatedMatchedSongs = matchedSongs.filter(song => song.src !== songToRemove.src);
+    setMatchedSongs(updatedMatchedSongs);
+
+    if (updatedMatchedSongs.length === 0) {
+      setCurrentIndex(null);
+    } else if (currentIndex >= updatedMatchedSongs.length) {
+      setCurrentIndex(updatedMatchedSongs.length - 1);
+    }
+  };
+
   useEffect(() => {
     if (audioRef.current && currentIndex !== null) {
-      audioRef.current.load();  // Reload the audio element with the new song
-      audioRef.current.play();  // Play the new song
+      audioRef.current.load();
+      audioRef.current.play();
     }
   }, [currentIndex]);
 
@@ -77,7 +93,6 @@ const PlaylistViewer = () => {
     <div className="container mt-4">
       <h3>{name} Playlist</h3>
 
-      {/* Button to delete the playlist */}
       <button 
         onClick={handleDeletePlaylist} 
         className="btn btn-danger mb-3"
@@ -89,13 +104,23 @@ const PlaylistViewer = () => {
         <ul className="list-group">
           {matchedSongs.map((song, index) => (
             <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-              {song.song} by {song.artist}
-              <button 
-                onClick={() => handlePlay(index)} 
-                className="btn btn-primary btn-sm"
-              >
-                Play
-              </button>
+              <span>
+                {song.song} by {song.artist}
+              </span>
+              <div>
+                <button 
+                  onClick={() => handlePlay(index)} 
+                  className="btn btn-primary btn-sm me-2"
+                >
+                  ▶ Play
+                </button>
+                <button 
+                  onClick={() => removeSongFromPlaylist(song)} 
+                  className="btn btn-danger btn-sm"
+                >
+                  ❌ Remove
+                </button>
+              </div>
             </li>
           ))}
         </ul>
