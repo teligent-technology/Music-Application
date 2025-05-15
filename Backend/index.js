@@ -5,7 +5,9 @@ const db=require('./ConnectDb')
 const passport=require('./auth')
 const bodyParser=require('body-parser')
 app.use(bodyParser.json())
+require('dotenv').config(); // dotenv load करें
 
+const PORT=process.env.PORT || 3000
 
 
 app.use(cors({
@@ -41,8 +43,7 @@ const localAuth=passport.authenticate('local', {session: false})
 const personRoutes=require('./routes/personRoutes')
 app.use('/person', personRoutes)
 
-
-app.listen(3000,()=>{console.log("server has Connected port no 3000")})
+app.listen(PORT,()=>{console.log("server has Connected port no 3000")})
 
 
 
