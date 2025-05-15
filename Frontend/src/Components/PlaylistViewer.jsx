@@ -90,75 +90,80 @@ const PlaylistViewer = () => {
   }, [currentIndex]);
 
   return (
-    <div className="container mt-4">
-      <h3>{name} Playlist</h3>
+   <div className="container mt-4">
+  <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+    <h3 className="mb-2 mb-md-0">{name} Playlist</h3>
+    <button 
+      onClick={handleDeletePlaylist} 
+      className="btn btn-danger"
+    >
+      🗑 Delete Playlist
+    </button>
+  </div>
 
-      <button 
-        onClick={handleDeletePlaylist} 
-        className="btn btn-danger mb-3"
-      >
-        🗑 Delete Playlist
-      </button>
-
-      {matchedSongs.length > 0 ? (
-        <ul className="list-group">
-          {matchedSongs.map((song, index) => (
-            <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-              <span>
-                {song.song} by {song.artist}
-              </span>
-              <div>
-                <button 
-                  onClick={() => handlePlay(index)} 
-                  className="btn btn-primary btn-sm me-2"
-                >
-                  ▶ Play
-                </button>
-                <button 
-                  onClick={() => removeSongFromPlaylist(song)} 
-                  className="btn btn-danger btn-sm"
-                >
-                  ❌ Remove
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No songs found in this playlist.</p>
-      )}
-
-      {currentIndex !== null && (
-        <div className="mt-4">
-          <h4>Now Playing: {matchedSongs[currentIndex]?.song}</h4>
-          <audio
-            ref={audioRef}
-            controls
-            autoPlay
-            onEnded={handleNext}
-            className="w-100"
-          >
-            <source src={matchedSongs[currentIndex]?.src} type="audio/mpeg" />
-          </audio>
-          <div className="mt-2">
-            <button 
-              onClick={handlePrev} 
-              className="btn btn-secondary me-2" 
-              disabled={currentIndex === 0}
-            >
-              ⏮ Previous
-            </button>
-            <button 
-              onClick={handleNext} 
-              className="btn btn-secondary" 
-              disabled={currentIndex === matchedSongs.length - 1}
-            >
-              ⏭ Next
-            </button>
+  {matchedSongs.length > 0 ? (
+    <ul className="list-group">
+      {matchedSongs.map((song, index) => (
+        <li key={index} className="list-group-item">
+          <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+            <span className="mb-2 mb-sm-0">
+              {song.song} by {song.artist}
+            </span>
+            <div className="d-flex gap-2">
+              <button 
+                onClick={() => handlePlay(index)} 
+                className="btn btn-primary btn-sm"
+              >
+                ▶ Play
+              </button>
+              <button 
+                onClick={() => removeSongFromPlaylist(song)} 
+                className="btn btn-danger btn-sm"
+              >
+                ❌ Remove
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p className="text-muted">No songs found in this playlist.</p>
+  )}
+
+  {currentIndex !== null && (
+    <div className="mt-4">
+      <h5 className="mb-3">Now Playing: <span className="text-primary">{matchedSongs[currentIndex]?.song}</span></h5>
+      <audio
+        ref={audioRef}
+        controls
+        autoPlay
+        onEnded={handleNext}
+        className="w-100"
+      >
+        <source src={matchedSongs[currentIndex]?.src} type="audio/mpeg" />
+      </audio>
+
+      <div className="mt-3 d-flex flex-column flex-sm-row gap-2">
+        <button 
+          onClick={handlePrev} 
+          className="btn btn-secondary"
+          disabled={currentIndex === 0}
+        >
+          ⏮ Previous
+        </button>
+        <button 
+          onClick={handleNext} 
+          className="btn btn-secondary"
+          disabled={currentIndex === matchedSongs.length - 1}
+        >
+          ⏭ Next
+        </button>
+      </div>
     </div>
+  )}
+</div>
+
   );
 };
 
