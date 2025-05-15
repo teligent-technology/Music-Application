@@ -89,7 +89,7 @@ const AudioPlayer = ({ songsList }) => {
 
   const handleSongClick = (Id) => {
     const audio = audioRef.current;
-    if (audio) audio.pause(); 
+    if (audio) audio.pause();
 
     const listToUse = showPlaylist ? playlist : filteredSongs;
     const index = listToUse.findIndex(song => song.Id === Id);
@@ -116,6 +116,7 @@ const AudioPlayer = ({ songsList }) => {
   const handleLoadedMetadata = () => {
     const audio = audioRef.current;
     if (audio) {
+      console.log("Duration loaded:", audio.duration); // add this line
       setDuration(audio.duration);
     }
   };
@@ -365,11 +366,14 @@ const AudioPlayer = ({ songsList }) => {
             type="range"
             className="form-range flex-grow-1"
             min="0"
-            max={duration}
+            max={duration || 0.1}
             value={currentTime}
             onChange={handleSeek}
+            onInput={handleSeek}
             style={{ height: "8px" }}
           />
+
+
           <span>{formatTime(duration)}</span>
 
           <a
