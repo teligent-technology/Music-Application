@@ -1,63 +1,38 @@
-
+const express = require('express');
 const cors = require('cors');
+const app = express();
+// const db = require('./ConnectDb');
+const passport = require('./auth');
+const bodyParser = require('body-parser');
+require('dotenv').config();
 
-const express=require('express')
-const app=express()
-const cors=require('cors')
-const db=require('./ConnectDb')
-const passport=require('./auth')
-const bodyParser=require('body-parser')
-app.use(bodyParser.json())
-require('dotenv').config(); // dotenv load करें
+const PORT = process.env.PORT || 3000;
 
-const PORT=process.env.PORT || 3000
-
-
-
+// CORS middleware sabse pehle use karo
 app.use(cors({
   origin: ['https://music-application-frontend-7juq.onrender.com'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 }));
 
+// OPTIONS preflight requests ke liye handle karo
+app.options('*', cors());
+
+app.use(bodyParser.json());
+
+// Request logging middleware
 app.use((req, res, next) => {
-  console.log(`Method: ${req.method}, URL: ${req.url}`);
+  console.log(`[${new Date().toLocaleString()}] Method: ${req.method}, URL: ${req.originalUrl}`);
   next();
 });
 
+app.use(passport.initialize());
+const localAuth = passport.authenticate('local', { session: false });
 
-// Baaki middleware/routes ke pehle use karein.
+// Routes
+const personRoutes = require('./routes/personRoutes');
+app.use('/person', personRoutes);
 
-  // Define Middleware
-const logRequest=(req,res, next)=>{
-    console.log(`[${new Date().toLocaleString()}] Request Made to : ${req.originalUrl}`)
-    next()// move on the next phase
-}
-//Middleware apply on All Routes
-app.use(logRequest)
-
-
-
-
-app.use(passport.initialize())
-const localAuth=passport.authenticate('local', {session: false})
-// app.get('/',localAuth, (req, res)=>{
-//     res.send("I am Server")
-// })
-// app.get('/', function (req, res) {
-//     res.send('Welcome to our Hotel');
-// })
-
-
-// app.post('/login', localAuth, (req, res) => {
-//     res.status(200).json({ message: "Login successful", user: req.user });
-//   });
-
-  
-const personRoutes=require('./routes/personRoutes')
-app.use('/person', personRoutes)
-
-app.listen(PORT,()=>{console.log("server has Connected port no 3000")})
-
-
-
+app.listen(PORT, () => {
+  console.log(`Server has connected on port ${PORT}`);
+});
