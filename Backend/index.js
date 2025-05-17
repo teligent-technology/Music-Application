@@ -1,38 +1,43 @@
+// server.js (main entry point)
 const express = require('express');
 const cors = require('cors');
-const app = express();
-// const db = require('./ConnectDb');
-const passport = require('./auth');
 const bodyParser = require('body-parser');
+const passport = require('./auth'); // your passport config
+const personRoutes = require('./routes/personRoutes');
 require('dotenv').config();
 
+const app = express();
 const PORT = process.env.PORT || 3000;
 
-// CORS middleware sabse pehle use karo
+// Enable CORS globally with correct config
 app.use(cors({
-  origin: ['https://music-application-frontend-7juq.onrender.com'],
+  origin: 'https://music-application-frontend-7juq.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 }));
 
-// OPTIONS preflight requests ke liye handle karo
-app.options('*', cors());
+// Handle preflight requests globally (optional, cors middleware usually does this)
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', 'https://music-application-frontend-7juq.onrender.com');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(204);
+});
 
 app.use(bodyParser.json());
 
-// Request logging middleware
+app.use(passport.initialize());
+
+// Optional: simple logger middleware
 app.use((req, res, next) => {
-  console.log(`[${new Date().toLocaleString()}] Method: ${req.method}, URL: ${req.originalUrl}`);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
   next();
 });
 
-app.use(passport.initialize());
-const localAuth = passport.authenticate('local', { session: false });
-
-// Routes
-const personRoutes = require('./routes/personRoutes');
+// Use your routes (without any additional CORS middleware inside routes)
 app.use('/person', personRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server has connected on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
