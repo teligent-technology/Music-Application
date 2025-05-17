@@ -10,20 +10,26 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Enable CORS globally with correct config
-app.use(cors({
+const corsOptions = {
   origin: 'https://music-application-frontend-7juq.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-}));
+};
 
-// Handle preflight requests globally (optional, cors middleware usually does this)
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://music-application-frontend-7juq.onrender.com');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(204);
+app.use(cors(corsOptions));
+
+// Optional: Explicitly handle OPTIONS preflight globally
+app.options('*', cors(corsOptions));
+
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    console.log('Received OPTIONS request for:', req.originalUrl);
+  }
+  next();
 });
+
+
 
 app.use(bodyParser.json());
 
