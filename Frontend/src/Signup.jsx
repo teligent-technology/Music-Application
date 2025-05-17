@@ -19,7 +19,7 @@ function Signup() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://music-application-backend.onrender.com', form);
+      const res = await axios.post('https://music-application-backend.onrender.com/person', form);
       if (res.status === 200) {
         alert(res.data.message || "Signup successful");
         navigate('/login');
