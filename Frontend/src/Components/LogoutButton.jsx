@@ -12,6 +12,8 @@ const LogoutButton = () => {
           "Authorization": `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json"
         },
+          credentials: 'include',  // agar cookies ya sessions hain
+
       });
 
       localStorage.removeItem("token");
