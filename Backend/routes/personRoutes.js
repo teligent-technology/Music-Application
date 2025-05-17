@@ -136,5 +136,13 @@ res.json({ message: "Login successful", token });
     }
 });
 
+
+// POST /logout
+router.post('/logout', jwtMiddleWare, (req, res) => {
+  // No token deletion on server since JWT is stateless
+  res.status(200).json({ message: "Logout successful" });
+});
+
+
  module.exports=router
   
