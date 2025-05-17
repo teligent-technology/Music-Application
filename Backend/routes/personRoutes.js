@@ -108,10 +108,5 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Logout route (protected)
-router.post('/logout', jwtMiddleWare, (req, res) => {
-  // Just return success - JWT tokens are stateless and handled client-side
-  res.status(200).json({ message: "Logout successful" });
-});
 
 module.exports = router;

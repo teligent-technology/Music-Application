@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Songs } from '../data/song';
 import { useParams, useNavigate } from 'react-router-dom';
-import LogoutButton from './LogoutButton';
+
 
 const PlaylistViewer = () => {
   const { name } = useParams();
@@ -100,7 +100,6 @@ const PlaylistViewer = () => {
     >
       🗑 Delete Playlist
     </button>
-              <LogoutButton />
 
   </div>
 
