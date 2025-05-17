@@ -52,26 +52,20 @@ function Login() {
 
           <div className="mb-3">
             <label className="form-label">Password</label>
-            <div className="position-relative">
+            <div className="input-group">
               <input
                 name="password"
                 type={showPassword ? "text" : "password"}
-                className="form-control pe-5"
+                className="form-control"
                 placeholder="Enter password"
                 value={form.password}
                 onChange={handleChange}
                 required
               />
               <span
+                className="input-group-text"
+                style={{ cursor: 'pointer' }}
                 onClick={() => setShowPassword(!showPassword)}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: '15px',
-                  transform: 'translateY(-50%)',
-                  cursor: 'pointer',
-                  color: '#6c757d',
-                }}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
