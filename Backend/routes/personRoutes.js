@@ -109,4 +109,12 @@ router.post('/login', async (req, res) => {
 });
 
 
+// Logout route
+router.post('/logout', (req, res) => {
+  // Backend side pe JWT stateless hota hai, so hum kuch nahi karte
+  return res.status(200).json({ message: 'Logout successful' });
+});
+
+
+
 module.exports = router;
