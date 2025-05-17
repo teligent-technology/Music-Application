@@ -11,16 +11,16 @@ const PORT = process.env.PORT || 3000;
 
 // Enable CORS globally with correct config
 const corsOptions = {
-  origin: 'https://music-application-frontend-2yd5.onrender.com',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  // allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: 'https://music-application-1-k531.onrender.com',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 };
 
 app.use(cors(corsOptions));
 
 // Optional: Explicitly handle OPTIONS preflight globally
-// app.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // app.use((req, res, next) => {
 //   if (req.method === 'OPTIONS') {
