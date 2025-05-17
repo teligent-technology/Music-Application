@@ -1,6 +1,7 @@
 // server.js (main entry point)
-const express = require('express');
 const cors = require('cors');
+
+const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('./auth'); // your passport config
 const personRoutes = require('./routes/personRoutes');
