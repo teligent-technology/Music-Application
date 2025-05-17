@@ -5,7 +5,9 @@ require('dotenv').config();
 
 const jwtMiddleWare=(req,res,next)=>{
 
-
+if (req.method === 'OPTIONS') {
+    return next();
+  }
     //first check request headers has authoriation or not
 
     const authorization = req.headers.authorization

@@ -3,6 +3,14 @@ const router=express.Router()
 const person=require('../model.js/user')
 const {jwtMiddleWare, generateToken}=require('./../jwt')
 
+
+const cors = require('cors');
+router.use(cors({
+  origin: ['https://music-application-frontend-7juq.onrender.com'],
+  credentials: true,
+}));
+
+
 //Post method 
 router.post('/', async (req,res)=>{
     try {
@@ -138,10 +146,11 @@ res.json({ message: "Login successful", token });
 
 
 // POST /logout
+router.options('/logout', cors());  // preflight
 router.post('/logout', jwtMiddleWare, (req, res) => {
-  // No token deletion on server since JWT is stateless
   res.status(200).json({ message: "Logout successful" });
 });
+
 
 
  module.exports=router
