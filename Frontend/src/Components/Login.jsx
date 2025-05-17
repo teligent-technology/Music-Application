@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // 👁️ Eye icons
 
 function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false); // 👁️ Toggle state
   const navigate = useNavigate();
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
@@ -12,7 +14,6 @@ function Login() {
     e.preventDefault();
     try {
       const res = await axios.post('https://music-application-backend.onrender.com/person/login', form, {
-        
         headers: {
           'Content-Type': 'application/json',
         },
@@ -48,20 +49,33 @@ function Login() {
               required
             />
           </div>
+
           <div className="mb-3">
             <label className="form-label">Password</label>
-            <input
-              name="password"
-              type="password"
-              className="form-control"
-              placeholder="Enter password"
-              value={form.password}
-              onChange={handleChange}
-              required
-            />
+            <div className="input-group">
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                className="form-control"
+                placeholder="Enter password"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
+
           <button type="submit" className="btn btn-primary w-100">Login</button>
         </form>
+
         <p className="mt-3 text-center">
           Don't have an account? <Link to="/">Signup</Link>
         </p>
