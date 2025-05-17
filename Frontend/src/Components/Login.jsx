@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // 👁️ Eye icons
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
-  const [showPassword, setShowPassword] = useState(false); // 👁️ Toggle state
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,9 +19,9 @@ function Login() {
         },
       });
       if (res.status === 200) {
-        localStorage.setItem("token", res.data.token); // Store token
+        localStorage.setItem("token", res.data.token);
         alert(res.data.message || "Login successful");
-        navigate('/punjabi'); // Redirect after login
+        navigate('/punjabi');
       } else {
         console.warn("Received non-200 response:", res.status);
       }
@@ -52,24 +52,29 @@ function Login() {
 
           <div className="mb-3">
             <label className="form-label">Password</label>
-            <div className="input-group">
+            <div className="position-relative">
               <input
                 name="password"
                 type={showPassword ? "text" : "password"}
-                className="form-control"
+                className="form-control pe-5"
                 placeholder="Enter password"
                 value={form.password}
                 onChange={handleChange}
                 required
               />
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
+              <span
                 onClick={() => setShowPassword(!showPassword)}
-                tabIndex={-1}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  right: '15px',
+                  transform: 'translateY(-50%)',
+                  cursor: 'pointer',
+                  color: '#6c757d',
+                }}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
+              </span>
             </div>
           </div>
 
