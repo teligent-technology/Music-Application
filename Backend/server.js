@@ -1,6 +1,6 @@
 // server.js (main entry point)
 const cors = require('cors');
-
+const db=require('./ConnectDb')
 const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('./auth'); // your passport config
@@ -10,18 +10,12 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  }));
 // Enable CORS globally with correct config
-const corsOptions = {
-  origin: 'https://music-application-1-k531.onrender.com',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
-
-// Optional: Explicitly handle OPTIONS preflight globally
-app.options('*', cors(corsOptions));
 
 // app.use((req, res, next) => {
 //   if (req.method === 'OPTIONS') {
