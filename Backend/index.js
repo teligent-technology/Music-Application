@@ -1,3 +1,6 @@
+
+const cors = require('cors');
+
 const express=require('express')
 const app=express()
 const cors=require('cors')
@@ -10,10 +13,21 @@ require('dotenv').config(); // dotenv load करें
 const PORT=process.env.PORT || 3000
 
 
+
 app.use(cors({
-    origin: 'https://music-application-frontend-7juq.onrender.com',
-    credentials: true,
-  }));
+  origin: ['https://music-application-frontend-7juq.onrender.com'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+}));
+
+app.use((req, res, next) => {
+  console.log(`Method: ${req.method}, URL: ${req.url}`);
+  next();
+});
+
+
+// Baaki middleware/routes ke pehle use karein.
+
   // Define Middleware
 const logRequest=(req,res, next)=>{
     console.log(`[${new Date().toLocaleString()}] Request Made to : ${req.originalUrl}`)
