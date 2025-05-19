@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import HomePage from './Components/Home';
 import PlaylistSelector from './Components/PlaylistSelector';
 import Playlist from './Components/Playlist';
 import PlaylistCreator from './Components/PlaylistCreator';
@@ -42,6 +42,8 @@ function App() {
 
           {/* Show songs from selected playlist on dynamic route */}
           <Route path="/playlist/:name" element={<PlaylistViewer />} />
+                    <Route path="/Home" element={<HomePage />} />
+
         </Routes>
       </Router>
     </>
