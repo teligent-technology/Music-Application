@@ -42,7 +42,7 @@ function App() {
 
           {/* Show songs from selected playlist on dynamic route */}
           <Route path="/playlist/:name" element={<PlaylistViewer />} />
-                    <Route path="/Home" element={<HomePage />} />
+                    <Route path="/home" element={<HomePage />} />
 
         </Routes>
       </Router>
