@@ -21,7 +21,7 @@ function Login() {
       if (res.status === 200) {
         localStorage.setItem("token", res.data.token);
         alert(res.data.message || "Login successful");
-        navigate('/punjabi');
+        navigate('/home');
       } else {
         console.warn("Received non-200 response:", res.status);
       }
