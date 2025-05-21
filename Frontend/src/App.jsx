@@ -22,8 +22,7 @@ import PlaylistSelector from './Components/PlaylistSelector';
 import PlaylistViewer from './Components/PlaylistViewer';
 import CreatePlaylistPage from './Components/CreatePlaylistPage';
 import Recents from './Components/Recent';
-import Settings from './Components/setting';
-
+import Settings from './Components/Setting'
 function App() {
   const [selectedSongs, setSelectedSongs] = useState([]);
 
