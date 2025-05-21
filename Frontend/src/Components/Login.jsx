@@ -1,22 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const shouldClear = location.state?.clearForm;
+    if (shouldClear) {
+      setForm({ username: '', password: '' });
+
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://music-application-backend.onrender.com/person/login', form, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const res = await axios.post('http://localhost:3000/person/login', form, {
+        headers: { 'Content-Type': 'application/json' },
       });
       if (res.status === 200) {
         localStorage.setItem("token", res.data.token);

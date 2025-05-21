@@ -4,16 +4,18 @@ import { Songs } from "../data/song";
 import AudioPlayer from "../Components/AudioPlayer";
 
 const Punjabi = () => {
+  console.log("Songs in Punjabi component:", Songs);
+
   return (
     <div
       className="bg-dark text-white"
       style={{
-        backgroundImage: "url(''/public/background.jpg'cd')", // Make sure this path is correct
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        minHeight: "100vh",
-        paddingTop: "40px",
-        paddingBottom: "40px"
+        // backgroundImage: "url(''/public/background.jpg'cd')", // Make sure this path is correct
+        // backgroundSize: "cover",
+        // backgroundPosition: "center",
+        // minHeight: "100vh",
+        // paddingTop: "40px",
+        // paddingBottom: "40px"
       }} >
      
     

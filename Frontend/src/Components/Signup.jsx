@@ -19,8 +19,16 @@ function Signup() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://music-application-backend.onrender.com/person/', form);
+      const res = await axios.post('http://localhost:3000/person/', form);
       if (res.status === 200) {
+        // ✅ Save user info to localStorage
+        const user = {
+          name: form.name,
+          username: form.username,
+          Mobile: form.Mobile,
+        };
+        localStorage.setItem("user", JSON.stringify(user));
+
         alert(res.data.message || "Signup successful");
         navigate('/login');
       } else {
@@ -60,6 +68,7 @@ function Signup() {
               placeholder="Enter mobile number"
               value={form.Mobile}
               onChange={handleChange}
+              required
             />
           </div>
 

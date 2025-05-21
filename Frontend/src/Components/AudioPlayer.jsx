@@ -1,17 +1,27 @@
 import React, { useRef, useState, useEffect } from "react";
-import { FaPlay, FaPause, FaDownload, FaStepForward, FaStepBackward, FaSlideshare, FaPlus } from "react-icons/fa";
+import {
+  FaPlay, FaPause, FaDownload, FaStepForward,
+  FaStepBackward, FaSlideshare, FaPlus
+} from "react-icons/fa";
 
-const AudioPlayer = ({ songsList }) => {
+const AudioPlayer = ({ songsList = [] }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [filteredSongs, setFilteredSongs] = useState(songsList);
+  const [filteredSongs, setFilteredSongs] = useState(songsList || []);
   const [showPlaylist, setShowPlaylist] = useState(false);
   const [playlist, setPlaylist] = useState([]);
 
   const audioRef = useRef(null);
+
+  // ✅ Add this function to track recents
+  const updateRecentSongs = (songId) => {
+    const stored = JSON.parse(localStorage.getItem("recentSongs")) || [];
+    const updated = [songId, ...stored.filter(id => id !== songId)].slice(0, 20); // Limit to last 20
+    localStorage.setItem("recentSongs", JSON.stringify(updated));
+  };
 
   useEffect(() => {
     const ids = playlist.map(song => song.Id);
@@ -97,6 +107,7 @@ const AudioPlayer = ({ songsList }) => {
       setCurrentIndex(index);
       setCurrentTime(0);
       setIsPlaying(true);
+      updateRecentSongs(Id); // ✅ Track as recently played
     }
   };
 
@@ -116,7 +127,6 @@ const AudioPlayer = ({ songsList }) => {
   const handleLoadedMetadata = () => {
     const audio = audioRef.current;
     if (audio) {
-      console.log("Duration loaded:", audio.duration); // add this line
       setDuration(audio.duration);
     }
   };
@@ -130,11 +140,12 @@ const AudioPlayer = ({ songsList }) => {
   };
 
   const handleEnded = () => {
-    const currentList = showPlaylist ? playlist : filteredSongs;
     if (currentList.length === 0) return;
 
     if (currentIndex < currentList.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      updateRecentSongs(currentList[nextIndex].Id); // ✅ Add next song to recent
       setIsPlaying(true);
     } else {
       setIsPlaying(false);
@@ -143,21 +154,19 @@ const AudioPlayer = ({ songsList }) => {
   };
 
   const handleNext = () => {
-    const currentList = showPlaylist ? playlist : filteredSongs;
     if (currentList.length === 0) return;
-
     const nextIndex = (currentIndex + 1) % currentList.length;
     setCurrentIndex(nextIndex);
+    updateRecentSongs(currentList[nextIndex].Id); // ✅ Add to recent
     setIsPlaying(true);
     setCurrentTime(0);
   };
 
   const handlePrevious = () => {
-    const currentList = showPlaylist ? playlist : filteredSongs;
     if (currentList.length === 0) return;
-
     const prevIndex = (currentIndex - 1 + currentList.length) % currentList.length;
     setCurrentIndex(prevIndex);
+    updateRecentSongs(currentList[prevIndex].Id); // ✅ Add to recent
     setIsPlaying(true);
     setCurrentTime(0);
   };
@@ -210,33 +219,31 @@ const AudioPlayer = ({ songsList }) => {
       const audio = audioRef.current;
       if (!audio) return;
 
-      const currentList = showPlaylist ? playlist : filteredSongs;
-
       switch (e.code) {
         case 'ArrowRight':
           audio.currentTime = Math.min(audio.currentTime + 5, duration);
           setCurrentTime(audio.currentTime);
           break;
-
         case 'ArrowLeft':
           audio.currentTime = Math.max(audio.currentTime - 5, 0);
           setCurrentTime(audio.currentTime);
           break;
-
         case 'ArrowUp':
           if (currentList.length === 0) return;
-          setCurrentIndex((prevIndex) => (prevIndex - 1 + currentList.length) % currentList.length);
+          const prevIndex = (currentIndex - 1 + currentList.length) % currentList.length;
+          setCurrentIndex(prevIndex);
+          updateRecentSongs(currentList[prevIndex].Id); // ✅
           setCurrentTime(0);
           setIsPlaying(true);
           break;
-
         case 'ArrowDown':
           if (currentList.length === 0) return;
-          setCurrentIndex((prevIndex) => (prevIndex + 1) % currentList.length);
+          const nextIndex = (currentIndex + 1) % currentList.length;
+          setCurrentIndex(nextIndex);
+          updateRecentSongs(currentList[nextIndex].Id); // ✅
           setCurrentTime(0);
           setIsPlaying(true);
           break;
-
         case 'Enter':
           e.preventDefault();
           if (audio.paused) {
@@ -246,7 +253,6 @@ const AudioPlayer = ({ songsList }) => {
             setIsPlaying(false);
           }
           break;
-
         default:
           break;
       }
@@ -257,6 +263,9 @@ const AudioPlayer = ({ songsList }) => {
       window.removeEventListener('keydown', handleKeyControls);
     };
   }, [duration, playlist, filteredSongs, showPlaylist, currentIndex]);
+
+
+  
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
@@ -270,17 +279,13 @@ const AudioPlayer = ({ songsList }) => {
           className="form-control w-100"
           style={{ height: "45px" }}
         />
-        <button
-          className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded shadow-sm"
-          onClick={handleSearchClick}
-        >
+        <button className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded shadow-sm" onClick={handleSearchClick}>
           Search
         </button>
       </div>
 
-      {/* Scrollable Song List */}
       <div style={{ maxHeight: "calc(100vh - 250px)", overflowY: "auto", width: "100%", marginTop: "20px" }}>
-        {showPlaylist && (
+        {showPlaylist ? (
           <div className="mt-4 bg-dark text-white p-3 rounded" style={{ maxHeight: "250px", overflowY: "auto", width: "300px" }}>
             <h5 className="mb-3">Playlist</h5>
             {playlist.length === 0 ? (
@@ -306,29 +311,25 @@ const AudioPlayer = ({ songsList }) => {
               ))
             )}
           </div>
-        )}
-
-        {!showPlaylist && filteredSongs.length === 0 || !currentSong ? (
+        ) : filteredSongs.length === 0 ? (
           <p style={{ color: "red", fontWeight: "bold" }}>No songs found.</p>
         ) : (
-          !showPlaylist && (
-            <div>
-              <br />
-              {filteredSongs.map((item) => (
-                <div key={item.Id} className="d-flex align-items-center justify-content-between" style={{ cursor: "pointer" }}>
-                  <div className="d-flex align-items-center gap-2" onClick={() => handleSongClick(item.Id)}>
-                    <h5 className={`fs-6 mb-0 fw-bold ${currentSong.Id === item.Id ? 'text-primary' : 'text-white'}`}>
-                      {item.Id}. {item.song}
-                    </h5>
-                    <small className="text-white">{item.artist}</small>
-                  </div>
-                  <button onClick={() => handleAddToPlaylist(item)} className="btn btn-sm text-success" title="Add to Playlist">
-                    <FaPlus />
-                  </button>
+          <div>
+            <br />
+            {filteredSongs.map((item) => (
+              <div key={item.Id} className="d-flex align-items-center justify-content-between" style={{ cursor: "pointer" }}>
+                <div className="d-flex align-items-center gap-2" onClick={() => handleSongClick(item.Id)}>
+                  <h5 className={`fs-6 mb-0 fw-bold ${currentSong?.Id === item.Id ? 'text-primary' : 'text-white'}`}>
+                    {item.Id}. {item.song}
+                  </h5>
+                  <small className="text-white">{item.artist}</small>
                 </div>
-              ))}
-            </div>
-          )
+                <button onClick={() => handleAddToPlaylist(item)} className="btn btn-sm text-success" title="Add to Playlist">
+                  <FaPlus />
+                </button>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 
@@ -348,7 +349,6 @@ const AudioPlayer = ({ songsList }) => {
         preload="metadata"
       />
 
-      {/* Sticky Seekbar */}
       <div className="my-3 sticky-bottom d-flex justify-content-center align-items-center" style={{ width: "100%", position: "fixed", bottom: "0", backgroundColor: "#222" }}>
         <button onClick={handlePrevious} className="btn btn-secondary me-2" title="Previous">
           <FaStepBackward />
@@ -372,8 +372,6 @@ const AudioPlayer = ({ songsList }) => {
             onInput={handleSeek}
             style={{ height: "8px" }}
           />
-
-
           <span>{formatTime(duration)}</span>
 
           <a

@@ -1,52 +1,68 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes  } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import HomePage from './Components/Home';
-import PlaylistSelector from './Components/PlaylistSelector';
+
+// Auth Pages
+import Signup from './Components/Signup';
+import Login from './Components/Login';
+
+// Core Pages
+import HomePage from './Components/HomePage';
+import Profile from './Components/Profile';
+import NewMusicFriday from './Components/NewMusicFriday';
+import Punjabi from './Pages/Punjabi';
+import AudioPlayer from './Components/AudioPlayer';
+import SpotifyPlayer from './Components/SpotifyPlayer';
+import ArtistSongs from './Components/ArtistSongs';
+
+// Playlist Components
 import Playlist from './Components/Playlist';
 import PlaylistCreator from './Components/PlaylistCreator';
+import PlaylistSelector from './Components/PlaylistSelector';
 import PlaylistViewer from './Components/PlaylistViewer';
-
-import Signup from './Signup';
-import Login from './Login';
-import Punjabi from './Pages/Punjabi';
+import CreatePlaylistPage from './Components/CreatePlaylistPage';
+import Recents from './Components/Recent';
+import Settings from './Components/setting';
 
 function App() {
   const [selectedSongs, setSelectedSongs] = useState([]);
 
   return (
-    <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/punjabi" element={<Punjabi />} />
+    <Router>
+      <Routes>
+        {/* Auth */}
+        <Route path="/" element={<Signup />} />
+      <Route path="/login" element={<Login />} />
 
-          {/* Playlist Selection Page */}
-          <Route
-            path="/playlist"
-            element={
-              <div className="container">
-                <h2>🎵 Music App with Playlist</h2>
-                {/* Pass selectedSongs and setter to Playlist */}
-                <Playlist selectedSongs={selectedSongs} setSelectedSongs={setSelectedSongs} />
+        {/* Core Pages */}
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/music" element={<NewMusicFriday />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/punjabi" element={<Punjabi />} />
+        <Route path="/player/:artistName/:songId" element={<SpotifyPlayer />} />
+        <Route path="/artist/:name" element={<ArtistSongs />} />
+        <Route path="/recents" element={<Recents />} />
+        <Route path="/settings" element={<Settings />} />
 
-                {/* Pass selectedSongs to PlaylistCreator */}
-                <PlaylistCreator selectedSongs={selectedSongs} />
+        {/* Audio Player Page */}
+        <Route path="/audio" element={<AudioPlayer />} />
 
-                {/* Pass selectedSongs to PlaylistSelector */}
-                <PlaylistSelector selectedSongs={selectedSongs} />
-              </div>
-            }
-          />
-
-          {/* Show songs from selected playlist on dynamic route */}
-          <Route path="/playlist/:name" element={<PlaylistViewer />} />
-                    <Route path="/home" element={<HomePage />} />
-
-        </Routes>
-      </Router>
-    </>
+        {/* Playlist Pages */}
+        <Route
+          path="/playlist"
+          element={
+            <div className="container">
+              <h2>🎵 Music App with Playlist</h2>
+              <Playlist selectedSongs={selectedSongs} setSelectedSongs={setSelectedSongs} />
+              <PlaylistCreator selectedSongs={selectedSongs} />
+              <PlaylistSelector selectedSongs={selectedSongs} />
+            </div>
+          }
+        />
+        <Route path="/playlist/:name" element={<PlaylistViewer />} />
+        <Route path="/CreatePlaylistPage" element={<CreatePlaylistPage />} />
+      </Routes>
+    </Router>
   );
 }
 
