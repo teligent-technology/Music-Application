@@ -88,3 +88,18 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
 } */
+
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: black !important;
+  color: white;
+  height: 100%;
+}
+
+
+#root {
+  min-height: 100vh;
+}

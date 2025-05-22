@@ -51,8 +51,13 @@ const Profile = () => {
         `}
       </style>
 
-      <div className={`${darkMode ? "bg-dark text-white" : "bg-light text-dark"} vh-100 p-4 profile-container d-flex flex-column justify-content-between`}>
-
+      <div
+        className={`profile-container d-flex flex-column justify-content-between p-4 ${darkMode ? "text-white" : "text-dark"}`}
+        style={{
+          backgroundColor: darkMode ? "black" : "white",
+          minHeight: "100vh"
+        }}
+      >
         {/* Profile Info */}
         <div>
           <div className="d-flex align-items-center gap-3 mb-4">
@@ -60,7 +65,12 @@ const Profile = () => {
               className={`rounded-circle d-flex align-items-center justify-content-center profile-initial ${
                 darkMode ? "bg-success text-dark" : "bg-warning text-dark"
               }`}
-              style={{ width: "48px", height: "48px", fontSize: "1.2rem", fontWeight: "bold" }}
+              style={{
+                width: "48px",
+                height: "48px",
+                fontSize: "1.2rem",
+                fontWeight: "bold"
+              }}
             >
               {user.name.charAt(0).toUpperCase()}
             </div>
@@ -76,16 +86,32 @@ const Profile = () => {
 
           {/* Menu Options */}
           <div className="d-grid gap-3 fs-5 fw-medium mt-4">
-            <div className="d-flex align-items-center gap-2 menu-option" role="button" onClick={() => alert("Feature coming soon!")}>
+            <div
+              className="d-flex align-items-center gap-2 menu-option"
+              role="button"
+              onClick={() => alert("Feature coming soon!")}
+            >
               <span>➕</span> <span>Add account</span>
             </div>
-            <div className="d-flex align-items-center gap-2 menu-option" role="button" onClick={() => alert("Stay tuned for updates!")}>
+            <div
+              className="d-flex align-items-center gap-2 menu-option"
+              role="button"
+              onClick={() => alert("Stay tuned for updates!")}
+            >
               <span>⚡</span> <span>What’s new</span>
             </div>
-            <div className="d-flex align-items-center gap-2 menu-option" role="button" onClick={() => handleNavigate("/recents")}>
+            <div
+              className="d-flex align-items-center gap-2 menu-option"
+              role="button"
+              onClick={() => handleNavigate("/recents")}
+            >
               <span>⏱️</span> <span>Recents</span>
             </div>
-            <div className="d-flex align-items-center gap-2 menu-option" role="button" onClick={() => handleNavigate("/settings")}>
+            <div
+              className="d-flex align-items-center gap-2 menu-option"
+              role="button"
+              onClick={() => handleNavigate("/settings")}
+            >
               <span>⚙️</span> <span>Settings and privacy</span>
             </div>
           </div>
