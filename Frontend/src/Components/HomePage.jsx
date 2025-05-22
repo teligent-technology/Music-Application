@@ -69,7 +69,10 @@ const HomePage = () => {
     .slice(0, 5);
 
   return (
-    <div className="bg-dark text-white min-vh-100 pb-5">
+    <div
+      className="bg-dark text-white min-vh-100 pb-5"
+      style={{ boxSizing: "border-box" }} // fixes sizing on mobile
+    >
 
       {/* Header */}
       <Container fluid className="py-2 px-3 border-bottom border-secondary sticky-top bg-dark z-3">
@@ -252,10 +255,12 @@ const HomePage = () => {
               padding-left: 0.5rem !important;
               padding-right: 0.5rem !important;
             }
+            /* Make header flex wrap so items don’t squish */
             .header-flex {
-              flex-wrap: nowrap !important;
+              flex-wrap: wrap !important;
               gap: 0.5rem !important;
             }
+            /* Stack inputs vertically */
             .search-col, .filter-col, .sort-col {
               flex: 0 0 100% !important;
               max-width: 100% !important;
@@ -266,7 +271,19 @@ const HomePage = () => {
               height: 36px !important;
               font-size: 1.1rem !important;
             }
+            /* Consistent height and font size for inputs and buttons */
+            input.form-control,
+            select.form-select,
+            button.btn {
+              font-size: 1rem;
+              height: 40px;
+            }
+            /* Fix min-width for cards inside horizontal scroll */
+            .hide-scrollbar > div {
+              min-width: 140px !important;
+            }
           }
+
           /* Card hover effect */
           .card-hover:hover {
             filter: brightness(1.15);
