@@ -6,22 +6,91 @@ import {
 
 const AudioPlayer = ({ songsList = [] }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [filteredSongs, setFilteredSongs] = useState(songsList);
+  const [playlist, setPlaylist] = useState([]);
+  const [showPlaylist, setShowPlaylist] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [filteredSongs, setFilteredSongs] = useState(songsList);
-  const [showPlaylist, setShowPlaylist] = useState(false);
-  const [playlist, setPlaylist] = useState([]);
 
   const audioRef = useRef(null);
 
   const currentList = showPlaylist ? playlist : filteredSongs;
   const currentSong = currentList.length > 0 ? currentList[currentIndex] : null;
 
-  // ... (same logic as before for localStorage, useEffect, handlers, etc.)
+  // Update filtered songs on search term change
+  const handleSearch = () => {
+    const term = searchTerm.toLowerCase();
+    const filtered = songsList.filter(song =>
+      song.song.toLowerCase().includes(term) ||
+      song.artist.toLowerCase().includes(term)
+    );
+    setFilteredSongs(filtered);
+    setCurrentIndex(0);
+    setIsPlaying(false);
+    setCurrentTime(0);
+  };
 
+  // Play/pause toggle
+  const togglePlayPause = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+  };
+
+  // Play selected song by index
+  const playSongAtIndex = (index) => {
+    if (index < 0 || index >= currentList.length) return;
+    setCurrentIndex(index);
+    setCurrentTime(0);
+    setIsPlaying(true);
+  };
+
+  // Effect to play audio when currentIndex or isPlaying changes
+  useEffect(() => {
+    if (!audioRef.current || !currentSong) return;
+    audioRef.current.pause();
+    audioRef.current.load();
+
+    if (isPlaying) {
+      audioRef.current.play().catch(() => {});
+    }
+    setCurrentTime(0);
+  }, [currentIndex, isPlaying, currentSong]);
+
+  // When audio time updates
+  const onTimeUpdate = () => {
+    if (!audioRef.current) return;
+    setCurrentTime(audioRef.current.currentTime);
+  };
+
+  // When audio metadata loads
+  const onLoadedMetadata = () => {
+    if (!audioRef.current) return;
+    setDuration(audioRef.current.duration);
+  };
+
+  // When audio ends - auto play next or stop
+  const onEnded = () => {
+    if (!currentList.length) return;
+
+    if (currentIndex < currentList.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
+      setCurrentTime(0);
+    }
+  };
+
+  // Format time in mm:ss
   const formatTime = (time) => {
+    if (isNaN(time)) return "0:00";
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60).toString().padStart(2, "0");
     return `${minutes}:${seconds}`;
@@ -29,12 +98,9 @@ const AudioPlayer = ({ songsList = [] }) => {
 
   return (
     <div className="container my-5" style={{ maxWidth: '720px' }}>
-      {/* Title */}
-      <h2 className="text-center mb-4 fw-bold" style={{ letterSpacing: '1.5px' }}>
-        🎵 My Awesome Audio Player
-      </h2>
+      <h2 className="text-center mb-4 fw-bold">🎵 My Awesome Audio Player</h2>
 
-      {/* Search Section */}
+      {/* Search */}
       <div className="input-group mb-4 shadow-sm rounded">
         <input
           type="text"
@@ -42,29 +108,19 @@ const AudioPlayer = ({ songsList = [] }) => {
           placeholder="Search by song or artist..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') handleSearchClick(); }}
+          onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
           style={{ borderRadius: '0.375rem 0 0 0.375rem' }}
         />
         <button
           className="btn btn-primary btn-lg"
-          onClick={() => {
-            const term = searchTerm.toLowerCase();
-            const filtered = songsList.filter(song =>
-              song.song.toLowerCase().includes(term) ||
-              song.artist.toLowerCase().includes(term)
-            );
-            setFilteredSongs(filtered);
-            setCurrentIndex(0);
-            setCurrentTime(0);
-            setIsPlaying(false);
-          }}
+          onClick={handleSearch}
           style={{ borderRadius: '0 0.375rem 0.375rem 0' }}
         >
           Search
         </button>
       </div>
 
-      {/* Song List or Playlist */}
+      {/* Songs / Playlist List */}
       <div className="mb-4 border rounded shadow-sm p-3" style={{ maxHeight: "300px", overflowY: "auto", backgroundColor: '#f8f9fa' }}>
         <h5 className="mb-3">
           {showPlaylist ? `Playlist (${playlist.length})` : `Songs (${filteredSongs.length})`}
@@ -81,19 +137,13 @@ const AudioPlayer = ({ songsList = [] }) => {
           <p className="text-muted fst-italic">No songs in playlist yet.</p>
         )}
 
-        {(showPlaylist ? playlist : filteredSongs).map(song => (
+        {(showPlaylist ? playlist : filteredSongs).map((song, i) => (
           <div
             key={song.Id}
             className={`d-flex justify-content-between align-items-center p-2 mb-2 rounded cursor-pointer
               ${currentSong?.Id === song.Id ? "bg-primary text-white" : "bg-white"}
               `}
-            onClick={() => {
-              setCurrentIndex(
-                (showPlaylist ? playlist : filteredSongs).findIndex(s => s.Id === song.Id)
-              );
-              setIsPlaying(true);
-              setCurrentTime(0);
-            }}
+            onClick={() => playSongAtIndex(i)}
             style={{ cursor: 'pointer' }}
           >
             <div>
@@ -124,8 +174,9 @@ const AudioPlayer = ({ songsList = [] }) => {
                     setIsPlaying(false);
                   }
                   setPlaylist(playlist.filter(s => s.Id !== song.Id));
+                  // Adjust currentIndex if needed
                   if (currentIndex >= playlist.length - 1) {
-                    setCurrentIndex(playlist.length - 2 >= 0 ? playlist.length - 2 : 0);
+                    setCurrentIndex(Math.max(playlist.length - 2, 0));
                     setCurrentTime(0);
                     setIsPlaying(false);
                   }
@@ -139,7 +190,7 @@ const AudioPlayer = ({ songsList = [] }) => {
         ))}
       </div>
 
-      {/* Now Playing Info */}
+      {/* Now Playing */}
       {currentSong && (
         <div className="text-center mb-3">
           <h4 className="mb-1">{currentSong.song}</h4>
@@ -159,11 +210,9 @@ const AudioPlayer = ({ songsList = [] }) => {
       <div className="d-flex justify-content-center align-items-center gap-3 mb-3">
         <button
           onClick={() => {
-            if (currentList.length === 0) return;
+            if (!currentList.length) return;
             const prevIndex = (currentIndex - 1 + currentList.length) % currentList.length;
-            setCurrentIndex(prevIndex);
-            setCurrentTime(0);
-            setIsPlaying(true);
+            playSongAtIndex(prevIndex);
           }}
           className="btn btn-outline-primary btn-lg rounded-circle p-3 shadow"
           title="Previous"
@@ -172,15 +221,7 @@ const AudioPlayer = ({ songsList = [] }) => {
         </button>
 
         <button
-          onClick={() => {
-            if (!audioRef.current) return;
-            if (audioRef.current.paused) {
-              audioRef.current.play().then(() => setIsPlaying(true));
-            } else {
-              audioRef.current.pause();
-              setIsPlaying(false);
-            }
-          }}
+          onClick={togglePlayPause}
           className="btn btn-primary btn-lg rounded-circle p-4 shadow"
           title={isPlaying ? "Pause" : "Play"}
         >
@@ -189,11 +230,9 @@ const AudioPlayer = ({ songsList = [] }) => {
 
         <button
           onClick={() => {
-            if (currentList.length === 0) return;
+            if (!currentList.length) return;
             const nextIndex = (currentIndex + 1) % currentList.length;
-            setCurrentIndex(nextIndex);
-            setCurrentTime(0);
-            setIsPlaying(true);
+            playSongAtIndex(nextIndex);
           }}
           className="btn btn-outline-primary btn-lg rounded-circle p-3 shadow"
           title="Next"
@@ -224,7 +263,10 @@ const AudioPlayer = ({ songsList = [] }) => {
             if (!audioRef.current) return;
             audioRef.current.currentTime = Number(e.target.value);
             setCurrentTime(Number(e.target.value));
-            if (isPlaying) audioRef.current.play().catch(() => {});
+            // Resume playing after seek if playing
+            if (isPlaying) {
+              audioRef.current.play().catch(() => {});
+            }
           }}
         />
         <small className="text-muted">{formatTime(duration)}</small>
@@ -232,20 +274,13 @@ const AudioPlayer = ({ songsList = [] }) => {
 
       <audio
         ref={audioRef}
-        onTimeUpdate={() => setCurrentTime(audioRef.current.currentTime)}
-        onLoadedMetadata={() => setDuration(audioRef.current.duration)}
-        onEnded={() => {
-          if (currentList.length === 0) return;
-          if (currentIndex < currentList.length - 1) {
-            setCurrentIndex(currentIndex + 1);
-            setIsPlaying(true);
-            setCurrentTime(0);
-          } else {
-            setIsPlaying(false);
-            setCurrentTime(0);
-          }
-        }}
-      />
+        onTimeUpdate={onTimeUpdate}
+        onLoadedMetadata={onLoadedMetadata}
+        onEnded={onEnded}
+      >
+        {currentSong && <source src={currentSong.src} type="audio/mpeg" />}
+        Your browser does not support the audio element.
+      </audio>
     </div>
   );
 };
