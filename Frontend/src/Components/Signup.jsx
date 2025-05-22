@@ -19,7 +19,7 @@ function Signup() {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://music-application-backend.onrender.com/person/', form);
+      const res = await axios.post('http://localhost:3000/person/', form);
       if (res.status === 200) {
         // ✅ Save user info to localStorage
         const user = {
