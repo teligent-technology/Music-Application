@@ -5,7 +5,6 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Songs } from "../data/song";
-// import "bootstrap-icons/font/bootstrap-icons.css";
 
 const getUniqueArtists = (songs) => {
   const artistSet = new Set();
@@ -73,10 +72,10 @@ const HomePage = () => {
     <div className="bg-dark text-white min-vh-100 pb-5">
 
       {/* Header */}
-      <Container fluid className="py-3 px-4 border-bottom border-secondary sticky-top bg-dark z-3">
+      <Container fluid className="py-2 px-3 border-bottom border-secondary sticky-top bg-dark z-3">
         <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
           <Link to="/profile">
-            <div className="bg-primary rounded-circle d-flex justify-content-center align-items-center text-white fw-bold" style={{ width: 40, height: 40 }}>
+            <div className="bg-primary rounded-circle d-flex justify-content-center align-items-center text-white fw-bold" style={{ width: 36, height: 36 }}>
               D
             </div>
           </Link>
@@ -89,8 +88,8 @@ const HomePage = () => {
       </Container>
 
       {/* Search and Filters */}
-      <Container className="mt-4">
-        <Row className="g-3 align-items-center">
+      <Container className="mt-3 px-2">
+        <Row className="g-2 align-items-center">
           <Col xs={12} md={4}>
             <Form.Control
               type="text"
@@ -116,25 +115,25 @@ const HomePage = () => {
       </Container>
 
       {/* Top Artists */}
-      <Container className="mt-5">
-        <h5 className="text-info"><i className="bi bi-stars me-2" />Top Artists</h5>
-        <Row xs={2} sm={3} md={4} lg={5} className="g-3">
+      <Container className="mt-4 px-2">
+        <h6 className="text-info"><i className="bi bi-stars me-2" />Top Artists</h6>
+        <Row xs={2} sm={3} md={4} lg={5} className="g-2">
           {topArtists.map((artist, index) => {
             const songWithArtist = Songs.find(song => song.artist === artist);
             return (
               <Col key={index}>
-                <Card bg="secondary" text="white" className="shadow-sm card-hover">
+                <Card bg="secondary" text="white" className="shadow-sm card-hover p-2">
                   <Card.Body className="d-flex align-items-center">
                     <img
                       src={songWithArtist?.img}
                       alt={artist}
-                      className="me-3 rounded-circle"
-                      style={{ width: 40, height: 40, objectFit: 'cover' }}
+                      className="me-2 rounded-circle"
+                      style={{ width: 32, height: 32, objectFit: 'cover' }}
                     />
-                    <Link to={`/artist/${encodeURIComponent(artist)}`} className="text-white text-decoration-none">
+                    <Link to={`/artist/${encodeURIComponent(artist)}`} className="text-white text-decoration-none text-truncate w-100">
                       {artist}
                     </Link>
-                    <Badge bg="warning" className="ms-auto">Top</Badge>
+                    <Badge bg="warning" className="ms-2">Top</Badge>
                   </Card.Body>
                 </Card>
               </Col>
@@ -145,15 +144,15 @@ const HomePage = () => {
 
       {/* Recently Played */}
       {recentlyPlayed.length > 0 && (
-        <Container className="mt-5">
-          <h5 className="text-success"><i className="bi bi-clock-history me-2" />Recently Played</h5>
-          <Row xs={2} sm={3} md={4} lg={5} className="g-3">
+        <Container className="mt-4 px-2">
+          <h6 className="text-success"><i className="bi bi-clock-history me-2" />Recently Played</h6>
+          <Row xs={2} sm={3} md={4} lg={5} className="g-2">
             {recentlyPlayed.map((song, idx) => (
               <Col key={idx}>
-                <Card bg="secondary" text="white" className="shadow-sm card-hover">
+                <Card bg="secondary" text="white" className="shadow-sm card-hover p-2">
                   <Card.Body>
-                    <Card.Title>{song.name}</Card.Title>
-                    <Card.Subtitle className="text-muted">{song.artist}</Card.Subtitle>
+                    <Card.Title className="text-truncate">{song.name}</Card.Title>
+                    <Card.Subtitle className="text-muted text-truncate">{song.artist}</Card.Subtitle>
                   </Card.Body>
                 </Card>
               </Col>
@@ -163,15 +162,15 @@ const HomePage = () => {
       )}
 
       {/* New Releases */}
-      <Container className="mt-5">
-        <h5 className="text-primary"><i className="bi bi-megaphone me-2" />New Releases</h5>
-        <Row xs={2} sm={3} md={4} lg={5} className="g-3">
+      <Container className="mt-4 px-2">
+        <h6 className="text-primary"><i className="bi bi-megaphone me-2" />New Releases</h6>
+        <Row xs={2} sm={3} md={4} lg={5} className="g-2">
           {newReleases.map((song, idx) => (
             <Col key={idx}>
-              <Card bg="secondary" text="white" className="shadow-sm card-hover">
+              <Card bg="secondary" text="white" className="shadow-sm card-hover p-2">
                 <Card.Body>
-                  <Card.Title>{song.name}</Card.Title>
-                  <Card.Subtitle className="text-muted">{song.artist}</Card.Subtitle>
+                  <Card.Title className="text-truncate">{song.name}</Card.Title>
+                  <Card.Subtitle className="text-muted text-truncate">{song.artist}</Card.Subtitle>
                   <small>Released: {song.releaseDate}</small>
                 </Card.Body>
               </Card>
@@ -181,18 +180,18 @@ const HomePage = () => {
       </Container>
 
       {/* All Artists Slider */}
-      <Container className="mt-5">
-        <h5 className="text-warning mb-3"><i className="bi bi-mic me-2" />All Artists</h5>
+      <Container className="mt-4 px-2">
+        <h6 className="text-warning mb-2"><i className="bi bi-mic me-2" />All Artists</h6>
         <div 
           style={{
             display: "flex",
             overflowX: "auto",
-            gap: "1rem",
+            gap: "0.75rem",
             paddingBottom: "1rem",
             scrollbarWidth: "thin",
             scrollbarColor: "#888 transparent"
           }}
-          className="hide-scrollbar" // We can hide scrollbar via CSS below
+          className="hide-scrollbar"
         >
           {sortedArtists.map((artist, index) => {
             const songWithArtist = Songs.find(song => song.artist === artist);
@@ -202,23 +201,23 @@ const HomePage = () => {
                 bg="secondary"
                 text="white"
                 className="shadow-sm card-hover d-flex flex-row align-items-center p-2"
-                style={{ minWidth: 250, flexShrink: 0 }}
+                style={{ minWidth: 180, flexShrink: 0 }}
               >
                 <Link to={`/artist/${encodeURIComponent(artist)}`} className="d-flex align-items-center text-decoration-none text-white w-100">
                   <img
                     src={songWithArtist?.img}
                     alt={artist}
-                    className="me-3 rounded-circle"
-                    style={{ width: 40, height: 40, objectFit: 'cover' }}
+                    className="me-2 rounded-circle"
+                    style={{ width: 32, height: 32, objectFit: 'cover' }}
                   />
-                  <span>{artist}</span>
+                  <span className="text-truncate">{artist}</span>
                 </Link>
                 <Button
                   size="sm"
                   variant="link"
                   className="text-danger ms-auto"
                   onClick={(e) => {
-                    e.preventDefault(); // prevent navigation when clicking heart
+                    e.preventDefault();
                     toggleFavorite(artist);
                   }}
                 >
@@ -230,7 +229,7 @@ const HomePage = () => {
         </div>
       </Container>
 
-      {/* Optional CSS for hiding scrollbar on Firefox and Webkit */}
+      {/* CSS for scrollbar and mobile tweaks */}
       <style>
         {`
           .hide-scrollbar::-webkit-scrollbar {
@@ -244,8 +243,16 @@ const HomePage = () => {
             background: transparent;
           }
           .hide-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: thin;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: thin;
+          }
+          @media (max-width: 576px) {
+            .card-hover {
+              padding: 0.5rem !important;
+            }
+            .card-title, .card-subtitle, span {
+              font-size: 0.875rem;
+            }
           }
         `}
       </style>
