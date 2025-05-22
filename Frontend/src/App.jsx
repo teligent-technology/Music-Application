@@ -9,10 +9,9 @@ import Login from './Components/Login';
 // Core Pages
 import HomePage from './Components/HomePage';
 import Profile from './Components/Profile';
-import NewMusicFriday from './Components/NewMusicFriday';
 import Punjabi from './Pages/Punjabi';
 import AudioPlayer from './Components/AudioPlayer';
-import SpotifyPlayer from './Components/SpotifyPlayer';
+import SpotifyPlayer from './Components/SpotifyPlayer'; 
 import ArtistSongs from './Components/ArtistSongs';
 
 // Playlist Components
@@ -35,7 +34,6 @@ function App() {
 
         {/* Core Pages */}
         <Route path="/home" element={<HomePage />} />
-        <Route path="/music" element={<NewMusicFriday />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/punjabi" element={<Punjabi />} />
         <Route path="/player/:artistName/:songId" element={<SpotifyPlayer />} />
