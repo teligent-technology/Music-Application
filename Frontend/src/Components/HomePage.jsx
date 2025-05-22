@@ -73,13 +73,13 @@ const HomePage = () => {
 
       {/* Header */}
       <Container fluid className="py-2 px-3 border-bottom border-secondary sticky-top bg-dark z-3">
-        <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div className="d-flex justify-content-between align-items-center flex-nowrap gap-2">
           <Link to="/profile">
             <div className="bg-primary rounded-circle d-flex justify-content-center align-items-center text-white fw-bold" style={{ width: 36, height: 36 }}>
               D
             </div>
           </Link>
-          <div className="btn-group bg-secondary rounded-pill p-1">
+          <div className="btn-group bg-secondary rounded-pill p-1 flex-shrink-0">
             <Link to="/home" className="btn btn-sm btn-dark rounded-pill">All</Link>
             <Link to="/music" className="btn btn-sm btn-dark rounded-pill">Music</Link>
             <Link to="/punjabi" className="btn btn-sm btn-dark rounded-pill">Songs</Link>
@@ -146,7 +146,7 @@ const HomePage = () => {
       {recentlyPlayed.length > 0 && (
         <Container className="mt-4 px-2">
           <h6 className="text-success"><i className="bi bi-clock-history me-2" />Recently Played</h6>
-          <Row xs={2} sm={3} md={4} lg={5} className="g-2">
+          <Row xs={1} sm={2} md={3} lg={5} className="g-2">
             {recentlyPlayed.map((song, idx) => (
               <Col key={idx}>
                 <Card bg="secondary" text="white" className="shadow-sm card-hover p-2">
@@ -164,7 +164,7 @@ const HomePage = () => {
       {/* New Releases */}
       <Container className="mt-4 px-2">
         <h6 className="text-primary"><i className="bi bi-megaphone me-2" />New Releases</h6>
-        <Row xs={2} sm={3} md={4} lg={5} className="g-2">
+        <Row xs={1} sm={2} md={3} lg={5} className="g-2">
           {newReleases.map((song, idx) => (
             <Col key={idx}>
               <Card bg="secondary" text="white" className="shadow-sm card-hover p-2">
@@ -191,7 +191,7 @@ const HomePage = () => {
             scrollbarWidth: "thin",
             scrollbarColor: "#888 transparent"
           }}
-          className="hide-scrollbar"
+          className="hide-scrollbar px-2"
         >
           {sortedArtists.map((artist, index) => {
             const songWithArtist = Songs.find(song => song.artist === artist);
@@ -201,7 +201,7 @@ const HomePage = () => {
                 bg="secondary"
                 text="white"
                 className="shadow-sm card-hover d-flex flex-row align-items-center p-2"
-                style={{ minWidth: 180, flexShrink: 0 }}
+                style={{ minWidth: 140, flexShrink: 0 }}
               >
                 <Link to={`/artist/${encodeURIComponent(artist)}`} className="d-flex align-items-center text-decoration-none text-white w-100">
                   <img
@@ -229,7 +229,7 @@ const HomePage = () => {
         </div>
       </Container>
 
-      {/* CSS for scrollbar and mobile tweaks */}
+      {/* Scrollbar & Mobile Tweaks */}
       <style>
         {`
           .hide-scrollbar::-webkit-scrollbar {
