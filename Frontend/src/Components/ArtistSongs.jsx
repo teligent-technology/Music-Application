@@ -26,7 +26,7 @@ const ArtistSongs = () => {
     >
       {/* Breadcrumb navigation */}
       <Breadcrumb className="bg-dark px-3 py-2 rounded mb-4" style={{ backgroundColor: "#121212" }}>
-        <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/" }}>
+        <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/home" }}>
           Home
         </Breadcrumb.Item>
         <Breadcrumb.Item active>Songs by {name}</Breadcrumb.Item>
@@ -95,33 +95,8 @@ const ArtistSongs = () => {
             ))}
           </Row>
 
-          {/* Fixed position Previous and Next buttons */}
-          <Button
-            variant="outline-light"
-            style={{
-              position: "fixed",
-              bottom: "20px",
-              left: "20px",
-              zIndex: 1050,
-              minWidth: "100px",
-            }}
-            onClick={handlePrevious}
-          >
-            ⬅ Previous
-          </Button>
-          <Button
-            variant="outline-light"
-            style={{
-              position: "fixed",
-              bottom: "20px",
-              right: "20px",
-              zIndex: 1050,
-              minWidth: "100px",
-            }}
-            onClick={handleNext}
-          >
-            Next ➡
-          </Button>
+         
+         
         </>
       )}
     </Container>
