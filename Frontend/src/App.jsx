@@ -26,6 +26,7 @@ function App() {
   const [selectedSongs, setSelectedSongs] = useState([]);
 
   return (
+
     <Router>
       <Routes>
         {/* Auth */}
@@ -60,6 +61,7 @@ function App() {
         <Route path="/CreatePlaylistPage" element={<CreatePlaylistPage />} />
       </Routes>
     </Router>
+
   );
 }
 

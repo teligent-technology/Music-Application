@@ -25,12 +25,26 @@ const ArtistSongs = () => {
               className="text-decoration-none"
             >
               <Card className="bg-dark border-0 h-100">
-                <Card.Img
-                  variant="top"
-                  src={song.img}
-                  alt={song.song}
-                  style={{ height: "160px", objectFit: "cover" }}
-                />
+                <div
+                  style={{
+                    height: "160px",
+                    backgroundColor: "#1e1e1e",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Card.Img
+                    variant="top"
+                    src={song.img}
+                    alt={song.song}
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </div>
                 <Card.Body className="p-2">
                   <h6 style={{ color: "white" }} className="mb-1 text-truncate">
                     {song.song}

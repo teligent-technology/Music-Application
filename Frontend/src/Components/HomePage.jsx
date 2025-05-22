@@ -71,7 +71,7 @@ const HomePage = () => {
   return (
     <div
       className="bg-dark text-white min-vh-100 pb-5"
-      style={{ boxSizing: "border-box" }} // fixes sizing on mobile
+      style={{ boxSizing: "border-box" }}
     >
 
       {/* Header */}
@@ -95,7 +95,7 @@ const HomePage = () => {
       {/* Search and Filters */}
       <Container className="mt-3 px-2">
         <Row className="g-2 align-items-center">
-          <Col xs={12} md={4} className="search-col">
+          <Col xs={12} md={4}> {/* Removed specific classes like search-col, filter-col, sort-col */}
             <Form.Control
               type="text"
               placeholder="Search artists..."
@@ -103,7 +103,7 @@ const HomePage = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </Col>
-          <Col xs={12} md={3} className="filter-col">
+          <Col xs={12} md={3}>
             <Form.Select value={genreFilter} onChange={(e) => setGenreFilter(e.target.value)}>
               <option value="">Filter by Genre</option>
               {genres.map((genre, idx) => (
@@ -111,8 +111,8 @@ const HomePage = () => {
               ))}
             </Form.Select>
           </Col>
-          <Col xs={12} md={2} className="sort-col">
-            <Button variant="outline-light" onClick={() => setSortAZ(!sortAZ)}>
+          <Col xs={12} md={2}>
+            <Button variant="outline-light" onClick={() => setSortAZ(!sortAZ)} className="w-100"> {/* Added w-100 for full width on small screens */}
               Sort A-Z
             </Button>
           </Col>
@@ -196,7 +196,7 @@ const HomePage = () => {
             scrollbarWidth: "thin",
             scrollbarColor: "#888 transparent"
           }}
-          className="hide-scrollbar px-2"
+          className="hide-scrollbar" // Removed px-2 from here, handled by Container
         >
           {sortedArtists.map((artist, index) => {
             const songWithArtist = Songs.find(song => song.artist === artist);
@@ -251,36 +251,37 @@ const HomePage = () => {
 
           /* Mobile responsiveness tweaks */
           @media (max-width: 576px) {
+            /* Adjust padding for containers on smaller screens */
             .container, .container-fluid {
-              padding-left: 0.5rem !important;
-              padding-right: 0.5rem !important;
+              padding-left: 0.75rem !important;
+              padding-right: 0.75rem !important;
             }
-            /* Make header flex wrap so items don’t squish */
+            
+            /* Header adjustments */
             .header-flex {
-              flex-wrap: wrap !important;
-              gap: 0.5rem !important;
+              flex-wrap: wrap; /* Already there, good */
+              justify-content: center !important; /* Center items when wrapped */
             }
-            /* Stack inputs vertically */
+            .btn-group {
+              margin-top: 0.5rem; /* Add some space if it wraps below profile icon */
+            }
+
+            /* Stack inputs vertically by making them full width */
             .search-col, .filter-col, .sort-col {
-              flex: 0 0 100% !important;
-              max-width: 100% !important;
-              margin-bottom: 0.5rem;
+              margin-bottom: 0.5rem; /* Add some space between stacked inputs */
             }
-            .profile-icon {
-              width: 36px !important;
-              height: 36px !important;
-              font-size: 1.1rem !important;
-            }
+            
             /* Consistent height and font size for inputs and buttons */
             input.form-control,
             select.form-select,
             button.btn {
-              font-size: 1rem;
-              height: 40px;
+              font-size: 0.9rem; /* Slightly smaller font for better fit */
+              height: 38px; /* Consistent height */
             }
-            /* Fix min-width for cards inside horizontal scroll */
-            .hide-scrollbar > div {
-              min-width: 140px !important;
+            .profile-icon {
+              width: 32px !important; /* Slightly smaller profile icon */
+              height: 32px !important;
+              font-size: 1rem !important;
             }
           }
 

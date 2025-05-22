@@ -153,7 +153,7 @@ const SpotifyPlayer = () => {
           src={song.img}
           alt={song.title}
           className="img-fluid rounded shadow mb-3"
-          style={{ maxHeight: "300px", objectFit: "cover", margin: "0 auto" }}
+          style={{ maxHeight: "300px", objectFit: "contain", margin: "0 auto" }}
         />
         <h5 className="fw-bold mb-1">{song.title}</h5>
         <p className="text-light small">{song.artist}</p>
