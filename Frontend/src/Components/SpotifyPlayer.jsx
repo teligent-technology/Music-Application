@@ -220,32 +220,34 @@ const SpotifyPlayer = () => {
       {/* Removed Bottom Controls (share & save) */}
 
       {/* Seekbar moved below the fixed controls */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: "#121212",
-          borderTop: "1px solid #333",
-          padding: "0.5rem 1rem",
-          zIndex: 9998,
-        }}
-      >
-        <input
-          type="range"
-          min="0"
-          max={duration}
-          value={progress}
-          onChange={handleSeek}
-          className="form-range"
-          style={{ accentColor: "#fff", marginBottom: 0 }}
-        />
-        <div className="d-flex justify-content-between small text-white-50">
-          <span>{formatTime(progress)}</span>
-          <span>{formatTime(duration)}</span>
-        </div>
-      </div>
+      {/* Seekbar moved above the fixed controls */}
+<div
+  style={{
+    position: "fixed",
+    bottom: 80, // 80px upar kiya from bottom (jo buttons se thoda upar ho)
+    left: 0,
+    right: 0,
+    backgroundColor: "#121212",
+    borderTop: "1px solid #333",
+    padding: "0.5rem 1rem",
+    zIndex: 9998,
+  }}
+>
+  <input
+    type="range"
+    min="0"
+    max={duration}
+    value={progress}
+    onChange={handleSeek}
+    className="form-range"
+    style={{ accentColor: "#fff", marginBottom: 0 }}
+  />
+  <div className="d-flex justify-content-between small text-white-50">
+    <span>{formatTime(progress)}</span>
+    <span>{formatTime(duration)}</span>
+  </div>
+</div>
+
 
       {/* Error Message */}
       {error && (
