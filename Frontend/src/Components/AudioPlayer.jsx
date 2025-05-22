@@ -57,10 +57,12 @@ const AudioPlayer = ({ songsList = [] }) => {
     audioRef.current.pause();
     audioRef.current.load();
 
+    // Reset currentTime state to 0 before play
+    setCurrentTime(0);
+
     if (isPlaying) {
       audioRef.current.play().catch(() => {});
     }
-    setCurrentTime(0);
   }, [currentIndex, isPlaying, currentSong]);
 
   // When audio time updates
@@ -141,8 +143,7 @@ const AudioPlayer = ({ songsList = [] }) => {
           <div
             key={song.Id}
             className={`d-flex justify-content-between align-items-center p-2 mb-2 rounded cursor-pointer
-              ${currentSong?.Id === song.Id ? "bg-primary text-white" : "bg-white"}
-              `}
+              ${currentSong?.Id === song.Id ? "bg-primary text-white" : "bg-white"}`}
             onClick={() => playSongAtIndex(i)}
             style={{ cursor: 'pointer' }}
           >
@@ -257,13 +258,14 @@ const AudioPlayer = ({ songsList = [] }) => {
           type="range"
           className="form-range flex-grow-1"
           min="0"
-          max={duration || 0}
+          max={duration > 0 ? duration : 0}
+          step="0.01"
           value={currentTime}
           onChange={e => {
             if (!audioRef.current) return;
-            audioRef.current.currentTime = Number(e.target.value);
-            setCurrentTime(Number(e.target.value));
-            // Resume playing after seek if playing
+            const val = Number(e.target.value);
+            audioRef.current.currentTime = val;
+            setCurrentTime(val);
             if (isPlaying) {
               audioRef.current.play().catch(() => {});
             }
