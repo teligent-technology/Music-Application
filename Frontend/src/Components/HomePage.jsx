@@ -230,32 +230,40 @@ const HomePage = () => {
       </Container>
 
       {/* Scrollbar & Mobile Tweaks */}
-      <style>
-        {`
-          .hide-scrollbar::-webkit-scrollbar {
-            height: 6px;
-          }
-          .hide-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #888;
-            border-radius: 3px;
-          }
-          .hide-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-          }
-          .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: thin;
-          }
-          @media (max-width: 576px) {
-            .card-hover {
-              padding: 0.5rem !important;
-            }
-            .card-title, .card-subtitle, span {
-              font-size: 0.875rem;
-            }
-          }
-        `}
-      </style>
+     <style>
+  {`
+    .hide-scrollbar::-webkit-scrollbar {
+      height: 6px;
+    }
+    .hide-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #888;
+      border-radius: 3px;
+    }
+    .hide-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: thin;
+    }
+    @media (max-width: 576px) {
+      .card-hover {
+        padding: 0.5rem !important;
+      }
+      .card-title, .card-subtitle, span {
+        font-size: 0.875rem;
+      }
+
+      /* 👇 Container tweak for small screens */
+      .container,
+      .container-fluid {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+    }
+  `}
+</style>
+     
     </div>
   );
 };
