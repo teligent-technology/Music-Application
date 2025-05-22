@@ -2,29 +2,28 @@ import React, { useState, useRef, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Songs } from "../data/song";
 import { Container, Row, Col, Card, Button, Breadcrumb } from "react-bootstrap";
-
+import SpotifyPlayer from "./SpotifyPlayer";
 const ArtistSongs = () => {
   const { name } = useParams();
   const filteredSongs = Songs.filter((song) =>
     song.artist.toLowerCase().includes(name.toLowerCase())
   );
 
-  // Track play state per song
   const [playingId, setPlayingId] = useState(null);
   const audioRefs = useRef({});
   const [progressMap, setProgressMap] = useState({});
   const [durationMap, setDurationMap] = useState({});
+  const [selectedSong, setSelectedSong] = useState(null); // For SpotifyPlayer
 
-  const togglePlayPause = (songId) => {
+  const togglePlayPause = (songId, song) => {
     const currentAudio = audioRefs.current[songId];
-
     if (!currentAudio) return;
 
     if (playingId === songId) {
       currentAudio.pause();
       setPlayingId(null);
+      setSelectedSong(null);
     } else {
-      // Pause others
       Object.keys(audioRefs.current).forEach((id) => {
         if (id !== songId && audioRefs.current[id]) {
           audioRefs.current[id].pause();
@@ -33,6 +32,7 @@ const ArtistSongs = () => {
 
       currentAudio.play();
       setPlayingId(songId);
+      setSelectedSong(song); // Set global player
     }
   };
 
@@ -45,7 +45,6 @@ const ArtistSongs = () => {
   };
 
   useEffect(() => {
-    // Attach timeupdate and metadata events
     filteredSongs.forEach((song) => {
       const audio = audioRefs.current[song.Id];
       if (!audio) return;
@@ -82,11 +81,7 @@ const ArtistSongs = () => {
   };
 
   return (
-    <Container
-      fluid
-      className="py-4 text-white"
-      style={{ minHeight: "85vh", backgroundColor: "#121212" }}
-    >
+    <Container fluid className="py-4 text-white" style={{ minHeight: "85vh", backgroundColor: "#121212" }}>
       <Breadcrumb className="bg-dark px-3 py-2 rounded mb-4">
         <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/home" }}>
           Home
@@ -109,20 +104,13 @@ const ArtistSongs = () => {
         <Row xs={1} sm={2} md={3} lg={4} className="g-4">
           {filteredSongs.map((song) => (
             <Col key={song.Id}>
-              <Card
-                className="bg-dark text-white h-100 shadow-sm border-0 d-flex flex-column"
-                style={{ minHeight: "280px" }}
-              >
+              <Card className="bg-dark text-white h-100 shadow-sm border-0 d-flex flex-column" style={{ minHeight: "280px" }}>
                 <div style={{ height: "140px", overflow: "hidden", backgroundColor: "#000" }}>
                   <Card.Img
                     variant="top"
                     src={song.img}
                     alt={song.title}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                    }}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   />
                 </div>
 
@@ -132,7 +120,6 @@ const ArtistSongs = () => {
                     <Card.Text className="text-muted small mb-2">{song.artist}</Card.Text>
                   </div>
 
-                  {/* Audio Player */}
                   <audio
                     ref={(el) => (audioRefs.current[song.Id] = el)}
                     src={song.audioUrl || song.audio || song.url || song.src || ""}
@@ -141,13 +128,14 @@ const ArtistSongs = () => {
 
                   <div>
                     <Button
-                      onClick={() => togglePlayPause(song.Id)}
+                      onClick={() => togglePlayPause(song.Id, song)}
                       variant="light"
                       size="sm"
                       className="me-2"
                     >
                       {playingId === song.Id ? "⏸ Pause" : "▶️ Play"}
                     </Button>
+
                     <div className="d-flex align-items-center mt-2">
                       <input
                         type="range"
@@ -158,6 +146,7 @@ const ArtistSongs = () => {
                         onChange={(e) => handleSeek(song.Id, parseFloat(e.target.value))}
                       />
                     </div>
+
                     <div className="d-flex justify-content-between small text-white-50">
                       <span>{formatTime(progressMap[song.Id] || 0)}</span>
                       <span>{formatTime(durationMap[song.Id] || 0)}</span>
@@ -168,6 +157,13 @@ const ArtistSongs = () => {
             </Col>
           ))}
         </Row>
+      )}
+
+      {/* Global SpotifyPlayer at bottom */}
+      {selectedSong && (
+        <div className="fixed-bottom bg-dark shadow p-2">
+          <SpotifyPlayer song={selectedSong} />
+        </div>
       )}
     </Container>
   );
