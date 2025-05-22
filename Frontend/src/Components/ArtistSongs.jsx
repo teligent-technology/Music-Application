@@ -9,6 +9,17 @@ const ArtistSongs = () => {
     song.artist.toLowerCase().includes(name.toLowerCase())
   );
 
+  // Dummy handlers for previous/next buttons
+  const handlePrevious = () => {
+    // Your logic for previous song navigation
+    console.log("Previous clicked");
+  };
+
+  const handleNext = () => {
+    // Your logic for next song navigation
+    console.log("Next clicked");
+  };
+
   return (
     <Container fluid className="py-4 text-white" style={{ minHeight: "85vh" }}>
       {/* Breadcrumb navigation */}
@@ -31,52 +42,82 @@ const ArtistSongs = () => {
           </Button>
         </div>
       ) : (
-        <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-          {filteredSongs.map((song) => (
-            <Col key={song.Id}>
-              <Link
-                to={`/player/${song.artist}/${song.Id}`}
-                className="text-decoration-none"
-              >
-                <Card
-                  className="bg-dark text-white h-100 shadow-sm border-0 d-flex flex-column hover-shadow transition"
-                  style={{ minHeight: "320px" }}
+        <>
+          <Row xs={1} sm={2} md={3} lg={4} className="g-4">
+            {filteredSongs.map((song) => (
+              <Col key={song.Id}>
+                <Link
+                  to={`/player/${song.artist}/${song.Id}`}
+                  className="text-decoration-none"
                 >
-                  {/* Fixed image container */}
-                  <div style={{ height: "180px", overflow: "hidden" }}>
-                    <Card.Img
-                      variant="top"
-                      src={song.img}
-                      alt={song.title}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        borderTopLeftRadius: ".5rem",
-                        borderTopRightRadius: ".5rem",
-                      }}
-                    />
-                  </div>
+                  <Card
+                    className="bg-dark text-white h-100 shadow-sm border-0 d-flex flex-column hover-shadow transition"
+                    style={{ minHeight: "320px" }}
+                  >
+                    {/* Fixed image container */}
+                    <div style={{ height: "180px", overflow: "hidden" }}>
+                      <Card.Img
+                        variant="top"
+                        src={song.img}
+                        alt={song.title}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          borderTopLeftRadius: ".5rem",
+                          borderTopRightRadius: ".5rem",
+                        }}
+                      />
+                    </div>
 
-                  {/* Card content with consistent spacing */}
-                  <Card.Body className="d-flex flex-column justify-content-between flex-grow-1">
-                    <div>
-                      <Card.Title className="h6 mb-1 text-truncate">{song.title}</Card.Title>
-                      <Card.Text className="text-muted small mb-2">{song.artist}</Card.Text>
-                    </div>
-                    <div className="text-end mt-auto">
-                      {song.duration ? (
-                        <small className="text-light">⏱ {song.duration}</small>
-                      ) : (
-                        <div style={{ height: "1rem" }}></div> // placeholder
-                      )}
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Link>
-            </Col>
-          ))}
-        </Row>
+                    {/* Card content with consistent spacing */}
+                    <Card.Body className="d-flex flex-column justify-content-between flex-grow-1">
+                      <div>
+                        <Card.Title className="h6 mb-1 text-truncate">{song.title}</Card.Title>
+                        <Card.Text className="text-muted small mb-2">{song.artist}</Card.Text>
+                      </div>
+                      <div className="text-end mt-auto">
+                        {song.duration ? (
+                          <small className="text-light">⏱ {song.duration}</small>
+                        ) : (
+                          <div style={{ height: "1rem" }}></div> // placeholder
+                        )}
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Link>
+              </Col>
+            ))}
+          </Row>
+
+          {/* Fixed position Previous and Next buttons */}
+          <Button
+            variant="outline-light"
+            style={{
+              position: "fixed",
+              bottom: "20px",
+              left: "20px",
+              zIndex: 1050,
+              minWidth: "100px",
+            }}
+            onClick={handlePrevious}
+          >
+            ⬅ Previous
+          </Button>
+          <Button
+            variant="outline-light"
+            style={{
+              position: "fixed",
+              bottom: "20px",
+              right: "20px",
+              zIndex: 1050,
+              minWidth: "100px",
+            }}
+            onClick={handleNext}
+          >
+            Next ➡
+          </Button>
+        </>
       )}
     </Container>
   );
