@@ -102,7 +102,7 @@ const Recents = () => {
       <div className="container">
         <h3 className="mb-4">Recently Played</h3>
         {recentSongs.length === 0 ? (
-          <p className="text-muted">No recently played songs yet.</p>
+          <p className="text-muted" style={{color: "#fff"}}>No recently played songs yet.</p>
         ) : (
           <>
             <div className="mb-4 p-3 bg-dark text-white rounded shadow d-flex flex-column align-items-center">
