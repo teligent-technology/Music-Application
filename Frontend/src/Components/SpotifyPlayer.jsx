@@ -10,6 +10,7 @@ import {
   FaPause,
   FaForward,
   FaClock,
+  FaTv,
   FaSpinner,
 } from "react-icons/fa";
 
@@ -17,7 +18,6 @@ const SpotifyPlayer = () => {
   const { songId, artistName } = useParams();
   const navigate = useNavigate();
 
-  // Filter songs by artist
   const filteredSongs = Songs.filter((s) =>
     s.artist.toLowerCase().includes(artistName.toLowerCase())
   );
@@ -25,7 +25,6 @@ const SpotifyPlayer = () => {
   const currentIndex = filteredSongs.findIndex((s) => s.Id.toString() === songId);
   const song = filteredSongs[currentIndex];
 
-  // Refs and State
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -33,7 +32,6 @@ const SpotifyPlayer = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  // Load song when it changes
   useEffect(() => {
     if (!song) return;
 
@@ -58,7 +56,7 @@ const SpotifyPlayer = () => {
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("error", handleError);
 
-    // Save to recents
+    // Save to recent songs in localStorage
     const stored = JSON.parse(localStorage.getItem("recentSongs")) || [];
     const filtered = stored.filter((id) => id !== song.Id);
     const updated = [song.Id, ...filtered].slice(0, 20);
@@ -70,7 +68,6 @@ const SpotifyPlayer = () => {
     };
   }, [song]);
 
-  // Update progress
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -83,7 +80,6 @@ const SpotifyPlayer = () => {
     };
   }, []);
 
-  // Handle play/pause
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -95,8 +91,10 @@ const SpotifyPlayer = () => {
     }
   }, [isPlaying]);
 
-  // Handlers
-  const togglePlayPause = () => setIsPlaying((prev) => !prev);
+  const togglePlayPause = () => {
+    setIsPlaying((prev) => !prev);
+  };
+
   const handleSeek = (e) => {
     const time = parseFloat(e.target.value);
     audioRef.current.currentTime = time;
@@ -106,12 +104,14 @@ const SpotifyPlayer = () => {
   const handlePrev = () => {
     let prevIndex = currentIndex - 1;
     if (prevIndex < 0) prevIndex = filteredSongs.length - 1;
-    navigate(`/player/${artistName}/${filteredSongs[prevIndex].Id}`);
+    const prevSong = filteredSongs[prevIndex];
+    navigate(`/player/${artistName}/${prevSong.Id}`);
   };
 
   const handleNext = () => {
     if (currentIndex < filteredSongs.length - 1) {
-      navigate(`/player/${artistName}/${filteredSongs[currentIndex + 1].Id}`);
+      const nextSong = filteredSongs[currentIndex + 1];
+      navigate(`/player/${artistName}/${nextSong.Id}`);
     }
   };
 
@@ -138,23 +138,28 @@ const SpotifyPlayer = () => {
         <FaEllipsisH size={20} />
       </div>
 
-      {/* Main Content */}
+      {/* Main content scrollable area */}
       <div
         style={{
           flexGrow: 1,
           overflowY: "auto",
-          padding: "1rem 1rem 120px 1rem",
+          padding: "1rem 1rem 120px 1rem", // bottom padding for fixed controls
           textAlign: "center",
         }}
       >
+        {/* Cover Art */}
         <img
           src={song.img}
           alt={song.title}
           className="img-fluid rounded shadow mb-3"
           style={{ maxHeight: "300px", objectFit: "cover", margin: "0 auto" }}
         />
+
+        {/* Song Info */}
         <h5 className="fw-bold mb-1">{song.title}</h5>
         <p className="text-light small">{song.artist}</p>
+
+        {/* Audio Element */}
         <audio
           ref={audioRef}
           src={song.audioUrl || song.audio || song.url || song.src || ""}
@@ -162,35 +167,7 @@ const SpotifyPlayer = () => {
         />
       </div>
 
-      {/* Seekbar */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: 80,
-          left: 0,
-          right: 0,
-          backgroundColor: "#121212",
-          borderTop: "1px solid #333",
-          padding: "0.5rem 1rem",
-          zIndex: 9998,
-        }}
-      >
-        <input
-          type="range"
-          min="0"
-          max={duration}
-          value={progress}
-          onChange={handleSeek}
-          className="form-range"
-          style={{ accentColor: "#fff", marginBottom: 0 }}
-        />
-        <div className="d-flex justify-content-between small text-white-50">
-          <span>{formatTime(progress)}</span>
-          <span>{formatTime(duration)}</span>
-        </div>
-      </div>
-
-      {/* Controls */}
+      {/* Controls - Fixed at bottom */}
       <div
         style={{
           position: "fixed",
@@ -239,6 +216,38 @@ const SpotifyPlayer = () => {
         </button>
         <FaClock />
       </div>
+
+      {/* Removed Bottom Controls (share & save) */}
+
+      {/* Seekbar moved below the fixed controls */}
+      {/* Seekbar moved above the fixed controls */}
+<div
+  style={{
+    position: "fixed",
+    bottom: 80, // 80px upar kiya from bottom (jo buttons se thoda upar ho)
+    left: 0,
+    right: 0,
+    backgroundColor: "#121212",
+    borderTop: "1px solid #333",
+    padding: "0.5rem 1rem",
+    zIndex: 9998,
+  }}
+>
+  <input
+    type="range"
+    min="0"
+    max={duration}
+    value={progress}
+    onChange={handleSeek}
+    className="form-range"
+    style={{ accentColor: "#fff", marginBottom: 0 }}
+  />
+  <div className="d-flex justify-content-between small text-white-50">
+    <span>{formatTime(progress)}</span>
+    <span>{formatTime(duration)}</span>
+  </div>
+</div>
+
 
       {/* Error Message */}
       {error && (
