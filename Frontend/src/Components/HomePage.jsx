@@ -94,8 +94,9 @@ const HomePage = () => {
 
       {/* Search and Filters */}
       <Container className="mt-3 px-2">
-        <Row className="g-2 align-items-center">
-          <Col xs={12} md={4}> {/* Removed specific classes like search-col, filter-col, sort-col */}
+        <Row className="g-2 align-items-center flex-column flex-sm-row"> {/* Added flex-column flex-sm-row */}
+          {/* Ensure these columns stack on extra small screens */}
+          <Col xs={12} sm={6} md={4} className="mb-2 mb-sm-0"> {/* Added mb-2 for vertical spacing on xs */}
             <Form.Control
               type="text"
               placeholder="Search artists..."
@@ -103,7 +104,7 @@ const HomePage = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </Col>
-          <Col xs={12} md={3}>
+          <Col xs={12} sm={6} md={3} className="mb-2 mb-sm-0"> {/* Added mb-2 for vertical spacing on xs */}
             <Form.Select value={genreFilter} onChange={(e) => setGenreFilter(e.target.value)}>
               <option value="">Filter by Genre</option>
               {genres.map((genre, idx) => (
@@ -111,8 +112,8 @@ const HomePage = () => {
               ))}
             </Form.Select>
           </Col>
-          <Col xs={12} md={2}>
-            <Button variant="outline-light" onClick={() => setSortAZ(!sortAZ)} className="w-100"> {/* Added w-100 for full width on small screens */}
+          <Col xs={12} sm={12} md={2}> {/* This column now takes full width on sm and xs */}
+            <Button variant="outline-light" onClick={() => setSortAZ(!sortAZ)} className="w-100">
               Sort A-Z
             </Button>
           </Col>
@@ -128,17 +129,17 @@ const HomePage = () => {
             return (
               <Col key={index}>
                 <Card bg="secondary" text="white" className="shadow-sm card-hover p-2">
-                  <Card.Body className="d-flex align-items-center">
-                    <img
-                      src={songWithArtist?.img}
-                      alt={artist}
-                      className="me-2 rounded-circle"
-                      style={{ width: 32, height: 32, objectFit: 'cover' }}
-                    />
-                    <Link to={`/artist/${encodeURIComponent(artist)}`} className="text-white text-decoration-none text-truncate w-100">
-                      {artist}
+                  <Card.Body className="d-flex align-items-center justify-content-between"> {/* Added justify-content-between */}
+                    <Link to={`/artist/${encodeURIComponent(artist)}`} className="d-flex align-items-center text-white text-decoration-none text-truncate flex-grow-1 me-2"> {/* Added flex-grow-1 me-2 */}
+                      <img
+                        src={songWithArtist?.img}
+                        alt={artist}
+                        className="me-2 rounded-circle"
+                        style={{ width: 32, height: 32, objectFit: 'cover' }}
+                      />
+                      <span className="text-truncate">{artist}</span>
                     </Link>
-                    <Badge bg="warning" className="ms-2">Top</Badge>
+                    <Badge bg="warning" className="flex-shrink-0">Top</Badge> {/* Added flex-shrink-0 */}
                   </Card.Body>
                 </Card>
               </Col>
@@ -196,7 +197,7 @@ const HomePage = () => {
             scrollbarWidth: "thin",
             scrollbarColor: "#888 transparent"
           }}
-          className="hide-scrollbar" // Removed px-2 from here, handled by Container
+          className="hide-scrollbar"
         >
           {sortedArtists.map((artist, index) => {
             const songWithArtist = Songs.find(song => song.artist === artist);
@@ -259,18 +260,13 @@ const HomePage = () => {
             
             /* Header adjustments */
             .header-flex {
-              flex-wrap: wrap; /* Already there, good */
+              flex-wrap: wrap;
               justify-content: center !important; /* Center items when wrapped */
             }
             .btn-group {
               margin-top: 0.5rem; /* Add some space if it wraps below profile icon */
             }
 
-            /* Stack inputs vertically by making them full width */
-            .search-col, .filter-col, .sort-col {
-              margin-bottom: 0.5rem; /* Add some space between stacked inputs */
-            }
-            
             /* Consistent height and font size for inputs and buttons */
             input.form-control,
             select.form-select,
