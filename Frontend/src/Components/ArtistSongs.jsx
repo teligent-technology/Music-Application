@@ -27,12 +27,12 @@ const ArtistSongs = () => {
                 <Card.Img
                   variant="top"
                   src={song.img}
-                  alt={song.title}
+                  alt={song.song}   
                   style={{ height: "160px", objectFit: "cover" }}
                 />
                 <Card.Body className="p-2">
-                  <h6 className="mb-1 text-truncate">{song.title}</h6>
-                  <p className="mb-0 small text-muted">{song.artist}</p>
+                  <h6 className="mb-1 text-truncate">{song.song}</h6> {/* song name */}
+                  <p className="mb-0 small text-muted">{song.artist}</p> {/* artist name */}
                 </Card.Body>
               </Card>
             </Link>
