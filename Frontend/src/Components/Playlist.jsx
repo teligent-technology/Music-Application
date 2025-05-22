@@ -5,7 +5,7 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   if (!Array.isArray(selectedSongs)) {
-    return <p>Error: Playlist component expects selectedSongs prop.</p>;
+    return <p className="text-danger">Error: Playlist component expects selectedSongs prop.</p>;
   }
 
   // Filter songs based on search query
@@ -16,19 +16,18 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
   );
 
   const toggleSelect = (song) => {
-  const isSelected = selectedSongs.some((s) => s.src === song.src);
+    const isSelected = selectedSongs.some((s) => s.src === song.src);
 
-  if (isSelected) {
-    setSelectedSongs(selectedSongs.filter((s) => s.src !== song.src));
-  } else {
-    setSelectedSongs([...selectedSongs, song]);
-  }
-};
-
+    if (isSelected) {
+      setSelectedSongs(selectedSongs.filter((s) => s.src !== song.src));
+    } else {
+      setSelectedSongs([...selectedSongs, song]);
+    }
+  };
 
   return (
-    <div>
-      <h3>All Songs</h3>
+    <div className="container my-4 p-3 bg-light rounded shadow-sm">
+      <h3 className="mb-4 text-primary fw-bold">All Songs</h3>
 
       {/* Search Input */}
       <input
@@ -36,34 +35,42 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
         placeholder="Search songs"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        style={{ marginBottom: "20px", padding: "8px", width: "100%" }}
+        className="form-control mb-3"
+        aria-label="Search songs"
       />
 
       {/* Scrollable container for song list */}
       <div
-        style={{
-          maxHeight: "300px", // Set max height for scrollable area
-          overflowY: "auto", // Enable vertical scrolling
-          border: "1px solid #ccc", // Optional: to add a border around the list
-          padding: "10px",
-          backgroundColor: "#f9f9f9", // Optional: background color for the list area
-          borderRadius: "5px", // Optional: rounded corners
-        }}
+        className="border rounded bg-white"
+        style={{ maxHeight: "300px", overflowY: "auto", padding: "15px" }}
+        aria-live="polite"
       >
-        {/* List filtered songs */}
         {filteredSongs.length > 0 ? (
-          filteredSongs.map((song, index) => (
-            <div key={index} style={{ marginBottom: "10px" }}>
-              <input
-                type="checkbox"
-checked={selectedSongs.some((s) => s.src === song.src)}
-                onChange={() => toggleSelect(song)}
-              />
-              {song.song} - {song.artist}
-            </div>
-          ))
+          filteredSongs.map((song, index) => {
+            const isChecked = selectedSongs.some((s) => s.src === song.src);
+            return (
+              <div
+                key={index}
+                className="form-check mb-2"
+                style={{ cursor: "pointer" }}
+                onClick={() => toggleSelect(song)}
+              >
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => toggleSelect(song)}
+                  id={`songCheck${index}`}
+                  aria-checked={isChecked}
+                />
+                <label className="form-check-label" htmlFor={`songCheck${index}`}>
+                  {song.song} - <em>{song.artist}</em>
+                </label>
+              </div>
+            );
+          })
         ) : (
-          <p>No songs found matching your search.</p>
+          <p className="text-muted fst-italic">No songs found matching your search.</p>
         )}
       </div>
     </div>

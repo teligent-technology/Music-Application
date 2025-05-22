@@ -48,33 +48,39 @@ const PlaylistCreator = ({ selectedSongs }) => {
   const isSaveDisabled = !playlistName.trim() || !selectedSongs || selectedSongs.length === 0;
 
   return (
-    <div className="mb-4">
-      <h3>Create Playlist</h3>
+    <div className="mb-4 bg-dark text-white rounded shadow-sm p-4">
+      <h3 className="mb-4 border-bottom pb-2 fw-bold" style={{ borderColor: '#444' }}>
+        Create Playlist
+      </h3>
 
       <div
         style={{
           position: 'sticky',
           top: 0,
-          background: '#fff',
-          zIndex: 10,
-          padding: '15px',
-          borderBottom: '2px solid #dee2e6',
-          boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+          background: '#121212',
+          zIndex: 20,
+          padding: '1rem',
+          borderBottom: '1px solid #333',
+          borderRadius: '0.375rem',
+          boxShadow: '0 2px 10px rgb(0 0 0 / 0.5)',
         }}
       >
         <div className="mb-3">
-          <label htmlFor="playlistName" className="form-label">
+          <label htmlFor="playlistName" className="form-label fw-semibold">
             Playlist Name
           </label>
           <input
             type="text"
             id="playlistName"
-            className={`form-control ${error ? 'is-invalid' : ''}`}
+            className={`form-control bg-dark text-white border ${
+              error ? 'border-danger is-invalid' : 'border-secondary'
+            }`}
             placeholder="Enter playlist name"
             value={playlistName}
             onChange={(e) => setPlaylistName(e.target.value)}
             ref={inputRef}
             aria-describedby="playlistNameHelp"
+            style={{ boxShadow: 'none' }}
           />
           {error && (
             <div className="invalid-feedback" id="playlistNameHelp">
@@ -85,10 +91,11 @@ const PlaylistCreator = ({ selectedSongs }) => {
 
         <button
           onClick={savePlaylist}
-          className="btn btn-success w-100"
+          className="btn btn-success w-100 fw-bold"
           disabled={isSaveDisabled}
           aria-disabled={isSaveDisabled}
           title={isSaveDisabled ? 'Enter a playlist name and select songs to enable' : 'Save playlist'}
+          style={{ fontSize: '1.1rem', padding: '0.5rem' }}
         >
           Save Playlist
         </button>

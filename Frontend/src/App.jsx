@@ -28,6 +28,7 @@ function App() {
   return (
 
     <Router>
+      
       <Routes>
         {/* Auth */}
         <Route path="/" element={<Signup />} />

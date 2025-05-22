@@ -48,8 +48,7 @@ const PlaylistViewer = () => {
 
   const handleDeletePlaylist = () => {
     if (!name) return;
-    const confirmDelete = window.confirm(`Are you sure you want to delete the "${name}" playlist?`);
-    if (confirmDelete) {
+    if (window.confirm(`Are you sure you want to delete the "${name}" playlist?`)) {
       const updatedPlaylists = { ...playlists };
       delete updatedPlaylists[name];
       localStorage.setItem('playlists', JSON.stringify(updatedPlaylists));
@@ -86,13 +85,10 @@ const PlaylistViewer = () => {
     if (audioRef.current && currentIndex !== null) {
       audioRef.current.load();
       audioRef.current.play();
-
-      // Smooth scroll to audio player on play
       document.getElementById("audio-player")?.scrollIntoView({ behavior: "smooth" });
     }
   }, [currentIndex]);
 
-  // Pause audio if no song selected
   useEffect(() => {
     if (currentIndex === null && audioRef.current) {
       audioRef.current.pause();
@@ -101,22 +97,30 @@ const PlaylistViewer = () => {
   }, [currentIndex]);
 
   return (
-    <div className="container mt-4">
-      {/* Back button to playlists */}
+    <div 
+      className="container mt-4" 
+      style={{ backgroundColor: 'black', color: 'white', minHeight: '100vh', minWidth: '100vh' }}
+    >
+      {/* Back button */}
       <button
-        className="btn btn-outline-secondary mb-3"
+        className="btn btn-outline-secondary mb-4"
         onClick={() => navigate('/playlist')}
+        aria-label="Back to playlist overview"
+        style={{ color: 'white', borderColor: 'white' }}
       >
         ← Back to Playlists
       </button>
 
-      {/* Header with playlist name and delete button */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
-        <h3 className="mb-2 mb-md-0">{name} Playlist</h3>
+      {/* Playlist header with delete */}
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <h3 className="mb-3 mb-md-0 text-truncate" style={{ maxWidth: '80%' }}>
+          {name} Playlist
+        </h3>
         <button
           onClick={handleDeletePlaylist}
           className="btn btn-danger"
           aria-label="Delete Playlist"
+          title={`Delete "${name}" playlist`}
         >
           🗑 Delete Playlist
         </button>
@@ -124,58 +128,71 @@ const PlaylistViewer = () => {
 
       {/* Song list */}
       {matchedSongs.length > 0 ? (
-        <ul className="list-group">
+        <ul className="list-group shadow-sm">
           {matchedSongs.map((song, index) => (
             <li
               key={index}
-              className={`list-group-item ${index === currentIndex ? 'active text-white bg-primary' : ''}`}
+              className={`list-group-item d-flex justify-content-between align-items-center ${
+                index === currentIndex ? 'active text-white' : ''
+              }`}
+              role="listitem"
+              aria-current={index === currentIndex ? 'true' : 'false'}
+              style={{ backgroundColor: index === currentIndex ? '#0d6efd' : 'transparent', color: index === currentIndex ? 'white' : 'inherit' }}
             >
-              <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
-                <span className="mb-2 mb-sm-0">
-                  {song.song} by {song.artist}
-                </span>
-                <div className="d-flex gap-2">
-                  <button
-                    onClick={() => handlePlay(index)}
-                    className="btn btn-primary btn-sm"
-                    aria-label={`Play ${song.song}`}
-                  >
-                    ▶ Play
-                  </button>
-                  <button
-                    onClick={() => removeSongFromPlaylist(song)}
-                    className="btn btn-danger btn-sm"
-                    aria-label={`Remove ${song.song}`}
-                  >
-                    ❌ Remove
-                  </button>
-                </div>
+              <div className="flex-grow-1 me-3 text-truncate">
+                <strong>{song.song}</strong> <small className="text-muted" style={{ color: 'lightgray' }}>by {song.artist}</small>
+              </div>
+              <div className="btn-group" role="group" aria-label="Song controls">
+                <button
+                  onClick={() => handlePlay(index)}
+                  className={`btn btn-sm ${index === currentIndex ? 'btn-light text-primary' : 'btn-primary'}`}
+                  aria-pressed={index === currentIndex}
+                  aria-label={`Play ${song.song}`}
+                  title={`Play ${song.song}`}
+                >
+                  ▶
+                </button>
+                <button
+                  onClick={() => removeSongFromPlaylist(song)}
+                  className="btn btn-sm btn-outline-danger"
+                  aria-label={`Remove ${song.song} from playlist`}
+                  title={`Remove ${song.song}`}
+                >
+                  ✖
+                </button>
               </div>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="text-muted">No songs found in this playlist.</p>
+        <p className="text-muted fst-italic" style={{ color: 'lightgray' }}>No songs found in this playlist.</p>
       )}
 
       {/* Audio Player */}
-      {currentIndex !== null && (
-        <div id="audio-player" className="mt-4">
+      {currentIndex !== null && matchedSongs[currentIndex] && (
+        <div
+          id="audio-player"
+          className="mt-4 p-3 border rounded bg-light shadow-sm"
+          aria-live="polite"
+          aria-atomic="true"
+          style={{ color: 'black' }}
+        >
           <h5 className="mb-3">
-            Now Playing: <span className="text-primary">{matchedSongs[currentIndex]?.song}</span>
+            Now Playing: <span className="text-primary">{matchedSongs[currentIndex].song}</span>
           </h5>
           <audio
             ref={audioRef}
             controls
             autoPlay
             onEnded={handleNext}
-            onError={() => alert("Failed to load audio.")}
+            onError={() => alert('Failed to load audio.')}
             className="w-100"
           >
-            <source src={matchedSongs[currentIndex]?.src} type="audio/mpeg" />
+            <source src={matchedSongs[currentIndex].src} type="audio/mpeg" />
+            Your browser does not support the audio element.
           </audio>
 
-          <div className="mt-3 d-flex flex-column flex-sm-row gap-2">
+          <div className="mt-3 d-flex gap-2 justify-content-center justify-content-sm-start">
             <button
               onClick={handlePrev}
               className="btn btn-secondary"

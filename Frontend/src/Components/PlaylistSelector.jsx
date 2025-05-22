@@ -57,19 +57,22 @@ const PlaylistSelector = ({ selectedSongs }) => {
   const playlistNames = Object.keys(playlists);
 
   return (
-    <div className="container mt-4">
-      <h4 className="mb-3">Select Playlist to View</h4>
+    <div className="container mt-4 bg-dark text-white rounded shadow-sm p-4">
+      <h4 className="mb-4 fw-bold border-bottom pb-2" style={{ borderColor: '#444' }}>
+        Select Playlist to View
+      </h4>
 
       {playlistNames.length === 0 ? (
-        <p className="text-muted">No playlists available. Create one first!</p>
+        <p className="text-muted fst-italic">No playlists available. Create one first!</p>
       ) : (
         <div className="row g-3 align-items-center">
           <div className="col-12 col-md-6">
             <select
               value={selected}
               onChange={handleSelect}
-              className="form-select"
+              className="form-select bg-dark text-white border-secondary"
               aria-label="Select Playlist"
+              style={{ boxShadow: 'none' }}
             >
               <option value="">-- Select Playlist --</option>
               {playlistNames.map((name, index) => (
@@ -82,7 +85,7 @@ const PlaylistSelector = ({ selectedSongs }) => {
 
           <div className="col-6 col-md-3 d-grid">
             <button
-              className="btn btn-primary"
+              className="btn btn-primary fw-semibold"
               onClick={handleOpenPlaylist}
               disabled={!selected}
               aria-disabled={!selected}
@@ -95,7 +98,7 @@ const PlaylistSelector = ({ selectedSongs }) => {
 
           <div className="col-6 col-md-3 d-grid">
             <button
-              className="btn btn-success"
+              className="btn btn-success fw-semibold"
               onClick={handleSave}
               disabled={!selected || !selectedSongs.length}
               aria-disabled={!selected || !selectedSongs.length}

@@ -12,53 +12,79 @@ const ArtistSongs = () => {
   );
 
   return (
-    <Container
-      fluid
-      className="py-4"
-      style={{ minHeight: "85vh", backgroundColor: "#121212", color: "white" }}
-    >
-      <Row xs={2} sm={3} md={4} lg={5} xl={6} className="g-3">
-        {filteredSongs.map((song) => (
-          <Col key={song.Id}>
-            <Link
-              to={`/player/${song.artist}/${song.Id}`}
-              className="text-decoration-none"
-            >
-              <Card className="bg-dark border-0 h-100">
-                <div
-                  style={{
-                    height: "160px",
-                    backgroundColor: "#1e1e1e",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Card.Img
-                    variant="top"
-                    src={song.img}
-                    alt={song.song}
+    <>
+      <style>{`
+        html, body, #root {
+          background-color: #000000 !important;
+          color: white !important;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+        }
+        a {
+          color: white;
+        }
+        a:hover, a:focus {
+          color: #0d6efd; /* bootstrap primary blue for hover */
+          text-decoration: underline;
+        }
+      `}</style>
+
+      <Container
+        fluid
+        className="py-4"
+        style={{
+          minHeight: "85vh",
+          backgroundColor: "#000000",
+          color: "white",
+          borderBottom: "none",
+          boxShadow: "none",
+        }}
+      >
+        <Row xs={2} sm={3} md={4} lg={5} xl={6} className="g-3">
+          {filteredSongs.map((song) => (
+            <Col key={song.Id}>
+              <Link
+                to={`/player/${song.artist}/${song.Id}`}
+                className="text-decoration-none"
+              >
+                <Card className="bg-black border-0 h-100">
+                  <div
                     style={{
-                      height: "100%",
-                      width: "100%",
-                      objectFit: "contain",
+                      height: "160px",
+                      backgroundColor: "#1e1e1e",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
-                  />
-                </div>
-                <Card.Body className="p-2">
-                  <h6 style={{ color: "white" }} className="mb-1 text-truncate">
-                    {song.song}
-                  </h6>
-                  <p style={{ color: "lightgray" }} className="mb-0 small">
-                    {song.artist}
-                  </p>
-                </Card.Body>
-              </Card>
-            </Link>
-          </Col>
-        ))}
-      </Row>
-    </Container>
+                  >
+                    <Card.Img
+                      variant="top"
+                      src={song.img}
+                      alt={song.song}
+                      style={{
+                        height: "100%",
+                        width: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </div>
+                  <Card.Body className="p-2">
+                    <h6 className="mb-1 text-truncate" style={{ color: "white" }}>
+                      {song.song}
+                    </h6>
+                    <p className="mb-0 small" style={{ color: "lightgray" }}>
+                      {song.artist}
+                    </p>
+                  </Card.Body>
+                </Card>
+              </Link>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+    </>
   );
 };
 

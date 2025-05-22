@@ -241,16 +241,19 @@ const AudioPlayer = ({ songsList = [] }) => {
   };
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+    <div
+      className="d-flex flex-column justify-content-center align-items-center p-3"
+      style={{ minHeight: "100vh", width: "100vw", backgroundColor: "#121212", color: "white" }}
+    >
       {/* Search */}
-      <div className="d-flex flex-column flex-sm-row gap-2 mt-3 w-100 px-3">
+      <div className="d-flex flex-column flex-sm-row gap-2 w-100" style={{ maxWidth: "700px" }}>
         <input
           type="text"
           onKeyDown={handleKeyDown}
           value={searchTerm}
           onChange={handleSearchChange}
           placeholder="Search by song or artist"
-          className="form-control w-100"
+          className="form-control"
           style={{ height: "45px" }}
         />
         <button className="btn btn-primary px-4 py-2 rounded shadow-sm" onClick={handleSearchClick}>
@@ -267,21 +270,27 @@ const AudioPlayer = ({ songsList = [] }) => {
             className="img-fluid rounded shadow"
             style={{ maxWidth: "300px", maxHeight: "300px", objectFit: "cover" }}
           />
-          <h5 className="mt-2 text-white">{currentSong.song}</h5>
+          <h5 className="mt-2">{currentSong.song}</h5>
           <p className="text-secondary">{currentSong.artist}</p>
         </div>
       )}
 
       {/* Song List / Playlist */}
-      <div className="custom-scrollbar mt-4" style={{ maxHeight: "250px", overflowY: "auto", width: "100%" }}>
+      <div
+        className="custom-scrollbar mt-4"
+        style={{ maxHeight: "250px", overflowY: "auto", width: "100%", maxWidth: "700px" }}
+      >
         {showPlaylist ? (
-          <div className="bg-dark text-white p-3 rounded" style={{ width: "300px" }}>
+          <div className="bg-dark text-white p-3 rounded">
             <h5 className="mb-3">Playlist</h5>
             {playlist.length === 0 ? (
               <p>No songs in playlist.</p>
             ) : (
               playlist.map(song => (
-                <div key={song.Id} className="d-flex justify-content-between align-items-center mb-2">
+                <div
+                  key={song.Id}
+                  className="d-flex justify-content-between align-items-center mb-2"
+                >
                   <span
                     onClick={() => handleSongClick(song.Id)}
                     style={{ cursor: "pointer" }}
@@ -289,14 +298,24 @@ const AudioPlayer = ({ songsList = [] }) => {
                   >
                     {song.song}
                   </span>
-                  <span onClick={() => handleDeleteSong(song.Id)} className="text-danger" style={{ cursor: "pointer" }}>&times;</span>
+                  <span
+                    onClick={() => handleDeleteSong(song.Id)}
+                    className="text-danger"
+                    style={{ cursor: "pointer" }}
+                  >
+                    &times;
+                  </span>
                 </div>
               ))
             )}
           </div>
         ) : (
           filteredSongs.map(song => (
-            <div key={song.Id} className="d-flex align-items-center justify-content-between gap-2 rounded px-3 py-2" style={{ cursor: "pointer" }}>
+            <div
+              key={song.Id}
+              className="d-flex align-items-center justify-content-between gap-2 rounded px-3 py-2"
+              style={{ cursor: "pointer" }}
+            >
               <span
                 onClick={() => handleSongClick(song.Id)}
                 className={currentSong?.Id === song.Id ? "text-primary fw-bold" : ""}
@@ -304,7 +323,10 @@ const AudioPlayer = ({ songsList = [] }) => {
               >
                 {song.song}
               </span>
-              <button className="btn btn-sm btn-outline-primary" onClick={() => handleAddToPlaylist(song)}>
+              <button
+                className="btn btn-sm btn-outline-primary"
+                onClick={() => handleAddToPlaylist(song)}
+              >
                 <FaPlus />
               </button>
             </div>
@@ -312,13 +334,36 @@ const AudioPlayer = ({ songsList = [] }) => {
         )}
       </div>
 
-      {/* Playback controls */}
-      <div className="d-flex flex-column flex-sm-row align-items-center gap-3 mt-3 px-3 w-100">
-        <button onClick={handlePrevious} className="btn btn-outline-primary px-3 py-2 rounded shadow-sm"><FaStepBackward /></button>
-        <button onClick={handlePlayPause} className="btn btn-primary px-4 py-2 rounded shadow-sm">
-          {isPlaying ? <FaPause /> : <FaPlay />} {isPlaying ? "Pause" : "Play"}
+      {/* Playback controls: all buttons in a single horizontal row */}
+      <div
+        className="d-flex align-items-center gap-3 mt-3 px-3 w-100"
+        style={{ maxWidth: "700px", justifyContent: "center" }}
+      >
+        <button
+          onClick={handlePrevious}
+          className="btn btn-outline-primary px-3 py-2 rounded shadow-sm"
+          aria-label="Previous"
+        >
+          <FaStepBackward />
         </button>
-        <button onClick={handleNext} className="btn btn-outline-primary px-3 py-2 rounded shadow-sm"><FaStepForward /></button>
+
+        <button
+          onClick={handlePlayPause}
+          className="btn btn-primary px-4 py-2 rounded shadow-sm d-flex align-items-center gap-2"
+          aria-label={isPlaying ? "Pause" : "Play"}
+        >
+          {isPlaying ? <FaPause /> : <FaPlay />} 
+          <span>{isPlaying ? "Pause" : "Play"}</span>
+        </button>
+
+        <button
+          onClick={handleNext}
+          className="btn btn-outline-primary px-3 py-2 rounded shadow-sm"
+          aria-label="Next"
+        >
+          <FaStepForward />
+        </button>
+
         <a
           href={currentSong?.src || "#"}
           download={currentSong?.song}
@@ -329,7 +374,10 @@ const AudioPlayer = ({ songsList = [] }) => {
       </div>
 
       {/* Seekbar */}
-      <div className="d-flex align-items-center gap-2 w-100 mt-2 px-3">
+      <div
+        className="d-flex align-items-center gap-2 w-100 mt-2 px-3"
+        style={{ maxWidth: "700px" }}
+      >
         <span>{formatTime(currentTime)}</span>
         <input
           type="range"
@@ -349,7 +397,7 @@ const AudioPlayer = ({ songsList = [] }) => {
         onEnded={handleEnded}
       />
 
-      <button className="btn btn-link mt-3" onClick={togglePlaylist}>
+      <button className="btn btn-link mt-3" onClick={togglePlaylist} style={{ color: "white" }}>
         {showPlaylist ? "Show All Songs" : "Show Playlist"}
       </button>
     </div>

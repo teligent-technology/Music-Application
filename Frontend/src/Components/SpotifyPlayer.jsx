@@ -55,10 +55,8 @@ const SpotifyPlayer = () => {
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("error", handleError);
 
-    // Auto-play after short delay
     setTimeout(() => setIsPlaying(true), 300);
 
-    // Save to recents
     const stored = JSON.parse(localStorage.getItem("recentSongs")) || [];
     const filtered = stored.filter((id) => id !== song.Id);
     const updated = [song.Id, ...filtered].slice(0, 20);
@@ -127,129 +125,137 @@ const SpotifyPlayer = () => {
   if (!song) return <div className="text-white p-4">Song not found.</div>;
 
   return (
-    <div
-      className="bg-dark text-white d-flex flex-column"
-      style={{ minHeight: "100vh", position: "relative" }}
-    >
-      {/* Header */}
-      <div className="d-flex justify-content-between align-items-center px-3 py-3 border-bottom border-secondary">
-        <Link to={`/artist/${artistName}`} className="text-white text-decoration-none">
-          <FaChevronDown size={20} />
-        </Link>
-        <span className="fw-bold">{song.artist}</span>
-        <FaEllipsisH size={20} />
-      </div>
+    <>
+      <style>{`
+        html, body, #root {
+          background-color: #000000 !important;
+          color: white !important;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+        }
+        a {
+          color: white;
+        }
+        a:hover, a:focus {
+          color: #0d6efd; /* bootstrap primary blue */
+          text-decoration: underline;
+        }
+        /* Override default bootstrap dark btn text for play/pause buttons */
+        button.btn.btn-light.rounded-circle {
+          color: black !important;
+        }
+      `}</style>
 
-      {/* Main content */}
       <div
-        style={{
-          flexGrow: 1,
-          overflowY: "auto",
-          padding: "1rem 1rem 120px 1rem",
-          textAlign: "center",
-        }}
+        className="bg-dark text-white d-flex flex-column"
+        style={{ minHeight: "100vh" }}
       >
-        <img
-          src={song.img}
-          alt={song.title}
-          className="img-fluid rounded shadow mb-3"
-          style={{ maxHeight: "300px", objectFit: "contain", margin: "0 auto" }}
-        />
-        <h5 className="fw-bold mb-1">{song.title}</h5>
-        <p className="text-light small">{song.artist}</p>
-
-        <audio
-          ref={audioRef}
-          src={song.audioUrl || song.audio || song.url || song.src || ""}
-          preload="metadata"
-        />
-      </div>
-
-      {/* Controls */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: 40,
-          left: 0,
-          right: 0,
-          backgroundColor: "#121212",
-          borderTop: "1px solid #333",
-          padding: "0.75rem 1rem",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "1.5rem",
-          zIndex: 9999,
-        }}
-      >
-        <FaMagic className="text-success" />
-        <button
-          onClick={handlePrev}
-          className="btn btn-link text-white p-0"
-          disabled={filteredSongs.length < 2}
-          style={{ fontSize: "1.5rem" }}
-        >
-          <FaBackward />
-        </button>
-        <button
-          onClick={togglePlayPause}
-          className="btn btn-light rounded-circle d-flex justify-content-center align-items-center"
-          style={{ width: 56, height: 56 }}
-        >
-          {isLoading ? (
-            <FaSpinner className="text-dark fa-spin" />
-          ) : isPlaying ? (
-            <FaPause className="text-dark" />
-          ) : (
-            <FaPlay className="text-dark" />
-          )}
-        </button>
-        <button
-          onClick={handleNext}
-          className="btn btn-link text-white p-0"
-          disabled={currentIndex >= filteredSongs.length - 1}
-          style={{ fontSize: "1.5rem" }}
-        >
-          <FaForward />
-        </button>
-        <FaClock />
-      </div>
-
-      {/* Seekbar */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: 80,
-          left: 0,
-          right: 0,
-          backgroundColor: "#121212",
-          borderTop: "1px solid #333",
-          padding: "0.5rem 1rem",
-          zIndex: 9998,
-        }}
-      >
-        <input
-          type="range"
-          min="0"
-          max={duration}
-          value={progress}
-          onChange={handleSeek}
-          className="form-range"
-          style={{ accentColor: "#fff", marginBottom: 0 }}
-        />
-        <div className="d-flex justify-content-between small text-white-50">
-          <span>{formatTime(progress)}</span>
-          <span>{formatTime(duration)}</span>
+        {/* Header */}
+        <div className="d-flex justify-content-between align-items-center px-3 py-3 border-bottom border-secondary">
+          <Link
+            to={`/artist/${artistName}`}
+            className="text-white text-decoration-none"
+          >
+            <FaChevronDown size={20} />
+          </Link>
+          <span className="fw-bold">{song.artist}</span>
+          <FaEllipsisH size={20} />
         </div>
-      </div>
 
-      {/* Error Message */}
-      {error && (
-        <div className="text-danger text-center mt-2 small" style={{ marginBottom: "140px" }}>
-          ⚠️ Failed to load audio. Try again later.
+        {/* Main Content */}
+        <div className="flex-grow-1 overflow-auto px-3 py-3 pb-5 text-center">
+          <img
+            src={song.img}
+            alt={song.title}
+            className="img-fluid rounded shadow mb-3 mx-auto"
+            style={{ maxHeight: 300, objectFit: "contain" }}
+          />
+          <h5 className="fw-bold mb-1">{song.title}</h5>
+          <p className="text-light small">{song.artist}</p>
+
+          <audio
+            ref={audioRef}
+            src={song.audioUrl || song.audio || song.url || song.src || ""}
+            preload="metadata"
+          />
         </div>
-      )}
-    </div>
+
+        {/* Fixed Footer with Controls + Seekbar */}
+        <footer
+          className="fixed-bottom bg-dark border-top border-secondary py-3 px-3"
+          style={{ zIndex: 1050 }}
+        >
+          {/* Seekbar */}
+          <div className="mb-2">
+            <input
+              type="range"
+              min="0"
+              max={duration}
+              value={progress}
+              onChange={handleSeek}
+              className="form-range"
+              style={{ accentColor: "#fff" }}
+            />
+            <div className="d-flex justify-content-between small text-white-50">
+              <span>{formatTime(progress)}</span>
+              <span>{formatTime(duration)}</span>
+            </div>
+          </div>
+
+          {/* Controls */}
+          <div className="d-flex justify-content-center align-items-center gap-3">
+            <FaMagic className="text-success fs-4" />
+            <button
+              onClick={handlePrev}
+              className="btn btn-link text-white p-0 fs-4"
+              disabled={filteredSongs.length < 2}
+              aria-label="Previous Song"
+            >
+              <FaBackward />
+            </button>
+
+            <button
+              onClick={togglePlayPause}
+              className="btn btn-light rounded-circle d-flex justify-content-center align-items-center"
+              style={{ width: 56, height: 56 }}
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
+              {isLoading ? (
+                <FaSpinner className="text-dark fa-spin" />
+              ) : isPlaying ? (
+                <FaPause className="text-dark" />
+              ) : (
+                <FaPlay className="text-dark" />
+              )}
+            </button>
+
+            <button
+              onClick={handleNext}
+              className="btn btn-link text-white p-0 fs-4"
+              disabled={currentIndex >= filteredSongs.length - 1}
+              aria-label="Next Song"
+            >
+              <FaForward />
+            </button>
+
+            <FaClock className="fs-4" />
+          </div>
+        </footer>
+
+        {/* Error Message */}
+        {error && (
+          <div
+            className="text-danger text-center small position-fixed w-100"
+            style={{ bottom: "110px", zIndex: 1060 }}
+            role="alert"
+          >
+            ⚠️ Failed to load audio. Try again later.
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
