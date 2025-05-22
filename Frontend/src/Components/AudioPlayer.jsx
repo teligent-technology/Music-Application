@@ -133,18 +133,18 @@ const AudioPlayer = ({ songsList = [] }) => {
 };
 
 
-  // UPDATED handleSeek - use event value directly
-  const handleSeek = (e) => {
+const handleSeek = (e) => {
   const audio = audioRef.current;
   if (audio) {
-    const newTime = e.target.valueAsNumber;
+    const newTime = Number(e.target.value);
     audio.currentTime = newTime;
     setCurrentTime(newTime);
     if (!isPlaying) {
-      audio.play().then(() => setIsPlaying(true));
+      audio.play().then(() => setIsPlaying(true)).catch((err) => console.error(err));
     }
   }
 };
+
 
 
 
@@ -389,7 +389,7 @@ const AudioPlayer = ({ songsList = [] }) => {
   min="0"
   max={duration || 0}
   value={currentTime}
-  onChange={handleSeek}  
+  onInput={handleSeek}  
   style={{ height: "8px" }}
 />
 
