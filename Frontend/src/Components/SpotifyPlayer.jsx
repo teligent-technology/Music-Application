@@ -10,7 +10,6 @@ import {
   FaPause,
   FaForward,
   FaClock,
-  FaTv,
   FaSpinner,
 } from "react-icons/fa";
 
@@ -56,7 +55,10 @@ const SpotifyPlayer = () => {
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("error", handleError);
 
-    // Save to recent songs in localStorage
+    // Auto-play after short delay
+    setTimeout(() => setIsPlaying(true), 300);
+
+    // Save to recents
     const stored = JSON.parse(localStorage.getItem("recentSongs")) || [];
     const filtered = stored.filter((id) => id !== song.Id);
     const updated = [song.Id, ...filtered].slice(0, 20);
@@ -138,28 +140,24 @@ const SpotifyPlayer = () => {
         <FaEllipsisH size={20} />
       </div>
 
-      {/* Main content scrollable area */}
+      {/* Main content */}
       <div
         style={{
           flexGrow: 1,
           overflowY: "auto",
-          padding: "1rem 1rem 120px 1rem", // bottom padding for fixed controls
+          padding: "1rem 1rem 120px 1rem",
           textAlign: "center",
         }}
       >
-        {/* Cover Art */}
         <img
           src={song.img}
           alt={song.title}
           className="img-fluid rounded shadow mb-3"
           style={{ maxHeight: "300px", objectFit: "cover", margin: "0 auto" }}
         />
-
-        {/* Song Info */}
         <h5 className="fw-bold mb-1">{song.title}</h5>
         <p className="text-light small">{song.artist}</p>
 
-        {/* Audio Element */}
         <audio
           ref={audioRef}
           src={song.audioUrl || song.audio || song.url || song.src || ""}
@@ -167,7 +165,7 @@ const SpotifyPlayer = () => {
         />
       </div>
 
-      {/* Controls - Fixed at bottom */}
+      {/* Controls */}
       <div
         style={{
           position: "fixed",
@@ -217,37 +215,33 @@ const SpotifyPlayer = () => {
         <FaClock />
       </div>
 
-      {/* Removed Bottom Controls (share & save) */}
-
-      {/* Seekbar moved below the fixed controls */}
-      {/* Seekbar moved above the fixed controls */}
-<div
-  style={{
-    position: "fixed",
-    bottom: 80, // 80px upar kiya from bottom (jo buttons se thoda upar ho)
-    left: 0,
-    right: 0,
-    backgroundColor: "#121212",
-    borderTop: "1px solid #333",
-    padding: "0.5rem 1rem",
-    zIndex: 9998,
-  }}
->
-  <input
-    type="range"
-    min="0"
-    max={duration}
-    value={progress}
-    onChange={handleSeek}
-    className="form-range"
-    style={{ accentColor: "#fff", marginBottom: 0 }}
-  />
-  <div className="d-flex justify-content-between small text-white-50">
-    <span>{formatTime(progress)}</span>
-    <span>{formatTime(duration)}</span>
-  </div>
-</div>
-
+      {/* Seekbar */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: 80,
+          left: 0,
+          right: 0,
+          backgroundColor: "#121212",
+          borderTop: "1px solid #333",
+          padding: "0.5rem 1rem",
+          zIndex: 9998,
+        }}
+      >
+        <input
+          type="range"
+          min="0"
+          max={duration}
+          value={progress}
+          onChange={handleSeek}
+          className="form-range"
+          style={{ accentColor: "#fff", marginBottom: 0 }}
+        />
+        <div className="d-flex justify-content-between small text-white-50">
+          <span>{formatTime(progress)}</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
 
       {/* Error Message */}
       {error && (
