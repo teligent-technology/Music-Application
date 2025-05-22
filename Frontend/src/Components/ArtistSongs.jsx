@@ -11,19 +11,21 @@ const ArtistSongs = () => {
 
   // Dummy handlers for previous/next buttons
   const handlePrevious = () => {
-    // Your logic for previous song navigation
     console.log("Previous clicked");
   };
 
   const handleNext = () => {
-    // Your logic for next song navigation
     console.log("Next clicked");
   };
 
   return (
-    <Container fluid className="py-4 text-white" style={{ minHeight: "85vh" }}>
+    <Container
+      fluid
+      className="py-4 text-white"
+      style={{ minHeight: "85vh", backgroundColor: "#121212" }} // solid dark bg
+    >
       {/* Breadcrumb navigation */}
-      <Breadcrumb className="bg-dark px-3 py-2 rounded mb-4">
+      <Breadcrumb className="bg-dark px-3 py-2 rounded mb-4" style={{ backgroundColor: "#121212" }}>
         <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/" }}>
           Home
         </Breadcrumb.Item>
@@ -46,16 +48,18 @@ const ArtistSongs = () => {
           <Row xs={1} sm={2} md={3} lg={4} className="g-4">
             {filteredSongs.map((song) => (
               <Col key={song.Id}>
-                <Link
-                  to={`/player/${song.artist}/${song.Id}`}
-                  className="text-decoration-none"
-                >
+                <Link to={`/player/${song.artist}/${song.Id}`} className="text-decoration-none">
                   <Card
                     className="bg-dark text-white h-100 shadow-sm border-0 d-flex flex-column hover-shadow transition"
-                    style={{ minHeight: "320px" }}
+                    style={{ minHeight: "320px", backgroundColor: "#121212" }} // solid dark bg
                   >
-                    {/* Fixed image container */}
-                    <div style={{ height: "180px", overflow: "hidden" }}>
+                    <div
+                      style={{
+                        height: "180px",
+                        overflow: "hidden",
+                        backgroundColor: "#000", // fallback black bg for image container
+                      }}
+                    >
                       <Card.Img
                         variant="top"
                         src={song.img}
@@ -66,11 +70,12 @@ const ArtistSongs = () => {
                           objectFit: "cover",
                           borderTopLeftRadius: ".5rem",
                           borderTopRightRadius: ".5rem",
+                          display: "block",
+                          backgroundColor: "#000",
                         }}
                       />
                     </div>
 
-                    {/* Card content with consistent spacing */}
                     <Card.Body className="d-flex flex-column justify-content-between flex-grow-1">
                       <div>
                         <Card.Title className="h6 mb-1 text-truncate">{song.title}</Card.Title>
@@ -80,7 +85,7 @@ const ArtistSongs = () => {
                         {song.duration ? (
                           <small className="text-light">⏱ {song.duration}</small>
                         ) : (
-                          <div style={{ height: "1rem" }}></div> // placeholder
+                          <div style={{ height: "1rem" }}></div> // placeholder to keep height consistent
                         )}
                       </div>
                     </Card.Body>

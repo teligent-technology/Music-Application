@@ -57,6 +57,7 @@ const SpotifyPlayer = () => {
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("error", handleError);
 
+    // Save to recent songs in localStorage
     const stored = JSON.parse(localStorage.getItem("recentSongs")) || [];
     const filtered = stored.filter((id) => id !== song.Id);
     const updated = [song.Id, ...filtered].slice(0, 20);
@@ -125,7 +126,10 @@ const SpotifyPlayer = () => {
   if (!song) return <div className="text-white p-4">Song not found.</div>;
 
   return (
-    <div className="bg-dark text-white min-vh-100 d-flex flex-column">
+    <div
+      className="bg-dark text-white d-flex flex-column"
+      style={{ minHeight: "100vh", position: "relative" }}
+    >
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center px-3 py-3 border-bottom border-secondary">
         <Link to={`/artist/${artistName}`} className="text-white text-decoration-none">
@@ -135,31 +139,35 @@ const SpotifyPlayer = () => {
         <FaEllipsisH size={20} />
       </div>
 
-      {/* Cover Art */}
-      <div className="px-3 text-center mt-4">
+      {/* Main content scrollable area */}
+      <div
+        style={{
+          flexGrow: 1,
+          overflowY: "auto",
+          padding: "1rem 1rem 120px 1rem", // bottom padding for fixed controls
+          textAlign: "center",
+        }}
+      >
+        {/* Cover Art */}
         <img
           src={song.img}
           alt={song.title}
-          className="img-fluid rounded shadow"
-          style={{ maxHeight: "300px", objectFit: "cover" }}
+          className="img-fluid rounded shadow mb-3"
+          style={{ maxHeight: "300px", objectFit: "cover", margin: "0 auto" }}
         />
-      </div>
 
-      {/* Song Info */}
-      <div className="px-3 mt-3 text-center">
+        {/* Song Info */}
         <h5 className="fw-bold mb-1">{song.title}</h5>
         <p className="text-light small">{song.artist}</p>
-      </div>
 
-      {/* Audio */}
-      <audio
-        ref={audioRef}
-        src={song.audioUrl || song.audio || song.url || song.src || ""}
-        preload="metadata"
-      />
+        {/* Audio Element */}
+        <audio
+          ref={audioRef}
+          src={song.audioUrl || song.audio || song.url || song.src || ""}
+          preload="metadata"
+        />
 
-      {/* Progress Bar */}
-      <div className="px-4 mt-3">
+        {/* Progress Bar */}
         <input
           type="range"
           min="0"
@@ -169,26 +177,42 @@ const SpotifyPlayer = () => {
           className="form-range"
           style={{ accentColor: "#fff" }}
         />
-        <div className="d-flex justify-content-between small text-white-50">
+        <div className="d-flex justify-content-between small text-white-50 mb-3">
           <span>{formatTime(progress)}</span>
           <span>{formatTime(duration)}</span>
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="mt-4 d-flex justify-content-center align-items-center gap-4 fs-3">
+      {/* Controls - Fixed at bottom */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: "#121212",
+          borderTop: "1px solid #333",
+          padding: "0.75rem 1rem",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "1.5rem",
+          zIndex: 9999,
+        }}
+      >
         <FaMagic className="text-success" />
         <button
           onClick={handlePrev}
-          className="btn btn-link text-white"
+          className="btn btn-link text-white p-0"
           disabled={filteredSongs.length < 2}
+          style={{ fontSize: "1.5rem" }}
         >
           <FaBackward />
         </button>
         <button
           onClick={togglePlayPause}
-          className="btn btn-light rounded-circle"
-          style={{ width: 64, height: 64 }}
+          className="btn btn-light rounded-circle d-flex justify-content-center align-items-center"
+          style={{ width: 56, height: 56 }}
         >
           {isLoading ? (
             <FaSpinner className="text-dark fa-spin" />
@@ -200,8 +224,9 @@ const SpotifyPlayer = () => {
         </button>
         <button
           onClick={handleNext}
-          className="btn btn-link text-white"
+          className="btn btn-link text-white p-0"
           disabled={currentIndex >= filteredSongs.length - 1}
+          style={{ fontSize: "1.5rem" }}
         >
           <FaForward />
         </button>
@@ -209,14 +234,28 @@ const SpotifyPlayer = () => {
       </div>
 
       {/* Bottom Controls */}
-      <div className="mt-4 mb-3 d-flex justify-content-around fs-4">
+      <div
+        style={{
+          position: "fixed",
+          bottom: "60px",
+          left: 0,
+          right: 0,
+          backgroundColor: "#121212",
+          borderTop: "1px solid #333",
+          padding: "0.5rem 0",
+          display: "flex",
+          justifyContent: "space-around",
+          fontSize: "1.5rem",
+          zIndex: 9998,
+        }}
+      >
         <FaTv />
         <FaShareAlt />
       </div>
 
       {/* Error Message */}
       {error && (
-        <div className="text-danger text-center mt-2 small">
+        <div className="text-danger text-center mt-2 small" style={{ marginBottom: "140px" }}>
           ⚠️ Failed to load audio. Try again later.
         </div>
       )}
