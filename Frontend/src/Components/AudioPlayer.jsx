@@ -125,25 +125,27 @@ const AudioPlayer = ({ songsList = [] }) => {
   };
 
   const handleLoadedMetadata = () => {
-    const audio = audioRef.current;
-    if (audio) {
-      setDuration(audio.duration);
-    }
-  };
+  const audio = audioRef.current;
+  if (audio) {
+    const dur = audio.duration;
+    if (!isNaN(dur)) setDuration(dur);
+  }
+};
+
 
   // UPDATED handleSeek - use event value directly
   const handleSeek = (e) => {
   const audio = audioRef.current;
   if (audio) {
-    const newTime = Number(e.target.value);
+    const newTime = e.target.valueAsNumber;
     audio.currentTime = newTime;
     setCurrentTime(newTime);
     if (!isPlaying) {
-      audio.play();
-      setIsPlaying(true);
+      audio.play().then(() => setIsPlaying(true));
     }
   }
 };
+
 
 
   const handleEnded = () => {
@@ -382,14 +384,15 @@ const AudioPlayer = ({ songsList = [] }) => {
       <div className="d-flex align-items-center gap-2 w-100 mt-2 px-3">
         <span>{formatTime(currentTime)}</span>
         <input
-          type="range"
-          className="form-range flex-grow-1"
-          min="0"
-          max={duration > 0 ? duration : 0.1}  // duration zero hone se bachao
-          value={currentTime}
-          onInput={handleSeek}  // onInput hata diya
-          style={{ height: "8px" }}
-        />
+  type="range"
+  className="form-range flex-grow-1"
+  min="0"
+  max={duration || 0}
+  value={currentTime}
+  onChange={handleSeek}  
+  style={{ height: "8px" }}
+/>
+
         <span>{formatTime(duration)}</span>
       </div>
 
