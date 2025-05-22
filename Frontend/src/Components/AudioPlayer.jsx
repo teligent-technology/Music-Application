@@ -133,13 +133,18 @@ const AudioPlayer = ({ songsList = [] }) => {
 
   // UPDATED handleSeek - use event value directly
   const handleSeek = (e) => {
-    const audio = audioRef.current;
-    if (audio) {
-      const newTime = Number(e.target.value);
-      audio.currentTime = newTime;
-      setCurrentTime(newTime);
+  const audio = audioRef.current;
+  if (audio) {
+    const newTime = Number(e.target.value);
+    audio.currentTime = newTime;
+    setCurrentTime(newTime);
+    if (!isPlaying) {
+      audio.play();
+      setIsPlaying(true);
     }
-  };
+  }
+};
+
 
   const handleEnded = () => {
     if (currentList.length === 0) return;
@@ -382,7 +387,7 @@ const AudioPlayer = ({ songsList = [] }) => {
           min="0"
           max={duration > 0 ? duration : 0.1}  // duration zero hone se bachao
           value={currentTime}
-          onChange={handleSeek}  // onInput hata diya
+          onInput={handleSeek}  // onInput hata diya
           style={{ height: "8px" }}
         />
         <span>{formatTime(duration)}</span>
