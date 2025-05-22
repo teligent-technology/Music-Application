@@ -139,11 +139,9 @@ const handleSeek = (e) => {
     const newTime = Number(e.target.value);
     audio.currentTime = newTime;
     setCurrentTime(newTime);
-    if (!isPlaying) {
-      audio.play().then(() => setIsPlaying(true)).catch((err) => console.error(err));
-    }
   }
 };
+
 
 
 
@@ -389,7 +387,7 @@ const handleSeek = (e) => {
   min="0"
   max={duration || 0}
   value={currentTime}
-  onInput={handleSeek}  
+  onChange={handleSeek}  
   style={{ height: "8px" }}
 />
 
