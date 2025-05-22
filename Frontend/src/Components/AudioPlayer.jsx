@@ -1,26 +1,119 @@
 import React, { useRef, useState, useEffect } from "react";
 import {
   FaPlay, FaPause, FaDownload, FaStepForward,
-  FaStepBackward, FaPlus
+  FaStepBackward, FaSlideshare, FaPlus
 } from "react-icons/fa";
+// import "./AudioPlayer.css"; // Custom CSS file for scrollbar styles
 
 const AudioPlayer = ({ songsList = [] }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredSongs, setFilteredSongs] = useState(songsList);
-  const [playlist, setPlaylist] = useState([]);
-  const [showPlaylist, setShowPlaylist] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [filteredSongs, setFilteredSongs] = useState(songsList);
+  const [showPlaylist, setShowPlaylist] = useState(false);
+  const [playlist, setPlaylist] = useState([]);
 
   const audioRef = useRef(null);
 
   const currentList = showPlaylist ? playlist : filteredSongs;
   const currentSong = currentList.length > 0 ? currentList[currentIndex] : null;
 
-  // Update filtered songs on search term change
-  const handleSearch = () => {
+  const updateRecentSongs = (songId) => {
+    const stored = JSON.parse(localStorage.getItem("recentSongs")) || [];
+    const updated = [songId, ...stored.filter(id => id !== songId)].slice(0, 20);
+    localStorage.setItem("recentSongs", JSON.stringify(updated));
+  };
+
+  useEffect(() => {
+    if (!songsList || songsList.length === 0) return;
+
+    const savedIds = JSON.parse(localStorage.getItem("playlistIds"));
+    if (Array.isArray(savedIds)) {
+      const reconstructed = savedIds
+        .map(id => songsList.find(song => song.Id === id))
+        .filter(Boolean);
+      setPlaylist(reconstructed);
+    }
+
+    setFilteredSongs(songsList);
+    setCurrentIndex(0);
+    setSearchTerm('');
+    setCurrentTime(0);
+    setIsPlaying(false);
+  }, [songsList]);
+
+  useEffect(() => {
+    const ids = playlist.map(song => song.Id);
+    localStorage.setItem("playlistIds", JSON.stringify(ids));
+  }, [playlist]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !currentSong) return;
+
+    audio.src = currentSong.src;
+    audio.load();
+    setCurrentTime(0);
+
+    if (isPlaying) {
+      audio.play().catch((error) => {
+        console.error("Auto-play failed:", error);
+        setIsPlaying(false);
+      });
+    }
+  }, [currentIndex, currentSong]);
+
+  useEffect(() => {
+    const handleKeyControls = (e) => {
+      const audio = audioRef.current;
+      if (!audio) return;
+
+      switch (e.code) {
+        case 'ArrowRight':
+          audio.currentTime = Math.min(audio.currentTime + 5, duration);
+          setCurrentTime(audio.currentTime);
+          break;
+        case 'ArrowLeft':
+          audio.currentTime = Math.max(audio.currentTime - 5, 0);
+          setCurrentTime(audio.currentTime);
+          break;
+        case 'ArrowUp':
+          if (currentList.length) {
+            const prevIndex = (currentIndex - 1 + currentList.length) % currentList.length;
+            setCurrentIndex(prevIndex);
+            updateRecentSongs(currentList[prevIndex].Id);
+            setCurrentTime(0);
+            setIsPlaying(true);
+          }
+          break;
+        case 'ArrowDown':
+          if (currentList.length) {
+            const nextIndex = (currentIndex + 1) % currentList.length;
+            setCurrentIndex(nextIndex);
+            updateRecentSongs(currentList[nextIndex].Id);
+            setCurrentTime(0);
+            setIsPlaying(true);
+          }
+          break;
+        case 'Enter':
+          e.preventDefault();
+          isPlaying ? audio.pause() : audio.play().then(() => setIsPlaying(true));
+          setIsPlaying(!audio.paused);
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyControls);
+    return () => window.removeEventListener('keydown', handleKeyControls);
+  }, [duration, playlist, filteredSongs, showPlaylist, currentIndex]);
+
+  const handleSearchChange = (e) => setSearchTerm(e.target.value);
+
+  const handleSearchClick = () => {
     const term = searchTerm.toLowerCase();
     const filtered = songsList.filter(song =>
       song.song.toLowerCase().includes(term) ||
@@ -28,61 +121,58 @@ const AudioPlayer = ({ songsList = [] }) => {
     );
     setFilteredSongs(filtered);
     setCurrentIndex(0);
+    setCurrentTime(0);
     setIsPlaying(false);
-    setCurrentTime(0);
   };
 
-  // Play/pause toggle
-  const togglePlayPause = () => {
-    if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleSearchClick();
+  };
+
+  const togglePlaylist = () => setShowPlaylist(prev => !prev);
+
+  const handlePlayPause = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      audio.play().then(() => setIsPlaying(true)).catch((error) => console.error("Playback error:", error));
     } else {
-      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      audio.pause();
+      setIsPlaying(false);
     }
   };
 
-  // Play selected song by index
-  const playSongAtIndex = (index) => {
-    if (index < 0 || index >= currentList.length) return;
-    setCurrentIndex(index);
-    setCurrentTime(0);
-    setIsPlaying(true);
-  };
-
-  // Effect to play audio when currentIndex or isPlaying changes
-  useEffect(() => {
-    if (!audioRef.current || !currentSong) return;
-    audioRef.current.pause();
-    audioRef.current.load();
-
-    // Reset currentTime state to 0 before play
-    setCurrentTime(0);
-
-    if (isPlaying) {
-      audioRef.current.play().catch(() => {});
+  const handleSeek = (e) => {
+    const audio = audioRef.current;
+    const newTime = Number(e.target.value);
+    if (audio && !isNaN(audio.duration)) {
+      audio.currentTime = newTime;
+      setCurrentTime(newTime);
+      if (isPlaying) {
+        audio.play().catch((err) => console.error("Seek play error:", err));
+      }
     }
-  }, [currentIndex, isPlaying, currentSong]);
-
-  // When audio time updates
-  const onTimeUpdate = () => {
-    if (!audioRef.current) return;
-    setCurrentTime(audioRef.current.currentTime);
   };
 
-  // When audio metadata loads
-  const onLoadedMetadata = () => {
-    if (!audioRef.current) return;
-    setDuration(audioRef.current.duration);
+  const handleTimeUpdate = () => {
+    const audio = audioRef.current;
+    if (audio) setCurrentTime(audio.currentTime);
   };
 
-  // When audio ends - auto play next or stop
-  const onEnded = () => {
-    if (!currentList.length) return;
+  const handleLoadedMetadata = () => {
+    const audio = audioRef.current;
+    if (audio && !isNaN(audio.duration)) {
+      setDuration(audio.duration);
+    }
+  };
 
+  const handleEnded = () => {
+    if (currentList.length === 0) return;
     if (currentIndex < currentList.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      updateRecentSongs(currentList[nextIndex].Id);
       setIsPlaying(true);
     } else {
       setIsPlaying(false);
@@ -90,199 +180,178 @@ const AudioPlayer = ({ songsList = [] }) => {
     }
   };
 
-  // Format time in mm:ss
+  const handleNext = () => {
+    if (currentList.length === 0) return;
+    const nextIndex = (currentIndex + 1) % currentList.length;
+    setCurrentIndex(nextIndex);
+    updateRecentSongs(currentList[nextIndex].Id);
+    setCurrentTime(0);
+    setIsPlaying(true);
+  };
+
+  const handlePrevious = () => {
+    if (currentList.length === 0) return;
+    const prevIndex = (currentIndex - 1 + currentList.length) % currentList.length;
+    setCurrentIndex(prevIndex);
+    updateRecentSongs(currentList[prevIndex].Id);
+    setCurrentTime(0);
+    setIsPlaying(true);
+  };
+
+  const handleSongClick = (Id) => {
+    const audio = audioRef.current;
+    if (audio) audio.pause();
+    const list = showPlaylist ? playlist : filteredSongs;
+    const index = list.findIndex(song => song.Id === Id);
+    if (index !== -1) {
+      setCurrentIndex(index);
+      setCurrentTime(0);
+      setIsPlaying(true);
+      updateRecentSongs(Id);
+    }
+  };
+
+  const handleAddToPlaylist = (song) => {
+    if (!playlist.some(s => s.Id === song.Id)) {
+      setPlaylist([...playlist, song]);
+    }
+  };
+
+  const handleDeleteSong = (idToDelete) => {
+    const audio = audioRef.current;
+    if (audio && currentSong?.Id === idToDelete) {
+      audio.pause();
+      setIsPlaying(false);
+    }
+
+    const updated = playlist.filter(song => song.Id !== idToDelete);
+    setPlaylist(updated);
+
+    if (currentIndex >= updated.length) {
+      setCurrentIndex(updated.length - 1);
+      setIsPlaying(false);
+      setCurrentTime(0);
+    }
+  };
+
   const formatTime = (time) => {
-    if (isNaN(time)) return "0:00";
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60).toString().padStart(2, "0");
     return `${minutes}:${seconds}`;
   };
 
   return (
-    <div className="container my-5" style={{ maxWidth: '720px' }}>
-      <h2 className="text-center mb-4 fw-bold">🎵 My Awesome Audio Player</h2>
-
+    <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
       {/* Search */}
-      <div className="input-group mb-4 shadow-sm rounded">
+      <div className="d-flex flex-column flex-sm-row gap-2 mt-3 w-100 px-3">
         <input
           type="text"
-          className="form-control form-control-lg"
-          placeholder="Search by song or artist..."
+          onKeyDown={handleKeyDown}
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
-          style={{ borderRadius: '0.375rem 0 0 0.375rem' }}
+          onChange={handleSearchChange}
+          placeholder="Search by song or artist"
+          className="form-control w-100"
+          style={{ height: "45px" }}
         />
-        <button
-          className="btn btn-primary btn-lg"
-          onClick={handleSearch}
-          style={{ borderRadius: '0 0.375rem 0.375rem 0' }}
-        >
+        <button className="btn btn-primary px-4 py-2 rounded shadow-sm" onClick={handleSearchClick}>
           Search
         </button>
       </div>
 
-      {/* Songs / Playlist List */}
-      <div className="mb-4 border rounded shadow-sm p-3" style={{ maxHeight: "300px", overflowY: "auto", backgroundColor: '#f8f9fa' }}>
-        <h5 className="mb-3">
-          {showPlaylist ? `Playlist (${playlist.length})` : `Songs (${filteredSongs.length})`}
-          <button
-            className="btn btn-sm btn-outline-secondary ms-3"
-            onClick={() => setShowPlaylist(!showPlaylist)}
-            title={showPlaylist ? "Show All Songs" : "Show Playlist"}
-          >
-            {showPlaylist ? "All Songs" : "Playlist"}
-          </button>
-        </h5>
-
-        {showPlaylist && playlist.length === 0 && (
-          <p className="text-muted fst-italic">No songs in playlist yet.</p>
-        )}
-
-        {(showPlaylist ? playlist : filteredSongs).map((song, i) => (
-          <div
-            key={song.Id}
-            className={`d-flex justify-content-between align-items-center p-2 mb-2 rounded cursor-pointer
-              ${currentSong?.Id === song.Id ? "bg-primary text-white" : "bg-white"}`}
-            onClick={() => playSongAtIndex(i)}
-            style={{ cursor: 'pointer' }}
-          >
-            <div>
-              <strong>{song.song}</strong><br />
-              <small className="text-muted">{song.artist}</small>
-            </div>
-            {!showPlaylist && (
-              <button
-                className="btn btn-sm btn-outline-primary"
-                onClick={e => {
-                  e.stopPropagation();
-                  if (!playlist.some(s => s.Id === song.Id)) {
-                    setPlaylist([...playlist, song]);
-                  }
-                }}
-                title="Add to Playlist"
-              >
-                <FaPlus />
-              </button>
-            )}
-            {showPlaylist && (
-              <button
-                className="btn btn-sm btn-outline-danger"
-                onClick={e => {
-                  e.stopPropagation();
-                  if (audioRef.current && currentSong?.Id === song.Id) {
-                    audioRef.current.pause();
-                    setIsPlaying(false);
-                  }
-                  setPlaylist(playlist.filter(s => s.Id !== song.Id));
-                  // Adjust currentIndex if needed
-                  if (currentIndex >= playlist.length - 1) {
-                    setCurrentIndex(Math.max(playlist.length - 2, 0));
-                    setCurrentTime(0);
-                    setIsPlaying(false);
-                  }
-                }}
-                title="Remove from Playlist"
-              >
-                &times;
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Now Playing */}
-      {currentSong && (
-        <div className="text-center mb-3">
-          <h4 className="mb-1">{currentSong.song}</h4>
-          <p className="text-muted mb-0">{currentSong.artist}</p>
-          {currentSong.img && (
-            <img
-              src={currentSong.img}
-              alt={currentSong.song}
-              className="rounded shadow"
-              style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover' }}
-            />
-          )}
+      {/* Song Image */}
+      {currentSong?.img && (
+        <div className="mt-4 text-center">
+          <img
+            src={currentSong.img}
+            alt={currentSong.song}
+            className="img-fluid rounded shadow"
+            style={{ maxWidth: "300px", maxHeight: "300px", objectFit: "cover" }}
+          />
+          <h5 className="mt-2 text-white">{currentSong.song}</h5>
+          <p className="text-secondary">{currentSong.artist}</p>
         </div>
       )}
 
-      {/* Controls */}
-      <div className="d-flex justify-content-center align-items-center gap-3 mb-3">
-        <button
-          onClick={() => {
-            if (!currentList.length) return;
-            const prevIndex = (currentIndex - 1 + currentList.length) % currentList.length;
-            playSongAtIndex(prevIndex);
-          }}
-          className="btn btn-outline-primary btn-lg rounded-circle p-3 shadow"
-          title="Previous"
-        >
-          <FaStepBackward size={20} />
-        </button>
+      {/* Song List / Playlist */}
+      <div className="custom-scrollbar mt-4" style={{ maxHeight: "250px", overflowY: "auto", width: "100%" }}>
+        {showPlaylist ? (
+          <div className="bg-dark text-white p-3 rounded" style={{ width: "300px" }}>
+            <h5 className="mb-3">Playlist</h5>
+            {playlist.length === 0 ? (
+              <p>No songs in playlist.</p>
+            ) : (
+              playlist.map(song => (
+                <div key={song.Id} className="d-flex justify-content-between align-items-center mb-2">
+                  <span
+                    onClick={() => handleSongClick(song.Id)}
+                    style={{ cursor: "pointer" }}
+                    className={currentSong?.Id === song.Id ? "text-primary fw-bold" : ""}
+                  >
+                    {song.song}
+                  </span>
+                  <span onClick={() => handleDeleteSong(song.Id)} className="text-danger" style={{ cursor: "pointer" }}>&times;</span>
+                </div>
+              ))
+            )}
+          </div>
+        ) : (
+          filteredSongs.map(song => (
+            <div key={song.Id} className="d-flex align-items-center justify-content-between gap-2 rounded px-3 py-2" style={{ cursor: "pointer" }}>
+              <span
+                onClick={() => handleSongClick(song.Id)}
+                className={currentSong?.Id === song.Id ? "text-primary fw-bold" : ""}
+                style={{ flexGrow: 1 }}
+              >
+                {song.song}
+              </span>
+              <button className="btn btn-sm btn-outline-primary" onClick={() => handleAddToPlaylist(song)}>
+                <FaPlus />
+              </button>
+            </div>
+          ))
+        )}
+      </div>
 
-        <button
-          onClick={togglePlayPause}
-          className="btn btn-primary btn-lg rounded-circle p-4 shadow"
-          title={isPlaying ? "Pause" : "Play"}
-        >
-          {isPlaying ? <FaPause size={22} /> : <FaPlay size={22} />}
+      {/* Playback controls */}
+      <div className="d-flex flex-column flex-sm-row align-items-center gap-3 mt-3 px-3 w-100">
+        <button onClick={handlePrevious} className="btn btn-outline-primary px-3 py-2 rounded shadow-sm"><FaStepBackward /></button>
+        <button onClick={handlePlayPause} className="btn btn-primary px-4 py-2 rounded shadow-sm">
+          {isPlaying ? <FaPause /> : <FaPlay />} {isPlaying ? "Pause" : "Play"}
         </button>
-
-        <button
-          onClick={() => {
-            if (!currentList.length) return;
-            const nextIndex = (currentIndex + 1) % currentList.length;
-            playSongAtIndex(nextIndex);
-          }}
-          className="btn btn-outline-primary btn-lg rounded-circle p-3 shadow"
-          title="Next"
-        >
-          <FaStepForward size={20} />
-        </button>
-
+        <button onClick={handleNext} className="btn btn-outline-primary px-3 py-2 rounded shadow-sm"><FaStepForward /></button>
         <a
           href={currentSong?.src || "#"}
           download={currentSong?.song}
-          className={`btn btn-success btn-lg rounded-circle p-3 shadow ${!currentSong ? "disabled" : ""}`}
-          title="Download"
+          className={`btn btn-outline-success px-3 py-2 rounded shadow-sm ${!currentSong ? "disabled" : ""}`}
         >
-          <FaDownload size={18} />
+          <FaDownload /> Download
         </a>
       </div>
 
       {/* Seekbar */}
-      <div className="d-flex align-items-center gap-3">
-        <small className="text-muted">{formatTime(currentTime)}</small>
+      <div className="d-flex align-items-center gap-2 w-100 mt-2 px-3">
+        <span>{formatTime(currentTime)}</span>
         <input
           type="range"
           className="form-range flex-grow-1"
           min="0"
-          max={duration > 0 ? duration : 0}
-          step="0.01"
+          max={duration || 0}
           value={currentTime}
-          onChange={e => {
-            if (!audioRef.current) return;
-            const val = Number(e.target.value);
-            audioRef.current.currentTime = val;
-            setCurrentTime(val);
-            if (isPlaying) {
-              audioRef.current.play().catch(() => {});
-            }
-          }}
+          onChange={handleSeek}
         />
-        <small className="text-muted">{formatTime(duration)}</small>
+        <span>{formatTime(duration)}</span>
       </div>
 
       <audio
         ref={audioRef}
-        onTimeUpdate={onTimeUpdate}
-        onLoadedMetadata={onLoadedMetadata}
-        onEnded={onEnded}
-      >
-        {currentSong && <source src={currentSong.src} type="audio/mpeg" />}
-        Your browser does not support the audio element.
-      </audio>
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={handleEnded}
+      />
+
+      <button className="btn btn-link mt-3" onClick={togglePlaylist}>
+        {showPlaylist ? "Show All Songs" : "Show Playlist"}
+      </button>
     </div>
   );
 };
