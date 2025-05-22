@@ -16,7 +16,7 @@ const AudioPlayer = ({ songsList = [] }) => {
 
   const audioRef = useRef(null);
 
-  // ✅ Add this function to track recents
+  // Track recently played songs in localStorage
   const updateRecentSongs = (songId) => {
     const stored = JSON.parse(localStorage.getItem("recentSongs")) || [];
     const updated = [songId, ...stored.filter(id => id !== songId)].slice(0, 20); // Limit to last 20
@@ -107,7 +107,7 @@ const AudioPlayer = ({ songsList = [] }) => {
       setCurrentIndex(index);
       setCurrentTime(0);
       setIsPlaying(true);
-      updateRecentSongs(Id); // ✅ Track as recently played
+      updateRecentSongs(Id); // Track as recently played
     }
   };
 
@@ -131,11 +131,13 @@ const AudioPlayer = ({ songsList = [] }) => {
     }
   };
 
+  // UPDATED handleSeek - use event value directly
   const handleSeek = (e) => {
     const audio = audioRef.current;
     if (audio) {
-      audio.currentTime = e.target.value;
-      setCurrentTime(audio.currentTime);
+      const newTime = Number(e.target.value);
+      audio.currentTime = newTime;
+      setCurrentTime(newTime);
     }
   };
 
@@ -145,7 +147,7 @@ const AudioPlayer = ({ songsList = [] }) => {
     if (currentIndex < currentList.length - 1) {
       const nextIndex = currentIndex + 1;
       setCurrentIndex(nextIndex);
-      updateRecentSongs(currentList[nextIndex].Id); // ✅ Add next song to recent
+      updateRecentSongs(currentList[nextIndex].Id); // Add next song to recent
       setIsPlaying(true);
     } else {
       setIsPlaying(false);
@@ -157,7 +159,7 @@ const AudioPlayer = ({ songsList = [] }) => {
     if (currentList.length === 0) return;
     const nextIndex = (currentIndex + 1) % currentList.length;
     setCurrentIndex(nextIndex);
-    updateRecentSongs(currentList[nextIndex].Id); // ✅ Add to recent
+    updateRecentSongs(currentList[nextIndex].Id); // Add to recent
     setIsPlaying(true);
     setCurrentTime(0);
   };
@@ -166,7 +168,7 @@ const AudioPlayer = ({ songsList = [] }) => {
     if (currentList.length === 0) return;
     const prevIndex = (currentIndex - 1 + currentList.length) % currentList.length;
     setCurrentIndex(prevIndex);
-    updateRecentSongs(currentList[prevIndex].Id); // ✅ Add to recent
+    updateRecentSongs(currentList[prevIndex].Id); // Add to recent
     setIsPlaying(true);
     setCurrentTime(0);
   };
@@ -182,7 +184,7 @@ const AudioPlayer = ({ songsList = [] }) => {
     if (isPlaying) {
       audio.play().catch((error) => {
         console.error("Auto-play failed:", error);
-        setIsPlaying(true);
+        setIsPlaying(false);
       });
     }
   }, [currentIndex, currentSong]);
@@ -232,7 +234,7 @@ const AudioPlayer = ({ songsList = [] }) => {
           if (currentList.length === 0) return;
           const prevIndex = (currentIndex - 1 + currentList.length) % currentList.length;
           setCurrentIndex(prevIndex);
-          updateRecentSongs(currentList[prevIndex].Id); // ✅
+          updateRecentSongs(currentList[prevIndex].Id);
           setCurrentTime(0);
           setIsPlaying(true);
           break;
@@ -240,7 +242,7 @@ const AudioPlayer = ({ songsList = [] }) => {
           if (currentList.length === 0) return;
           const nextIndex = (currentIndex + 1) % currentList.length;
           setCurrentIndex(nextIndex);
-          updateRecentSongs(currentList[nextIndex].Id); // ✅
+          updateRecentSongs(currentList[nextIndex].Id);
           setCurrentTime(0);
           setIsPlaying(true);
           break;
@@ -263,9 +265,6 @@ const AudioPlayer = ({ songsList = [] }) => {
       window.removeEventListener('keydown', handleKeyControls);
     };
   }, [duration, playlist, filteredSongs, showPlaylist, currentIndex]);
-
-
-  
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
@@ -302,96 +301,103 @@ const AudioPlayer = ({ songsList = [] }) => {
                   </span>
                   <span
                     onClick={() => handleDeleteSong(song.Id)}
-                    style={{ cursor: "pointer", color: "red", marginLeft: "10px" }}
+                    className="text-danger"
+                    style={{ cursor: "pointer" }}
                     title="Remove from playlist"
                   >
-                    ❌
+                    &times;
                   </span>
                 </div>
               ))
             )}
           </div>
-        ) : filteredSongs.length === 0 ? (
-          <p style={{ color: "red", fontWeight: "bold" }}>No songs found.</p>
         ) : (
-          <div>
-            <br />
-            {filteredSongs.map((item) => (
-              <div key={item.Id} className="d-flex align-items-center justify-content-between" style={{ cursor: "pointer" }}>
-                <div className="d-flex align-items-center gap-2" onClick={() => handleSongClick(item.Id)}>
-                  <h5 className={`fs-6 mb-0 fw-bold ${currentSong?.Id === item.Id ? 'text-primary' : 'text-white'}`}>
-                    {item.Id}. {item.song}
-                  </h5>
-                  <small className="text-white">{item.artist}</small>
-                </div>
-                <button onClick={() => handleAddToPlaylist(item)} className="btn btn-sm text-success" title="Add to Playlist">
-                  <FaPlus />
-                </button>
-              </div>
-            ))}
-          </div>
+          filteredSongs.map((song) => (
+            <div
+              key={song.Id}
+              className="d-flex align-items-center justify-content-between gap-2 rounded px-3 py-2"
+              style={{ cursor: "pointer" }}
+            >
+              <span
+                onClick={() => handleSongClick(song.Id)}
+                className={currentSong?.Id === song.Id ? "text-primary fw-bold" : ""}
+                style={{ flexGrow: 1 }}
+              >
+                {song.song}
+              </span>
+              <button
+                className="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
+                onClick={() => handleAddToPlaylist(song)}
+                title="Add to playlist"
+              >
+                <FaPlus />
+              </button>
+            </div>
+          ))
         )}
       </div>
 
-      {currentSong && (
-        <div style={{ marginTop: "40px" }} className="text-center">
-          <h3 className="text-white">{currentSong.song}</h3>
-          <h4 className="text-white">Artist: {currentSong.artist}</h4>
-        </div>
-      )}
-
-      <audio
-        ref={audioRef}
-        src={currentSong?.src}
-        onEnded={handleEnded}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        preload="metadata"
-      />
-
-      <div className="my-3 sticky-bottom d-flex justify-content-center align-items-center" style={{ width: "100%", position: "fixed", bottom: "0", backgroundColor: "#222" }}>
-        <button onClick={handlePrevious} className="btn btn-secondary me-2" title="Previous">
+      {/* Playback controls */}
+      <div className="d-flex flex-column flex-sm-row align-items-center gap-3 mt-3 px-3 w-100">
+        <button
+          onClick={handlePrevious}
+          className="btn btn-outline-primary d-flex align-items-center gap-1 px-3 py-2 rounded shadow-sm"
+          style={{ minWidth: "60px" }}
+        >
           <FaStepBackward />
         </button>
-        <button onClick={handlePlayPause} className="btn btn-secondary me-2" title={isPlaying ? "Pause" : "Play"}>
+
+        <button
+          onClick={handlePlayPause}
+          className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded shadow-sm"
+        >
           {isPlaying ? <FaPause /> : <FaPlay />}
+          {isPlaying ? "Pause" : "Play"}
         </button>
-        <button onClick={handleNext} className="btn btn-secondary me-2" title="Next">
+
+        <button
+          onClick={handleNext}
+          className="btn btn-outline-primary d-flex align-items-center gap-1 px-3 py-2 rounded shadow-sm"
+          style={{ minWidth: "60px" }}
+        >
           <FaStepForward />
         </button>
 
-        <div className="d-flex align-items-center gap-2">
-          <span className="text-white">{formatTime(currentTime)}</span>
-          <input
-            type="range"
-            className="form-range flex-grow-1"
-            min="0"
-            max={duration || 0.1}
-            value={currentTime}
-            onChange={handleSeek}
-            onInput={handleSeek}
-            style={{ height: "8px" }}
-          />
-          <span>{formatTime(duration)}</span>
-
-          <a
-            href={currentSong?.src}
-            download
-            title="Download"
-            className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded"
-          >
-            <FaDownload />
-          </a>
-
-          <button
-            onClick={togglePlaylist}
-            title="Toggle Playlist"
-            className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2 rounded"
-          >
-            <FaSlideshare />
-          </button>
-        </div>
+        <a
+          href={currentSong?.src || "#"}
+          download={currentSong?.song}
+          className={`btn btn-outline-success d-flex align-items-center gap-2 px-3 py-2 rounded shadow-sm ${!currentSong ? "disabled" : ""}`}
+        >
+          <FaDownload />
+          Download
+        </a>
       </div>
+
+      {/* Seekbar */}
+      <div className="d-flex align-items-center gap-2 w-100 mt-2 px-3">
+        <span>{formatTime(currentTime)}</span>
+        <input
+          type="range"
+          className="form-range flex-grow-1"
+          min="0"
+          max={duration > 0 ? duration : 0.1}  // duration zero hone se bachao
+          value={currentTime}
+          onChange={handleSeek}  // onInput hata diya
+          style={{ height: "8px" }}
+        />
+        <span>{formatTime(duration)}</span>
+      </div>
+
+      <audio
+        ref={audioRef}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={handleEnded}
+      />
+
+      <button className="btn btn-link mt-3" onClick={togglePlaylist}>
+        {showPlaylist ? "Show All Songs" : "Show Playlist"}
+      </button>
     </div>
   );
 };
