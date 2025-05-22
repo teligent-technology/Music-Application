@@ -73,9 +73,12 @@ const HomePage = () => {
 
       {/* Header */}
       <Container fluid className="py-2 px-3 border-bottom border-secondary sticky-top bg-dark z-3">
-        <div className="d-flex justify-content-between align-items-center flex-nowrap gap-2">
+        <div className="d-flex justify-content-between align-items-center gap-2 header-flex">
           <Link to="/profile">
-            <div className="bg-primary rounded-circle d-flex justify-content-center align-items-center text-white fw-bold" style={{ width: 36, height: 36 }}>
+            <div
+              className="bg-primary rounded-circle d-flex justify-content-center align-items-center text-white fw-bold profile-icon"
+              style={{ width: 36, height: 36 }}
+            >
               D
             </div>
           </Link>
@@ -89,7 +92,7 @@ const HomePage = () => {
       {/* Search and Filters */}
       <Container className="mt-3 px-2">
         <Row className="g-2 align-items-center">
-          <Col xs={12} md={4}>
+          <Col xs={12} md={4} className="search-col">
             <Form.Control
               type="text"
               placeholder="Search artists..."
@@ -97,7 +100,7 @@ const HomePage = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </Col>
-          <Col xs={6} md={3}>
+          <Col xs={12} md={3} className="filter-col">
             <Form.Select value={genreFilter} onChange={(e) => setGenreFilter(e.target.value)}>
               <option value="">Filter by Genre</option>
               {genres.map((genre, idx) => (
@@ -105,7 +108,7 @@ const HomePage = () => {
               ))}
             </Form.Select>
           </Col>
-          <Col xs={6} md={2}>
+          <Col xs={12} md={2} className="sort-col">
             <Button variant="outline-light" onClick={() => setSortAZ(!sortAZ)}>
               Sort A-Z
             </Button>
@@ -181,7 +184,7 @@ const HomePage = () => {
       {/* All Artists Slider */}
       <Container className="mt-4 px-2">
         <h6 className="text-warning mb-2"><i className="bi bi-mic me-2" />All Artists</h6>
-        <div 
+        <div
           style={{
             display: "flex",
             overflowX: "auto",
@@ -229,40 +232,49 @@ const HomePage = () => {
       </Container>
 
       {/* Scrollbar & Mobile Tweaks */}
-     <style>
-  {`
-    .hide-scrollbar::-webkit-scrollbar {
-      height: 6px;
-    }
-    .hide-scrollbar::-webkit-scrollbar-thumb {
-      background-color: #888;
-      border-radius: 3px;
-    }
-    .hide-scrollbar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .hide-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: thin;
-    }
-    @media (max-width: 576px) {
-      .card-hover {
-        padding: 0.5rem !important;
-      }
-      .card-title, .card-subtitle, span {
-        font-size: 0.875rem;
-      }
+      <style>
+        {`
+          .hide-scrollbar::-webkit-scrollbar {
+            height: 6px;
+          }
+          .hide-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 3px;
+          }
+          .hide-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #888 transparent;
+          }
 
-      /* 👇 Container tweak for small screens */
-      .container,
-      .container-fluid {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
-      }
-    }
-  `}
-</style>
-     
+          /* Mobile responsiveness tweaks */
+          @media (max-width: 576px) {
+            .container, .container-fluid {
+              padding-left: 0.5rem !important;
+              padding-right: 0.5rem !important;
+            }
+            .header-flex {
+              flex-wrap: nowrap !important;
+              gap: 0.5rem !important;
+            }
+            .search-col, .filter-col, .sort-col {
+              flex: 0 0 100% !important;
+              max-width: 100% !important;
+              margin-bottom: 0.5rem;
+            }
+            .profile-icon {
+              width: 36px !important;
+              height: 36px !important;
+              font-size: 1.1rem !important;
+            }
+          }
+          /* Card hover effect */
+          .card-hover:hover {
+            filter: brightness(1.15);
+            cursor: pointer;
+            transition: filter 0.2s ease-in-out;
+          }
+        `}
+      </style>
     </div>
   );
 };
