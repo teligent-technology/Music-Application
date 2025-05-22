@@ -6,7 +6,6 @@ const PlaylistSelector = ({ selectedSongs }) => {
   const [selected, setSelected] = useState('');
   const navigate = useNavigate();
 
-  // Load playlists from localStorage and listen for updates
   useEffect(() => {
     loadPlaylists();
     window.addEventListener('playlist-updated', loadPlaylists);
@@ -18,12 +17,10 @@ const PlaylistSelector = ({ selectedSongs }) => {
     setPlaylists(stored);
   };
 
-  // Handle dropdown selection change
   const handleSelect = (e) => {
     setSelected(e.target.value);
   };
 
-  // Navigate to selected playlist page
   const handleOpenPlaylist = () => {
     if (!selected) {
       alert('Please select a playlist first!');
@@ -32,63 +29,90 @@ const PlaylistSelector = ({ selectedSongs }) => {
     navigate(`/playlist/${encodeURIComponent(selected)}`);
   };
 
-  // Save selected songs to chosen playlist
- const handleSave = () => {
-  if (!selected) {
-    alert('Please select a playlist first!');
-    return;
-  }
-  if (!Array.isArray(selectedSongs) || selectedSongs.length === 0) {
-    alert('No songs selected to add!');
-    return;
-  }
+  const handleSave = () => {
+    if (!selected) {
+      alert('Please select a playlist first!');
+      return;
+    }
+    if (!Array.isArray(selectedSongs) || selectedSongs.length === 0) {
+      alert('No songs selected to add!');
+      return;
+    }
 
-  const stored = JSON.parse(localStorage.getItem('playlists') || '{}');
-  const existingSongs = stored[selected] || [];
+    const stored = JSON.parse(localStorage.getItem('playlists') || '{}');
+    const existingSongs = stored[selected] || [];
 
-  // Use filenames for consistency with PlaylistViewer
-  const selectedFilenames = selectedSongs.map(song => song.src.split('/').pop());
+    const selectedFilenames = selectedSongs.map(song => song.src.split('/').pop());
 
-  // Combine unique filenames
-  const updatedSongs = [...new Set([...existingSongs, ...selectedFilenames])];
+    const updatedSongs = [...new Set([...existingSongs, ...selectedFilenames])];
 
-  stored[selected] = updatedSongs;
-  localStorage.setItem('playlists', JSON.stringify(stored));
-  setPlaylists({ ...stored });
+    stored[selected] = updatedSongs;
+    localStorage.setItem('playlists', JSON.stringify(stored));
+    setPlaylists({ ...stored });
 
-  alert(`Added ${selectedFilenames.length} songs to "${selected}" playlist.`);
-  window.dispatchEvent(new Event('playlist-updated'));
+    alert(`Added ${selectedFilenames.length} songs to "${selected}" playlist.`);
+    window.dispatchEvent(new Event('playlist-updated'));
+  };
 
-  console.log('Playlists after save:', stored);
-};
-
+  const playlistNames = Object.keys(playlists);
 
   return (
-    <div className="container mt-4 d-flex align-items-center gap-2">
-      <div className="flex-grow-1">
-        <h4 className="mb-3">Select Playlist to View</h4>
-        <select
-          value={selected}
-          onChange={handleSelect}
-          className="form-select"
-          aria-label="Select Playlist"
-        >
-          <option value="">-- Select Playlist --</option>
-          {Object.keys(playlists).map((name, index) => (
-            <option key={index} value={name}>
-              {name}
-            </option>
-          ))}
-        </select>
-      </div>
+    <div className="container mt-4">
+      <h4 className="mb-3">Select Playlist to View</h4>
 
-      <button className="btn btn-primary mt-4" onClick={handleOpenPlaylist}>
-        📂 Open Playlist
-      </button>
+      {playlistNames.length === 0 ? (
+        <p className="text-muted">No playlists available. Create one first!</p>
+      ) : (
+        <div className="row g-3 align-items-center">
+          <div className="col-12 col-md-6">
+            <select
+              value={selected}
+              onChange={handleSelect}
+              className="form-select"
+              aria-label="Select Playlist"
+            >
+              <option value="">-- Select Playlist --</option>
+              {playlistNames.map((name, index) => (
+                <option key={index} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      <button className="btn btn-success mt-4" onClick={handleSave}>
-        💾 Save Selected Songs
-      </button>
+          <div className="col-6 col-md-3 d-grid">
+            <button
+              className="btn btn-primary"
+              onClick={handleOpenPlaylist}
+              disabled={!selected}
+              aria-disabled={!selected}
+              title={!selected ? 'Select a playlist first' : 'Open selected playlist'}
+            >
+              <span className="me-1" role="img" aria-hidden="true">📂</span>
+              Open Playlist
+            </button>
+          </div>
+
+          <div className="col-6 col-md-3 d-grid">
+            <button
+              className="btn btn-success"
+              onClick={handleSave}
+              disabled={!selected || !selectedSongs.length}
+              aria-disabled={!selected || !selectedSongs.length}
+              title={
+                !selected
+                  ? 'Select a playlist first'
+                  : !selectedSongs.length
+                    ? 'No songs selected to add'
+                    : 'Save selected songs to playlist'
+              }
+            >
+              <span className="me-1" role="img" aria-hidden="true">💾</span>
+              Save Selected Songs
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

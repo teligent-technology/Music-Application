@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Songs } from '../data/song';
 import { useParams, useNavigate } from 'react-router-dom';
-// import LogoutButton from './LogoutButton';
-
 
 const PlaylistViewer = () => {
   const { name } = useParams();
@@ -38,13 +36,13 @@ const PlaylistViewer = () => {
 
   const handleNext = () => {
     if (currentIndex < matchedSongs.length - 1) {
-      setCurrentIndex((prevIndex) => prevIndex + 1);
+      setCurrentIndex(prevIndex => prevIndex + 1);
     }
   };
 
   const handlePrev = () => {
     if (currentIndex > 0) {
-      setCurrentIndex((prevIndex) => prevIndex - 1);
+      setCurrentIndex(prevIndex => prevIndex - 1);
     }
   };
 
@@ -88,87 +86,116 @@ const PlaylistViewer = () => {
     if (audioRef.current && currentIndex !== null) {
       audioRef.current.load();
       audioRef.current.play();
+
+      // Smooth scroll to audio player on play
+      document.getElementById("audio-player")?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [currentIndex]);
+
+  // Pause audio if no song selected
+  useEffect(() => {
+    if (currentIndex === null && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
     }
   }, [currentIndex]);
 
   return (
-   <div className="container mt-4">
-  <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
-    <h3 className="mb-2 mb-md-0">{name} Playlist</h3>
-    <button 
-      onClick={handleDeletePlaylist} 
-      className="btn btn-danger"
-    >
-      🗑 Delete Playlist
-    </button>
-
-    
-
-  </div>
-
-  {matchedSongs.length > 0 ? (
-    <ul className="list-group">
-      {matchedSongs.map((song, index) => (
-        <li key={index} className="list-group-item">
-          <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
-            <span className="mb-2 mb-sm-0">
-              {song.song} by {song.artist}
-            </span>
-            <div className="d-flex gap-2">
-              <button 
-                onClick={() => handlePlay(index)} 
-                className="btn btn-primary btn-sm"
-              >
-                ▶ Play
-              </button>
-              <button 
-                onClick={() => removeSongFromPlaylist(song)} 
-                className="btn btn-danger btn-sm"
-              >
-                ❌ Remove
-              </button>
-            </div>
-          </div>
-        </li>
-      ))}
-    </ul>
-  ) : (
-    <p className="text-muted">No songs found in this playlist.</p>
-  )}
-
-  {currentIndex !== null && (
-    <div className="mt-4">
-      <h5 className="mb-3">Now Playing: <span className="text-primary">{matchedSongs[currentIndex]?.song}</span></h5>
-      <audio
-        ref={audioRef}
-        controls
-        autoPlay
-        onEnded={handleNext}
-        className="w-100"
+    <div className="container mt-4">
+      {/* Back button to playlists */}
+      <button
+        className="btn btn-outline-secondary mb-3"
+        onClick={() => navigate('/playlist')}
       >
-        <source src={matchedSongs[currentIndex]?.src} type="audio/mpeg" />
-      </audio>
+        ← Back to Playlists
+      </button>
 
-      <div className="mt-3 d-flex flex-column flex-sm-row gap-2">
-        <button 
-          onClick={handlePrev} 
-          className="btn btn-secondary"
-          disabled={currentIndex === 0}
+      {/* Header with playlist name and delete button */}
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+        <h3 className="mb-2 mb-md-0">{name} Playlist</h3>
+        <button
+          onClick={handleDeletePlaylist}
+          className="btn btn-danger"
+          aria-label="Delete Playlist"
         >
-          ⏮ Previous
-        </button>
-        <button 
-          onClick={handleNext} 
-          className="btn btn-secondary"
-          disabled={currentIndex === matchedSongs.length - 1}
-        >
-          ⏭ Next
+          🗑 Delete Playlist
         </button>
       </div>
-    </div>
-  )}
-</div>
 
+      {/* Song list */}
+      {matchedSongs.length > 0 ? (
+        <ul className="list-group">
+          {matchedSongs.map((song, index) => (
+            <li
+              key={index}
+              className={`list-group-item ${index === currentIndex ? 'active text-white bg-primary' : ''}`}
+            >
+              <div className="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                <span className="mb-2 mb-sm-0">
+                  {song.song} by {song.artist}
+                </span>
+                <div className="d-flex gap-2">
+                  <button
+                    onClick={() => handlePlay(index)}
+                    className="btn btn-primary btn-sm"
+                    aria-label={`Play ${song.song}`}
+                  >
+                    ▶ Play
+                  </button>
+                  <button
+                    onClick={() => removeSongFromPlaylist(song)}
+                    className="btn btn-danger btn-sm"
+                    aria-label={`Remove ${song.song}`}
+                  >
+                    ❌ Remove
+                  </button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-muted">No songs found in this playlist.</p>
+      )}
+
+      {/* Audio Player */}
+      {currentIndex !== null && (
+        <div id="audio-player" className="mt-4">
+          <h5 className="mb-3">
+            Now Playing: <span className="text-primary">{matchedSongs[currentIndex]?.song}</span>
+          </h5>
+          <audio
+            ref={audioRef}
+            controls
+            autoPlay
+            onEnded={handleNext}
+            onError={() => alert("Failed to load audio.")}
+            className="w-100"
+          >
+            <source src={matchedSongs[currentIndex]?.src} type="audio/mpeg" />
+          </audio>
+
+          <div className="mt-3 d-flex flex-column flex-sm-row gap-2">
+            <button
+              onClick={handlePrev}
+              className="btn btn-secondary"
+              disabled={currentIndex === 0}
+              aria-label="Previous Song"
+            >
+              ⏮ Previous
+            </button>
+            <button
+              onClick={handleNext}
+              className="btn btn-secondary"
+              disabled={currentIndex === matchedSongs.length - 1}
+              aria-label="Next Song"
+            >
+              ⏭ Next
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
