@@ -32,11 +32,12 @@ userSchema.pre('save', async function (next) {
     if(!person.isModified('password')) return next()
     try {
 //hash Password generation
-        const salt=await bcrypt.genSalt(10)
+        const salt=await bcrypt.genSalt(8)
         //hash Password
         const hashPassword=await bcrypt.hash(person.password, salt)
 
         person.password=hashPassword
+        next()
     } catch (error) {
         return next(error)
     }
