@@ -14,6 +14,7 @@ import {
 } from "react-icons/fa";
 
 const SpotifyPlayer = () => {
+  
   const { songId, artistName } = useParams();
   const navigate = useNavigate();
 
