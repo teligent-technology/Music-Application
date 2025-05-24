@@ -27,6 +27,14 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
 
   return (
     <div className="container my-4 p-3 bg-light rounded shadow-sm">
+
+       <Link
+      to="/home"
+      className="btn btn-outline-light"
+      style={{ fontSize: "1.1rem" }}
+    >
+      Go to Home
+    </Link>
       <h3 className="mb-4 text-primary fw-bold">All Songs</h3>
 
       {/* Search Input */}

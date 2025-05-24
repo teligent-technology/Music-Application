@@ -126,6 +126,14 @@ const SpotifyPlayer = () => {
 
   return (
     <>
+
+        <Link
+      to="/home"
+      className="btn btn-outline-light"
+      style={{ fontSize: "1.1rem" }}
+    >
+      Go to Home
+    </Link>
       <style>{`
         html, body, #root {
           background-color: #000000 !important;
@@ -152,6 +160,8 @@ const SpotifyPlayer = () => {
         className="bg-dark text-white d-flex flex-column"
         style={{ minHeight: "100vh" }}
       >
+
+     
         {/* Header */}
         <div className="d-flex justify-content-between align-items-center px-3 py-3 border-bottom border-secondary">
           <Link

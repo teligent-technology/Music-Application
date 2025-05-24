@@ -13,6 +13,15 @@ const ArtistSongs = () => {
 
   return (
     <>
+
+
+     <Link
+      to="/home"
+      className="btn btn-outline-light"
+      style={{ fontSize: "1.1rem" }}
+    >
+      Go to Home
+    </Link>
       <style>{`
         html, body, #root {
           background-color: #000000 !important;
