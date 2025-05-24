@@ -9,6 +9,7 @@ const Punjabi = () => {
   return (
     <div
       className="bg-dark text-white"
+      
       style={{
         // backgroundImage: "url(''/public/background.jpg'cd')", // Make sure this path is correct
         // backgroundSize: "cover",
@@ -18,7 +19,13 @@ const Punjabi = () => {
         // paddingBottom: "40px"
       }} >
      
-    
+      <Link
+      to="/home"
+      className="btn btn-outline-light"
+      style={{ fontSize: "1.1rem" }}
+    >
+      Go to Home
+    </Link>
       <nav style={{ marginBottom: "20px" }}>
       <div 
       style={{ marginTop: 60 }} className="d-flex justify-content-center gap-5"
