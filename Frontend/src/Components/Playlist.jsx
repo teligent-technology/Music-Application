@@ -30,7 +30,7 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
 
        <Link
       to="/home"
-      className="btn btn-outline-light"
+      className="btn btn-outline-dark"
       style={{ fontSize: "1.1rem" }}
     >
       Go to Home
