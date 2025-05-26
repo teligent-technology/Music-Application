@@ -8,7 +8,7 @@ const LogoutButton = () => {
     const token = localStorage.getItem('token');
 
     try {
-      await fetch('https://music-application-backend.onrender.com/person/logout', {
+      await fetch('http://localhost:3000/person/logout', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
