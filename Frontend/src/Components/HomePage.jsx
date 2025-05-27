@@ -124,14 +124,14 @@ const HomePage = () => {
   </h5>
   <Row xs={2} sm={3} md={4} lg={4} className="g-3">
     {[
-      { img: "Jass.jpeg", name: "Jass Manak", link: "/player" },
-      { img: "Jass.jpeg", name: "HARNOOR All Songs", link: "/player" },
-      { img: "Jass.jpeg", name: "Mood", link: "/player" },
-      { img: "Jass.jpeg", name: "Rich & Famous", link: "/player" },
-      { img: "Jass.jpeg", name: "Prm Nagra", link: "/player" },
-      { img: "Jass.jpeg", name: "Vikram Sarkar", link: "" },
-      { img: "Jass.jpeg", name: "Jasmine Sandlas", link: "" },
-      { img: "Jass.jpeg", name: "Gurnam Bhullar", link: "" },
+      { img: "Jass.jpeg", name: "Jass Manak", link: "/artist/:name" },
+      { img: "Jass.jpeg", name: "HARNOOR All Songs", link: "/artist/:name" },
+      { img: "Jass.jpeg", name: "Mood", link: "/artist/:name" },
+      { img: "Jass.jpeg", name: "Rich & Famous", link: "/artist/:name" },
+      { img: "Jass.jpeg", name: "Prm Nagra", link: "/artist/:name" },
+      { img: "Jass.jpeg", name: "Vikram Sarkar", link: "/artist/:name" },
+      { img: "Jass.jpeg", name: "Jasmine Sandlas", link: "/artist/:name" },
+      { img: "Jass.jpeg", name: "Gurnam Bhullar", link: "/artist/:name"},
     ].map((item, index) => (
       <Col key={index}>
         <div
