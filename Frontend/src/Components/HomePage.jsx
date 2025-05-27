@@ -223,7 +223,7 @@ const HomePage = () => {
               >
                 <Card.Img
                   variant="top"
-                  src={"Images/image1.jpg"}
+                  src={item.img}
                   alt={item.title}
                   className="rounded mb-2"
                   style={{ objectFit: "cover", height: 120 }}
