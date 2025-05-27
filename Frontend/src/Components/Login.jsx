@@ -13,36 +13,21 @@ function Login() {
     const shouldClear = location.state?.clearForm;
     if (shouldClear) {
       setForm({ username: '', password: '' });
+
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        'https://music-application-backend.onrender.com/person/login',
-        form,
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-
+      const res = await axios.post('https://music-application-backend.onrender.com/person/login', form, {
+        headers: { 'Content-Type': 'application/json' },
+      });
       if (res.status === 200) {
         localStorage.setItem("token", res.data.token);
-
-        // ✅ Store user info locally (requires backend to send this info)
-        const user = {
-          name: res.data.name,
-          username: res.data.username || form.username,
-          Mobile: res.data.Mobile
-        };
-        localStorage.setItem("user", JSON.stringify(user));
-
         alert(res.data.message || "Login successful");
         navigate('/home');
       } else {

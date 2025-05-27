@@ -8,16 +8,9 @@ const Profile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    try {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      if (storedUser?.name) {
-        setUser(storedUser);
-      } else {
-        setUser({ name: "Guest" });
-      }
-    } catch (error) {
-      console.error("Invalid user data in localStorage");
-      setUser({ name: "Guest" });
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
     }
   }, []);
 
@@ -59,12 +52,10 @@ const Profile = () => {
       </style>
 
       <div
-        className={`profile-container d-flex flex-column justify-content-between p-4 ${
-          darkMode ? "text-white" : "text-dark"
-        }`}
+        className={`profile-container d-flex flex-column justify-content-between p-4 ${darkMode ? "text-white" : "text-dark"}`}
         style={{
           backgroundColor: darkMode ? "black" : "white",
-          minHeight: "100vh",
+          minHeight: "100vh"
         }}
       >
         {/* Profile Info */}
@@ -78,13 +69,13 @@ const Profile = () => {
                 width: "48px",
                 height: "48px",
                 fontSize: "1.2rem",
-                fontWeight: "bold",
+                fontWeight: "bold"
               }}
             >
-              {user?.name?.charAt(0)?.toUpperCase() || "?"}
+              {user.name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <div className="fw-bold fs-5">{user?.name || "Guest"}</div>
+              <div className="fw-bold fs-5">{user.name}</div>
               <div className="text-secondary" style={{ fontSize: "0.85rem" }}>
                 View profile
               </div>
@@ -143,9 +134,7 @@ const Profile = () => {
 
         {/* Footer & Logout */}
         <div className="text-center mt-5">
-          <div className="text-secondary small mb-2">
-            Spotify Clone UI – Menu Screen
-          </div>
+          <div className="text-secondary small mb-2">Spotify Clone UI – Menu Screen</div>
           <LogoutButton />
         </div>
       </div>
