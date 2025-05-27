@@ -299,256 +299,255 @@ const HomePage = () => {
 </Container>
 
          <Container className="mt-5 mb-5">
-        <h5 className="text-light fw-bold mb-3">Recents</h5>
-        <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpMoveInItems.map((item, idx) => (
-            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-              <Card
-  bg="dark"
-  text="white"
-  className="shadow-sm rounded-lg card-hover p-3"
-  style={{ cursor: "pointer", transition: "transform 0.2s" }}
-  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
->
-  <Card.Img
-    variant="top"
-    src={item.img}
-    alt={item.title}
-    className="rounded mb-2"
-    style={{ objectFit: "cover", height: 120 }}
-  />
-  <Card.Body className="p-0">
-    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-      {item.title}
-    </Card.Title>
-    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
-      {item.artist}
-    </Card.Text>
-  </Card.Body>
-</Card>
-
-            </Col>
-          ))}
-        </Row>
-      </Container>
-         <Container className="mt-5 mb-5">
-        <h5 className="text-light fw-bold mb-3">Recommandations Stations</h5>
-        <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpMoveInItems.map((item, idx) => (
-            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-              <Card
-  bg="dark"
-  text="white"
-  className="shadow-sm rounded-lg card-hover p-3"
-  style={{ cursor: "pointer", transition: "transform 0.2s" }}
-  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
->
-  <Card.Img
-    variant="top"
-    src={item.img}
-    alt={item.title}
-    className="rounded mb-2"
-    style={{ objectFit: "cover", height: 120 }}
-  />
-  <Card.Body className="p-0">
-    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-      {item.title}
-    </Card.Title>
-    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
-      {item.artist}
-    </Card.Text>
-  </Card.Body>
-</Card>
-
-            </Col>
-          ))}
-        </Row>
-      </Container>
-        <Container className="mt-5 mb-5">
-        <h5 className="text-light fw-bold mb-3">Your favourite artists</h5>
-        <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpMoveInItems.map((item, idx) => (
-            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-              <Card
-  bg="dark"
-  text="white"
-  className="shadow-sm rounded-lg card-hover p-3"
-  style={{ cursor: "pointer", transition: "transform 0.2s" }}
-  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
->
-  <Card.Img
-    variant="top"
-    src={item.img}
-    alt={item.title}
-    className="rounded mb-2"
-    style={{ objectFit: "cover", height: 120 }}
-  />
-  <Card.Body className="p-0">
-    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-      {item.title}
-    </Card.Title>
-    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
-      {item.artist}
-    </Card.Text>
-  </Card.Body>
-</Card>
-
-            </Col>
-          ))}
-        </Row>
-      </Container>
+  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <Row className="flex-row flex-nowrap overflow-auto gx-3">
+    {jumpMoveInItems.map((item, idx) => (
+      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+        <Card
+          bg="dark"
+          text="white"
+          className="shadow-sm rounded-lg card-hover p-3"
+          style={{ cursor: "pointer", transition: "transform 0.2s" }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+        >
+          <Card.Img
+            variant="top"
+            src={item.img}
+            alt={item.title}
+            className="rounded mb-2"
+            style={{ objectFit: "cover", height: 120 }}
+          />
+          <Card.Body className="p-0">
+            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+              {item.title}
+            </Card.Title>
+            <Card.Text className="fs-7 mb-0 text-truncate text-light">
+              {item.artist}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
+    ))}
+  </Row>
+</Container>
 
         <Container className="mt-5 mb-5">
-        <h5 className="text-light fw-bold mb-3">India Best</h5>
-        <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpRightInItems.map((item, idx) => (
-            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-              <Card
-  bg="dark"
-  text="white"
-  className="shadow-sm rounded-lg card-hover p-3"
-  style={{ cursor: "pointer", transition: "transform 0.2s" }}
-  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
->
-  <Card.Img
-    variant="top"
-    src={item.img}
-    alt={item.title}
-    className="rounded mb-2"
-    style={{ objectFit: "cover", height: 120 }}
-  />
-  <Card.Body className="p-0">
-    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-      {item.title}
-    </Card.Title>
-    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
-      {item.artist}
-    </Card.Text>
-  </Card.Body>
-</Card>
+  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <Row className="flex-row flex-nowrap overflow-auto gx-3">
+    {jumpRightInItems.map((item, idx) => (
+      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+        <Card
+          bg="dark"
+          text="white"
+          className="shadow-sm rounded-lg card-hover p-3"
+          style={{ cursor: "pointer", transition: "transform 0.2s" }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+        >
+          <Card.Img
+            variant="top"
+            src={item.img}
+            alt={item.title}
+            className="rounded mb-2"
+            style={{ objectFit: "cover", height: 120 }}
+          />
+          <Card.Body className="p-0">
+            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+              {item.title}
+            </Card.Title>
+            <Card.Text className="fs-7 mb-0 text-truncate text-light">
+              {item.artist}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
+    ))}
+  </Row>
+</Container>
 
-            </Col>
-          ))}
-        </Row>
-      </Container>
+       <Container className="mt-5 mb-5">
+  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <Row className="flex-row flex-nowrap overflow-auto gx-3">
+    {jumpLeftInItems.map((item, idx) => (
+      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+        <Card
+          bg="dark"
+          text="white"
+          className="shadow-sm rounded-lg card-hover p-3"
+          style={{ cursor: "pointer", transition: "transform 0.2s" }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+        >
+          <Card.Img
+            variant="top"
+            src={item.img}
+            alt={item.title}
+            className="rounded mb-2"
+            style={{ objectFit: "cover", height: 120 }}
+          />
+          <Card.Body className="p-0">
+            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+              {item.title}
+            </Card.Title>
+            <Card.Text className="fs-7 mb-0 text-truncate text-light">
+              {item.artist}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
+    ))}
+  </Row>
+</Container>
 
-        <Container className="mt-5 mb-5">
-        <h5 className="text-light fw-bold mb-3">Recommandation today</h5>
-        <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpLeftInItems.map((item, idx) => (
-            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-              <Card
-  bg="dark"
-  text="white"
-  className="shadow-sm rounded-lg card-hover p-3"
-  style={{ cursor: "pointer", transition: "transform 0.2s" }}
-  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
->
-  <Card.Img
-    variant="top"
-    src={item.img}
-    alt={item.title}
-    className="rounded mb-2"
-    style={{ objectFit: "cover", height: 120 }}
-  />
-  <Card.Body className="p-0">
-    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-      {item.title}
-    </Card.Title>
-    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
-      {item.artist}
-    </Card.Text>
-  </Card.Body>
-</Card>
 
-            </Col>
-          ))}
-        </Row>
-      </Container>
-
-        <Container className="mt-5 mb-5">
-        <h5 className="text-light fw-bold mb-3">Made for Aditya Kumar</h5>
-        <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpBackInItems.map((item, idx) => (
-            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-              <Card
-  bg="dark"
-  text="white"
-  className="shadow-sm rounded-lg card-hover p-3"
-  style={{ cursor: "pointer", transition: "transform 0.2s" }}
-  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
->
-  <Card.Img
-    variant="top"
-    src={item.img}
-    alt={item.title}
-    className="rounded mb-2"
-    style={{ objectFit: "cover", height: 120 }}
-  />
-  <Card.Body className="p-0">
-    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-      {item.title}
-    </Card.Title>
-    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
-      {item.artist}
-    </Card.Text>
-  </Card.Body>
-</Card>
-
-            </Col>
-          ))}
-        </Row>
-      </Container>
+       <Container className="mt-5 mb-5">
+  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <Row className="flex-row flex-nowrap overflow-auto gx-3">
+    {jumpMoveInItems.map((item, idx) => (
+      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+        <Card
+          bg="dark"
+          text="white"
+          className="shadow-sm rounded-lg card-hover p-3"
+          style={{ cursor: "pointer", transition: "transform 0.2s" }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+        >
+          <Card.Img
+            variant="top"
+            src={item.img}
+            alt={item.title}
+            className="rounded mb-2"
+            style={{ objectFit: "cover", height: 120 }}
+          />
+          <Card.Body className="p-0">
+            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+              {item.title}
+            </Card.Title>
+            <Card.Text className="fs-7 mb-0 text-truncate text-light">
+              {item.artist}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
+    ))}
+  </Row>
+</Container>
 
         <Container className="mt-5 mb-5">
-        <h5 className="text-light fw-bold mb-3">Made for Garry Sandhu</h5>
-        <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpBackInItems.map((item, idx) => (
-            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-              <Card
-  bg="dark"
-  text="white"
-  className="shadow-sm rounded-lg card-hover p-3"
-  style={{ cursor: "pointer", transition: "transform 0.2s" }}
-  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
->
-  <Card.Img
-    variant="top"
-    src={item.img}
-    alt={item.title}
-    className="rounded mb-2"
-    style={{ objectFit: "cover", height: 120 }}
-  />
-  <Card.Body className="p-0">
-    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-      {item.title}
-    </Card.Title>
-    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
-      {item.artist}
-    </Card.Text>
-  </Card.Body>
-</Card>
+  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <Row className="flex-row flex-nowrap overflow-auto gx-3">
+    {jumpRightInItems.map((item, idx) => (
+      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+        <Card
+          bg="dark"
+          text="white"
+          className="shadow-sm rounded-lg card-hover p-3"
+          style={{ cursor: "pointer", transition: "transform 0.2s" }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+        >
+          <Card.Img
+            variant="top"
+            src={item.img}
+            alt={item.title}
+            className="rounded mb-2"
+            style={{ objectFit: "cover", height: 120 }}
+          />
+          <Card.Body className="p-0">
+            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+              {item.title}
+            </Card.Title>
+            <Card.Text className="fs-7 mb-0 text-truncate text-light">
+              {item.artist}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
+    ))}
+  </Row>
+</Container>
 
-            </Col>
-          ))}
-        </Row>
-      </Container>
 
-       (
+       <Container className="mt-5 mb-5">
+  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <Row className="flex-row flex-nowrap overflow-auto gx-3">
+    {jumpLeftInItems.map((item, idx) => (
+      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+        <Card
+          bg="dark"
+          text="white"
+          className="shadow-sm rounded-lg card-hover p-3"
+          style={{ cursor: "pointer", transition: "transform 0.2s" }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+        >
+          <Card.Img
+            variant="top"
+            src={item.img}
+            alt={item.title}
+            className="rounded mb-2"
+            style={{ objectFit: "cover", height: 120 }}
+          />
+          <Card.Body className="p-0">
+            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+              {item.title}
+            </Card.Title>
+            <Card.Text className="fs-7 mb-0 text-truncate text-light">
+              {item.artist}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
+    ))}
+  </Row>
+</Container>
+
+
+        <Container className="mt-5 mb-5">
+  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <Row className="flex-row flex-nowrap overflow-auto gx-3">
+    {jumpBackInItems.map((item, idx) => (
+      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+        <Card
+          bg="dark"
+          text="white"
+          className="shadow-sm rounded-lg card-hover p-3"
+          style={{ cursor: "pointer", transition: "transform 0.2s" }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+        >
+          <Card.Img
+            variant="top"
+            src={item.img}
+            alt={item.title}
+            className="rounded mb-2"
+            style={{ objectFit: "cover", height: 120 }}
+          />
+          <Card.Body className="p-0">
+            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+              {item.title}
+            </Card.Title>
+            <Card.Text className="fs-7 mb-0 text-truncate text-light">
+              {item.artist}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Col>
+    ))}
+  </Row>
+</Container>
+
+
+       
     <Container className="bg-dark text-white rounded p-4 my-4 mx-2">
       {/* Header Row */}
       <Row className="align-items-center mb-3">
