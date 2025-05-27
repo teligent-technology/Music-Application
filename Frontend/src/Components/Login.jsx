@@ -54,15 +54,18 @@ function Login() {
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
       <div className="card shadow p-4" style={{ width: "100%", maxWidth: "400px" }}>
         <h2 className="text-center mb-4">Login</h2>
-        <form onSubmit={handleSubmit}>
+<form onSubmit={handleSubmit} autoComplete="off">
           <div className="mb-3">
             <label className="form-label">Username</label>
             <input
               name="username"
               type="text"
+                autoComplete="new-password"   // Prevent password save prompt
+
               className="form-control"
               placeholder="Enter username"
               value={form.username}
+
               onChange={handleChange}
               required
             />
