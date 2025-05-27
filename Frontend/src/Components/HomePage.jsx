@@ -217,18 +217,31 @@ const HomePage = () => {
           <Row xs={1} sm={2} md={3} lg={5} className="g-4">
             {recentlyPlayed.map((song, idx) => (
               <Col key={idx}>
-                <Card
-                  bg="black"
-                  text="white"
-                  className="shadow-sm h-100 border-0 card-hover"
-                  style={{ cursor: "pointer" }}
-                  aria-label={`Recently played song: ${song.name} by ${song.artist}`}
-                >
-                  <Card.Body className="px-3 py-2">
-                    <Card.Title className="text-truncate fw-semibold">{song.name}</Card.Title>
-                    <Card.Subtitle className="text-white text-truncate">{song.artist}</Card.Subtitle>
-                  </Card.Body>
-                </Card>
+               <Card
+  bg="dark"
+  text="white"
+  className="shadow-sm rounded-lg card-hover p-3"
+  style={{ cursor: "pointer", transition: "transform 0.2s" }}
+  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+>
+  <Card.Img
+    variant="top"
+    src={item.img}
+    alt={item.title}
+    className="rounded mb-2"
+    style={{ objectFit: "cover", height: 120 }}
+  />
+  <Card.Body className="p-0">
+    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+      {item.title}
+    </Card.Title>
+    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
+      {item.artist}
+    </Card.Text>
+  </Card.Body>
+</Card>
               </Col>
             ))}
           </Row>
@@ -242,21 +255,30 @@ const HomePage = () => {
           {newReleases.map((song, idx) => (
             <Col key={idx}>
               <Card
-                className="bg-black text-white shadow-sm h-100 border-0 card-hover text-center"
-                style={{ cursor: "pointer", overflow: "hidden" }}
-                aria-label={`New release: ${song.name} by ${song.artist}`}
-              >
-                <Card.Img
-                  variant="top"
-                  src={song.img}
-                  alt={song.name}
-                  style={{ height: "220px", objectFit: "cover" }}
-                />
-                <Card.Body className="py-3">
-                  <Card.Title className="fw-bold fs-6 text-truncate">{song.name}</Card.Title>
-                  <Card.Text className="text-muted text-truncate">{song.artist}</Card.Text>
-                </Card.Body>
-              </Card>
+  bg="dark"
+  text="white"
+  className="shadow-sm rounded-lg card-hover p-3"
+  style={{ cursor: "pointer", transition: "transform 0.2s" }}
+  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+>
+  <Card.Img
+    variant="top"
+    src={item.img}
+    alt={item.title}
+    className="rounded mb-2"
+    style={{ objectFit: "cover", height: 120 }}
+  />
+  <Card.Body className="p-0">
+    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+      {item.title}
+    </Card.Title>
+    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
+      {item.artist}
+    </Card.Text>
+  </Card.Body>
+</Card>
             </Col>
           ))}
         </Row>
@@ -269,26 +291,30 @@ const HomePage = () => {
           {jumpBackInItems.map((item, idx) => (
             <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
               <Card
-                bg="dark"
-                text="white"
-                className="shadow-sm rounded-lg card-hover p-3"
-                style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
-                onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
-                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-              >
-                <Card.Img
-                  variant="top"
-                  src={item.img}
-                  alt={item.title}
-                  className="rounded mb-2"
-                  style={{ objectFit: "cover", height: 120 }}
-                />
-                <Card.Body className="p-0">
-                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">{item.title}</Card.Title>
-                  <Card.Text className="text-muted fs-7 mb-0 text-truncate">{item.artist}</Card.Text>
-                </Card.Body>
-              </Card>
+  bg="dark"
+  text="white"
+  className="shadow-sm rounded-lg card-hover p-3"
+  style={{ cursor: "pointer", transition: "transform 0.2s" }}
+  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+>
+  <Card.Img
+    variant="top"
+    src={item.img}
+    alt={item.title}
+    className="rounded mb-2"
+    style={{ objectFit: "cover", height: 120 }}
+  />
+  <Card.Body className="p-0">
+    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+      {item.title}
+    </Card.Title>
+    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
+      {item.artist}
+    </Card.Text>
+  </Card.Body>
+</Card>
             </Col>
           ))}
         </Row>
@@ -334,26 +360,30 @@ const HomePage = () => {
           {jumpMoveInItems.map((item, idx) => (
             <Col key={idx} xs="auto" style={{ minWidth: 150 }}>.
               <Card
-                bg="dark"
-                text="white"
-                className="shadow-sm rounded-lg card-hover p-3"
-                style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
-                onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
-                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-              >
-                <Card.Img
-                  variant="top"
-                  src={"Images/image3.jpg"}
-                  alt={item.title}
-                  className="rounded mb-2"
-                  style={{ objectFit: "cover", height: 120 }}
-                />
-                <Card.Body className="p-0">
-                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">{item.title}</Card.Title>
-                  <Card.Text className="text-muted fs-7 mb-0 text-truncate">{item.artist}</Card.Text>
-                </Card.Body>
-              </Card>
+  bg="dark"
+  text="white"
+  className="shadow-sm rounded-lg card-hover p-3"
+  style={{ cursor: "pointer", transition: "transform 0.2s" }}
+  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+>
+  <Card.Img
+    variant="top"
+    src={item.img}
+    alt={item.title}
+    className="rounded mb-2"
+    style={{ objectFit: "cover", height: 120 }}
+  />
+  <Card.Body className="p-0">
+    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+      {item.title}
+    </Card.Title>
+    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
+      {item.artist}
+    </Card.Text>
+  </Card.Body>
+</Card>
             </Col>
           ))}
         </Row>
@@ -364,26 +394,30 @@ const HomePage = () => {
           {jumpMoveInItems.map((item, idx) => (
             <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
               <Card
-                bg="dark"
-                text="white"
-                className="shadow-sm rounded-lg card-hover p-3"
-                style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
-                onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
-                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-              >
-                <Card.Img
-                  variant="top"
-                  src={item.img}
-                  alt={item.title}
-                  className="rounded mb-2"
-                  style={{ objectFit: "cover", height: 120 }}
-                />
-                <Card.Body className="p-0">
-                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">{item.title}</Card.Title>
-                  <Card.Text className="text-muted fs-7 mb-0 text-truncate">{item.artist}</Card.Text>
-                </Card.Body>
-              </Card>
+  bg="dark"
+  text="white"
+  className="shadow-sm rounded-lg card-hover p-3"
+  style={{ cursor: "pointer", transition: "transform 0.2s" }}
+  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+>
+  <Card.Img
+    variant="top"
+    src={item.img}
+    alt={item.title}
+    className="rounded mb-2"
+    style={{ objectFit: "cover", height: 120 }}
+  />
+  <Card.Body className="p-0">
+    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+      {item.title}
+    </Card.Title>
+    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
+      {item.artist}
+    </Card.Text>
+  </Card.Body>
+</Card>
             </Col>
           ))}
         </Row>
@@ -394,27 +428,31 @@ const HomePage = () => {
         <Row className="flex-row flex-nowrap overflow-auto gx-3">
           {jumpRightInItems.map((item, idx) => (
             <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-              <Card
-                bg="dark"
-                text="white"
-                className="shadow-sm rounded-lg card-hover p-3"
-                style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
-                onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
-                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-              >
-                <Card.Img
-                  variant="top"
-                  src={item.img}
-                  alt={item.title}
-                  className="rounded mb-2"
-                  style={{ objectFit: "cover", height: 120 }}
-                />
-                <Card.Body className="p-0">
-                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">{item.title}</Card.Title>
-                  <Card.Text className="text-muted fs-7 mb-0 text-truncate">{item.artist}</Card.Text>
-                </Card.Body>
-              </Card>
+             <Card
+  bg="dark"
+  text="white"
+  className="shadow-sm rounded-lg card-hover p-3"
+  style={{ cursor: "pointer", transition: "transform 0.2s" }}
+  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+>
+  <Card.Img
+    variant="top"
+    src={item.img}
+    alt={item.title}
+    className="rounded mb-2"
+    style={{ objectFit: "cover", height: 120 }}
+  />
+  <Card.Body className="p-0">
+    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+      {item.title}
+    </Card.Title>
+    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
+      {item.artist}
+    </Card.Text>
+  </Card.Body>
+</Card>
             </Col>
           ))}
         </Row>
