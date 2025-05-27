@@ -224,21 +224,21 @@ const HomePage = () => {
   style={{ cursor: "pointer", transition: "transform 0.2s" }}
   onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
   onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+  aria-label={`Jump back in: ${song.title} by ${song.artist}`}
 >
   <Card.Img
     variant="top"
-    src={item.img}
-    alt={item.title}
+    src={song.img}
+    alt={song.title}
     className="rounded mb-2"
     style={{ objectFit: "cover", height: 120 }}
   />
   <Card.Body className="p-0">
     <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-      {item.title}
+      {song.title}
     </Card.Title>
     <Card.Text className="text-muted fs-7 mb-0 text-truncate">
-      {item.artist}
+      {song.artist}
     </Card.Text>
   </Card.Body>
 </Card>
@@ -261,12 +261,12 @@ const HomePage = () => {
   style={{ cursor: "pointer", transition: "transform 0.2s" }}
   onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
   onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+  aria-label={`Jump back in: ${song.title} by ${song.artist}`}
 >
   <Card.Img
     variant="top"
-    src={item.img}
-    alt={item.title}
+    src={song.img}
+    alt={song.title}
     className="rounded mb-2"
     style={{ objectFit: "cover", height: 120 }}
   />
