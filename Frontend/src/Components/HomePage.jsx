@@ -97,6 +97,60 @@ const HomePage = () => {
     },
   ];
 
+   const jumpMoveInItems = [
+    {
+      img: "/Images/image1.jpg",
+      title: "Heat",
+      artist: "Diljit Dosjanj"
+    },
+    {
+      img: "/Images/image2.jpg",
+      title: "wavy",
+      artist: "Karan Aujla",
+    },
+    {
+      img: "/Images/image3.jpg",
+      title: "safar",
+      artist: "karun nair",
+    },
+  ];
+
+   const jumpRightInItems = [
+    {
+      img: "/Images/image4.jpg",
+      title: "Notes",
+      artist: "Laddi Chahal",
+    },
+    {
+      img: "/Images/image5.jpg",
+      title: "Reflections",
+      artist: "Gurdeep Singh",
+    },
+    {
+      img: "/Images/image6.jpg",
+      title: "Waves",
+      artist: "Simran Kaur",
+    },
+  ];
+
+   const jumpLeftInItems = [
+    {
+      img: "/Images/image7.jpg",
+      title: "Notes",
+      artist: "Laddi Chahal",
+    },
+    {
+      img: "/Images/image8.jpg",
+      title: "Reflections",
+      artist: "Gurdeep Singh",
+    },
+    {
+      img: "/Images/image9.jpg",
+      title: "Waves",
+      artist: "Simran Kaur",
+    },
+  ];
+
   return (
     
     <div className="bg-dark text-white min-vh-100 pb-5">
@@ -240,7 +294,7 @@ const HomePage = () => {
          <Container className="mt-5 mb-5">
         <h5 className="text-light fw-bold mb-3">Recents</h5>
         <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpBackInItems.map((item, idx) => (
+          {jumpMoveInItems.map((item, idx) => (
             <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
               <Card
                 bg="dark"
@@ -270,7 +324,7 @@ const HomePage = () => {
          <Container className="mt-5 mb-5">
         <h5 className="text-light fw-bold mb-3">Recommandations Stations</h5>
         <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpBackInItems.map((item, idx) => (
+          {jumpMoveInItems.map((item, idx) => (
             <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
               <Card
                 bg="dark"
@@ -300,7 +354,7 @@ const HomePage = () => {
         <Container className="mt-5 mb-5">
         <h5 className="text-light fw-bold mb-3">Your favourite artists</h5>
         <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpBackInItems.map((item, idx) => (
+          {jumpMoveInItems.map((item, idx) => (
             <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
               <Card
                 bg="dark"
@@ -331,7 +385,7 @@ const HomePage = () => {
         <Container className="mt-5 mb-5">
         <h5 className="text-light fw-bold mb-3">India Best</h5>
         <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpBackInItems.map((item, idx) => (
+          {jumpRightInItems.map((item, idx) => (
             <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
               <Card
                 bg="dark"
@@ -362,7 +416,7 @@ const HomePage = () => {
         <Container className="mt-5 mb-5">
         <h5 className="text-light fw-bold mb-3">Recommandation today</h5>
         <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpBackInItems.map((item, idx) => (
+          {jumpRightInItems.map((item, idx) => (
             <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
               <Card
                 bg="dark"
