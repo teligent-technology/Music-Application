@@ -151,6 +151,40 @@ const HomePage = () => {
     },
   ];
 
+  const recommendedStations = [
+  {
+    title: "Prm Nagra",
+    description: "Bir, Tarna, Gagan Kooner, SAHIL CHEEMA...",
+    images: [
+      "https://i.pravatar.cc/60?img=20",
+      "https://i.pravatar.cc/60?img=21",
+      "https://i.pravatar.cc/60?img=22"
+    ],
+    bgColor: "bg-purple-300"
+  },
+  {
+    title: "Rich & Famous",
+    description: "Guru Randhawa, Jasmine Sandlas, Nav...",
+    images: [
+      "https://i.pravatar.cc/60?img=23",
+      "https://i.pravatar.cc/60?img=24",
+      "https://i.pravatar.cc/60?img=25"
+    ],
+    bgColor: "bg-purple-300"
+  },
+  {
+    title: "Ranjit Bawa",
+    description: "Ranjit Bawa, Manak, Gagan...",
+    images: [
+      "https://i.pravatar.cc/60?img=26",
+      "https://i.pravatar.cc/60?img=27",
+      "https://i.pravatar.cc/60?img=28"
+    ],
+    bgColor: "bg-lime-300"
+  }
+];
+
+
   return (
     
     <div className="bg-dark text-white min-vh-100 pb-5">
@@ -351,6 +385,55 @@ const HomePage = () => {
           ))}
         </Row>
       </Container>
+
+       <Container className="mt-5 px-3">
+      <h5 className="text-light fw-bold mb-3">Recommended Stations</h5>
+      <div className="d-flex overflow-auto pb-4" style={{ gap: "1rem" }}>
+        {recommendedStations.map((station, index) => (
+          <Card
+            key={index}
+            className={`shadow rounded p-3 ${station.bgColor}`}
+            style={{
+              minWidth: "180px",
+              cursor: "pointer",
+              transition: "transform 0.2s"
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.transform = "scale(1)")
+            }
+          >
+            <div className="d-flex align-items-center mb-2">
+              <Image
+                src={station.images[0]}
+                roundedCircle
+                width={64}
+                height={64}
+                className="object-fit-cover"
+              />
+              <Image
+                src={station.images[1]}
+                roundedCircle
+                width={40}
+                height={40}
+                className="object-fit-cover border border-white ms-n3"
+              />
+              <Image
+                src={station.images[2]}
+                roundedCircle
+                width={40}
+                height={40}
+                className="object-fit-cover border border-white ms-n3"
+              />
+            </div>
+            <h6 className="fw-bold">{station.title}</h6>
+            <p className="text-dark small mb-0 text-truncate">{station.description}</p>
+          </Card>
+        ))}
+      </div>
+    </Container>
         <Container className="mt-5 mb-5">
         <h5 className="text-light fw-bold mb-3">Your favourite artists</h5>
         <Row className="flex-row flex-nowrap overflow-auto gx-3">
@@ -416,7 +499,7 @@ const HomePage = () => {
         <Container className="mt-5 mb-5">
         <h5 className="text-light fw-bold mb-3">Recommandation today</h5>
         <Row className="flex-row flex-nowrap overflow-auto gx-3">
-          {jumpRightInItems.map((item, idx) => (
+          {jumpLeftInItems.map((item, idx) => (
             <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
               <Card
                 bg="dark"
