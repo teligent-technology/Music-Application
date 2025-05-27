@@ -116,53 +116,49 @@ const HomePage = () => {
              
 
       {/* Top Artists */}
-      <Container className="mt-5">
-        <h5 className="text-info fw-bold mb-3"><i className="bi bi-stars me-2" />Top Artists</h5>
-        {topArtistChunks.map((chunk, chunkIndex) => (
-          <Row key={chunkIndex} xs={1} sm={2} md={3} className="g-3 mb-4">
-            {chunk.map((artist, index) => {
-              const songWithArtist = Songs.find(song => song.artist === artist);
-              return (
-                <Col key={index}>
-                  <Card
-                    bg="black"
-                    text="white"
-                    className="shadow-sm h-100 border-0 d-flex flex-row align-items-center p-3 card-hover"
-                    style={{ cursor: "pointer", gap: "1rem" }}
-                  >
-                    <Link
-                      to={`/artist/${encodeURIComponent(artist)}`}
-                      className="d-flex align-items-center text-white text-decoration-none flex-grow-1"
-                      aria-label={`Artist details: ${artist}`}
-                    >
-                      <img
-                        src={songWithArtist?.img}
-                        alt={artist}
-                        className="rounded-circle shadow"
-                        style={{ width: 60, height: 60, objectFit: "cover" }}
-                      />
-                      <div className="fw-semibold ms-3 fs-5 text-truncate">{artist}</div>
-                    </Link>
-                    <Button
-                      size="sm"
-                      variant="link"
-                      className="text-danger ms-auto"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleFavorite(artist);
-                      }}
-                      aria-pressed={favorites.includes(artist)}
-                      aria-label={favorites.includes(artist) ? "Remove from favorites" : "Add to favorites"}
-                    >
-                      <i className={favorites.includes(artist) ? "bi bi-heart-fill" : "bi bi-heart"} />
-                    </Button>
-                  </Card>
-                </Col>
-              );
-            })}
-          </Row>
-        ))}
-      </Container>
+     {/* All Artists / Moods Section */}
+<Container className="mt-4">
+  <h5 className="text-info fw-bold mb-3">
+    <i className="bi bi-people-fill me-2" />
+    All Artists / Moods
+  </h5>
+  <Row xs={2} sm={3} md={4} lg={4} className="g-3">
+    {[
+      { img: "Jass.jpeg", name: "Jass Manak", link: "/player" },
+      { img: "Jass.jpeg", name: "HARNOOR All Songs", link: "/player" },
+      { img: "Jass.jpeg", name: "Mood", link: "/player" },
+      { img: "Jass.jpeg", name: "Rich & Famous", link: "/player" },
+      { img: "Jass.jpeg", name: "Prm Nagra", link: "/player" },
+      { img: "Jass.jpeg", name: "Vikram Sarkar", link: "" },
+      { img: "Jass.jpeg", name: "Jasmine Sandlas", link: "" },
+      { img: "Jass.jpeg", name: "Gurnam Bhullar", link: "" },
+    ].map((item, index) => (
+      <Col key={index}>
+        <div
+          className="d-flex align-items-center bg-secondary rounded p-2 shadow-sm hover-shadow"
+          style={{ cursor: "pointer" }}
+        >
+          <img
+            src={item.img}
+            alt={item.name}
+            className="rounded-circle"
+            style={{ width: 48, height: 48, objectFit: "cover" }}
+          />
+          {item.link ? (
+            <Link
+              to={item.link}
+              className="ms-3 text-white text-decoration-none fw-medium flex-grow-1"
+            >
+              {item.name}
+            </Link>
+          ) : (
+            <div className="ms-3 text-white fw-medium">{item.name}</div>
+          )}
+        </div>
+      </Col>
+    ))}
+  </Row>
+</Container>
 
       {/* Recently Played */}
       {recentlyPlayed.length > 0 && (
