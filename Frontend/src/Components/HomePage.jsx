@@ -11,6 +11,12 @@ const getUniqueArtists = (songs) => {
   return Array.from(artistSet);
 };
 
+// Extract unique artist names from Songs array
+const uniqueArtists = Array.from(
+  new Set(Songs.map((song) => song.artist))
+).slice(0, 7);
+
+
 const getTopArtists = (songs) => {
   const count = {};
   songs.forEach(song => {
@@ -119,46 +125,32 @@ const HomePage = () => {
      {/* All Artists / Moods Section */}
 <Container className="mt-4">
   <h5 className="text-info fw-bold mb-3">
-    <i className="bi bi-people-fill me-2" />
-    All Artists / Moods
+    <i className="bi bi-music-note-list me-2" />
+    Top 7 Artists
   </h5>
   <Row xs={2} sm={3} md={4} lg={4} className="g-3">
-    {[
-      { img: "Jass.jpeg", name: "Jass Manak", link: "/artist/:name" },
-      { img: "Jass.jpeg", name: "HARNOOR All Songs", link: "/artist/:name" },
-      { img: "Jass.jpeg", name: "Mood", link: "/artist/:name" },
-      { img: "Jass.jpeg", name: "Rich & Famous", link: "/artist/:name" },
-      { img: "Jass.jpeg", name: "Prm Nagra", link: "/artist/:name" },
-      { img: "Jass.jpeg", name: "Vikram Sarkar", link: "/artist/:name" },
-      { img: "Jass.jpeg", name: "Jasmine Sandlas", link: "/artist/:name" },
-      { img: "Jass.jpeg", name: "Gurnam Bhullar", link: "/artist/:name"},
-    ].map((item, index) => (
+    {uniqueArtists.map((artist, index) => (
       <Col key={index}>
-        <div
-          className="d-flex align-items-center bg-secondary rounded p-2 shadow-sm hover-shadow"
+        <Link
+          to={`/artist/${encodeURIComponent(artist)}`}
+          className="d-flex align-items-center bg-secondary rounded p-2 shadow-sm hover-shadow text-white text-decoration-none"
           style={{ cursor: "pointer" }}
+          title={artist}
         >
+          {/* Find one image for this artist from Songs */}
           <img
-            src={item.img}
-            alt={item.name}
+            src={Songs.find(song => song.artist === artist)?.img || "/default-img.jpg"}
+            alt={artist}
             className="rounded-circle"
             style={{ width: 48, height: 48, objectFit: "cover" }}
           />
-          {item.link ? (
-            <Link
-              to={item.link}
-              className="ms-3 text-white text-decoration-none fw-medium flex-grow-1"
-            >
-              {item.name}
-            </Link>
-          ) : (
-            <div className="ms-3 text-white fw-medium">{item.name}</div>
-          )}
-        </div>
+          <span className="ms-3 fw-medium flex-grow-1">{artist}</span>
+        </Link>
       </Col>
     ))}
   </Row>
 </Container>
+
 
       {/* Recently Played */}
       {recentlyPlayed.length > 0 && (
