@@ -92,7 +92,7 @@ const HomePage = () => {
   ];
 
   return (
-<div style={{ backgroundColor: "#0a0a0a" }} className="text-white min-vh-100 pb-5">
+    <div className="bg-darker text-white min-vh-100 pb-5">
       {/* Header */}
       <Container fluid className="py-3 px-4 border-bottom border-secondary sticky-top bg-black z-3">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
