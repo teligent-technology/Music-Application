@@ -100,17 +100,17 @@ const HomePage = () => {
    const jumpMoveInItems = [
     {
       img: "/Images/image1.jpg",
-      title: "Heat",
+      title: "Rich & Famous ",
       artist: "Diljit Dosjanj"
     },
     {
       img: "/Images/image2.jpg",
-      title: "wavy",
+      title: "Harnoor All songs",
       artist: "Karan Aujla",
     },
     {
       img: "/Images/image3.jpg",
-      title: "safar",
+      title: "Jass Manak",
       artist: "karun nair",
     },
   ];
@@ -118,17 +118,17 @@ const HomePage = () => {
    const jumpRightInItems = [
     {
       img: "/Images/image4.jpg",
-      title: "Notes",
+      title: "Diljit Dosanjh, Shubh, Badshah, Jasleen Roy...",
       artist: "Laddi Chahal",
     },
     {
       img: "/Images/image5.jpg",
-      title: "Reflections",
+      title: "Pritam, Anirudh Ravichandra, Sachet Tandon",
       artist: "Gurdeep Singh",
     },
     {
       img: "/Images/image6.jpg",
-      title: "Waves",
+      title: "Diljit Dosanjh",
       artist: "Simran Kaur",
     },
   ];
@@ -136,17 +136,17 @@ const HomePage = () => {
    const jumpLeftInItems = [
     {
       img: "/Images/image7.jpg",
-      title: "Notes",
+      title: "Lekh (Original Motion Picture)",
       artist: "Laddi Chahal",
     },
     {
       img: "/Images/image8.jpg",
-      title: "Reflections",
+      title: "Roi na (From Siddhat)",
       artist: "Gurdeep Singh",
     },
     {
       img: "/Images/image9.jpg",
-      title: "Waves",
+      title: "Karan Aujla , Dj & Snake -P&D",
       artist: "Simran Kaur",
     },
   ];
@@ -299,26 +299,31 @@ const HomePage = () => {
           {jumpMoveInItems.map((item, idx) => (
             <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
               <Card
-                bg="dark"
-                text="white"
-                className="shadow-sm rounded-lg card-hover p-3"
-                style={{ cursor: "pointer", transition: "transform 0.2s" }}
-                onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
-                onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
-                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-              >
-                <Card.Img
-                  variant="top"
-                  src={item.img}
-                  alt={item.title}
-                  className="rounded mb-2"
-                  style={{ objectFit: "cover", height: 120 }}
-                />
-                <Card.Body className="p-0">
-                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">{item.title}</Card.Title>
-                  <Card.Text className="text-muted fs-7 mb-0 text-truncate">{item.artist}</Card.Text>
-                </Card.Body>
-              </Card>
+  bg="dark"
+  text="white"
+  className="shadow-sm rounded-lg card-hover p-3"
+  style={{ cursor: "pointer", transition: "transform 0.2s" }}
+  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+>
+  <Card.Img
+    variant="top"
+    src={item.img}
+    alt={item.title}
+    className="rounded mb-2"
+    style={{ objectFit: "cover", height: 120 }}
+  />
+  <Card.Body className="p-0">
+    <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+      {item.title}
+    </Card.Title>
+    <Card.Text className="text-muted fs-7 mb-0 text-truncate">
+      {item.artist}
+    </Card.Text>
+  </Card.Body>
+</Card>
+
             </Col>
           ))}
         </Row>
@@ -327,7 +332,7 @@ const HomePage = () => {
         <h5 className="text-light fw-bold mb-3">Recommandations Stations</h5>
         <Row className="flex-row flex-nowrap overflow-auto gx-3">
           {jumpMoveInItems.map((item, idx) => (
-            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>.
               <Card
                 bg="dark"
                 text="white"
