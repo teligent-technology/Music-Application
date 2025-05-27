@@ -223,7 +223,7 @@ const HomePage = () => {
               >
                 <Card.Img
                   variant="top"
-                  src={item.img}
+                  src={"/Images/image1.jpg"}
                   alt={item.title}
                   className="rounded mb-2"
                   style={{ objectFit: "cover", height: 120 }}
@@ -253,7 +253,7 @@ const HomePage = () => {
               >
                 <Card.Img
                   variant="top"
-                  src={item.img}
+                  src={"/Images/image2.jpg"}
                   alt={item.title}
                   className="rounded mb-2"
                   style={{ objectFit: "cover", height: 120 }}
@@ -283,7 +283,7 @@ const HomePage = () => {
               >
                 <Card.Img
                   variant="top"
-                  src={item.img}
+                  src={"/Images/image3.jpg"}
                   alt={item.title}
                   className="rounded mb-2"
                   style={{ objectFit: "cover", height: 120 }}
@@ -313,7 +313,7 @@ const HomePage = () => {
               >
                 <Card.Img
                   variant="top"
-                  src={item.img}
+                  src={"/Images/image4.jpg"}
                   alt={item.title}
                   className="rounded mb-2"
                   style={{ objectFit: "cover", height: 120 }}
@@ -344,7 +344,7 @@ const HomePage = () => {
               >
                 <Card.Img
                   variant="top"
-                  src={item.img}
+                  src={"/Images/image5.jpg"}
                   alt={item.title}
                   className="rounded mb-2"
                   style={{ objectFit: "cover", height: 120 }}
@@ -375,7 +375,7 @@ const HomePage = () => {
               >
                 <Card.Img
                   variant="top"
-                  src={item.img}
+                  src={"/Images/image7.jpg"}
                   alt={item.title}
                   className="rounded mb-2"
                   style={{ objectFit: "cover", height: 120 }}
@@ -406,7 +406,7 @@ const HomePage = () => {
               >
                 <Card.Img
                   variant="top"
-                  src={item.img}
+                  src={"/Images/image8.jpg"}
                   alt={item.title}
                   className="rounded mb-2"
                   style={{ objectFit: "cover", height: 120 }}
@@ -437,7 +437,7 @@ const HomePage = () => {
               >
                 <Card.Img
                   variant="top"
-                  src={item.img}
+                  src={"/Images/image9.jpg"}
                   alt={item.title}
                   className="rounded mb-2"
                   style={{ objectFit: "cover", height: 120 }}
