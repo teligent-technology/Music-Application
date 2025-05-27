@@ -155,7 +155,7 @@ const HomePage = () => {
 
   return (
     
-    <div className="bg-dark text-white min-vh-100 pb-5">
+<div className="bg-dark text-white w-100 min-vh-100">
       {/* "bg-dark text-white min-vh-100 pb-5" */}
       {/* Header */}
       <Container fluid className="py-3 px-4 border-bottom border-secondary sticky-top bg-black z-3">
