@@ -101,7 +101,14 @@ router.post('/login', async (req, res) => {
 
     const token = generateToken(payload);
 
-    res.json({ message: "Login successful", token });
+    // ✅ Send user info along with token
+    res.json({
+      message: "Login successful",
+      token,
+      name: user.name,
+      username: user.username,
+      Mobile: user.Mobile
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });

@@ -72,7 +72,7 @@ const Profile = () => {
                 fontWeight: "bold"
               }}
             >
-              {user.name.charAt(0).toUpperCase()}
+{user?.name?.charAt(0)?.toUpperCase() || "?"}
             </div>
             <div>
               <div className="fw-bold fs-5">{user.name}</div>

@@ -27,10 +27,20 @@ function Login() {
         headers: { 'Content-Type': 'application/json' },
       });
       if (res.status === 200) {
-        localStorage.setItem("token", res.data.token);
-        alert(res.data.message || "Login successful");
-        navigate('/home');
-      } else {
+  localStorage.setItem("token", res.data.token);
+
+  const user = {
+    name: res.data.name,
+    username: res.data.username,
+    Mobile: res.data.Mobile
+  };
+  localStorage.setItem("user", JSON.stringify(user));
+
+  alert(res.data.message || "Login successful");
+  navigate('/home');
+}
+
+ else {
         console.warn("Received non-200 response:", res.status);
       }
     } catch (err) {
