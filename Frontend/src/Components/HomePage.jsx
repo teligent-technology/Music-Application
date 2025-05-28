@@ -170,7 +170,6 @@ const HomePage = () => {
           </Link>
           <div className="btn-group bg-secondary rounded-pill p-1 shadow-sm">
             <Link to="/home" className="btn btn-sm btn-dark rounded-pill px-4">All</Link>
-            <Link to="/punjabi" className="btn btn-sm btn-dark rounded-pill px-4">Songs</Link>
           </div>
         </div>
       </Container>
@@ -796,9 +795,12 @@ const HomePage = () => {
             <i className="bi bi-search fs-4 d-block" />
             <small>Search</small>
           </Link>
-          <Link to="/library" className="text-white text-center text-decoration-none">
+          <Link to="/punjabi" className="text-white text-center text-decoration-none">
             <i className="bi bi-music-note-list fs-4 d-block" />
             <small>Library</small>
+
+                        {/* <Link to="/punjabi" className="btn btn-sm btn-dark rounded-pill px-4">Songs</Link> */}
+
           </Link>
           <Link to="/create" className="text-white text-center text-decoration-none">
             <i className="bi bi-plus-circle-fill fs-4 d-block" />
