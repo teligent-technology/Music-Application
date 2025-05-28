@@ -132,6 +132,17 @@ const CreatePlaylistPage = () => {
 
       {/* Playlist Viewer */}
       <div className="px-4 pt-2 position-relative z-1">
+        {/* Your Link inserted here */}
+        <div className="mb-3">
+          <Link
+            to="/playlist"
+            className="btn btn-light text-dark"
+            style={{ fontSize: "1.1rem" }}
+          >
+            Create Custom Playlist
+          </Link>
+        </div>
+
         <h5 className="text-white mt-4">Your Playlists</h5>
         {playlists.map((playlist, idx) => (
           <div key={idx} className="bg-dark rounded my-2 p-3">
