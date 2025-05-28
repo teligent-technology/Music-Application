@@ -11,7 +11,8 @@ const PlaylistViewer = () => {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    loadPlaylists();
+    const stored = JSON.parse(localStorage.getItem('playlists') || '{}');
+    setPlaylists(stored);
   }, []);
 
   useEffect(() => {
@@ -24,57 +25,6 @@ const PlaylistViewer = () => {
       setCurrentIndex(null);
     }
   }, [name, playlists]);
-
-  const loadPlaylists = () => {
-    const storedPlaylists = JSON.parse(localStorage.getItem('playlists') || '{}');
-    setPlaylists(storedPlaylists);
-  };
-
-  const handlePlay = (index) => setCurrentIndex(index);
-  const handleNext = () => {
-    if (currentIndex < matchedSongs.length - 1) {
-      setCurrentIndex(prevIndex => prevIndex + 1);
-    }
-  };
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(prevIndex => prevIndex - 1);
-    }
-  };
-
-  const handleDeletePlaylist = () => {
-    if (!name) return;
-    if (window.confirm(`Are you sure you want to delete the "${name}" playlist?`)) {
-      const updatedPlaylists = { ...playlists };
-      delete updatedPlaylists[name];
-      localStorage.setItem('playlists', JSON.stringify(updatedPlaylists));
-      setPlaylists(updatedPlaylists);
-      setMatchedSongs([]);
-      navigate('/playlist');
-      alert(`"${name}" playlist has been deleted.`);
-    }
-  };
-
-  const removeSongFromPlaylist = (songToRemove) => {
-    const filename = songToRemove.src.split('/').pop();
-    const updatedFilenames = playlists[name].filter(f => f !== filename);
-    const updatedPlaylists = {
-      ...playlists,
-      [name]: updatedFilenames
-    };
-
-    localStorage.setItem('playlists', JSON.stringify(updatedPlaylists));
-    setPlaylists(updatedPlaylists);
-
-    const updatedMatchedSongs = matchedSongs.filter(song => song.src !== songToRemove.src);
-    setMatchedSongs(updatedMatchedSongs);
-
-    if (updatedMatchedSongs.length === 0) {
-      setCurrentIndex(null);
-    } else if (currentIndex >= updatedMatchedSongs.length) {
-      setCurrentIndex(updatedMatchedSongs.length - 1);
-    }
-  };
 
   useEffect(() => {
     if (audioRef.current && currentIndex !== null) {
@@ -91,71 +41,95 @@ const PlaylistViewer = () => {
     }
   }, [currentIndex]);
 
+  const handlePlay = (index) => setCurrentIndex(index);
+  const handleNext = () => currentIndex < matchedSongs.length - 1 && setCurrentIndex(i => i + 1);
+  const handlePrev = () => currentIndex > 0 && setCurrentIndex(i => i - 1);
+
+  const handleDeletePlaylist = () => {
+    if (!name) return;
+    if (window.confirm(`Are you sure you want to delete "${name}" playlist?`)) {
+      const updated = { ...playlists };
+      delete updated[name];
+      localStorage.setItem('playlists', JSON.stringify(updated));
+      setPlaylists(updated);
+      setMatchedSongs([]);
+      navigate('/playlist');
+    }
+  };
+
+  const removeSong = (songToRemove) => {
+    const filename = songToRemove.src.split('/').pop();
+    const updatedList = playlists[name].filter(f => f !== filename);
+    const updatedPlaylists = { ...playlists, [name]: updatedList };
+    localStorage.setItem('playlists', JSON.stringify(updatedPlaylists));
+    setPlaylists(updatedPlaylists);
+
+    const updatedSongs = matchedSongs.filter(song => song.src !== songToRemove.src);
+    setMatchedSongs(updatedSongs);
+    if (updatedSongs.length === 0) setCurrentIndex(null);
+    else if (currentIndex >= updatedSongs.length) setCurrentIndex(updatedSongs.length - 1);
+  };
+
   return (
-    <div 
-      className="container-fluid py-4 px-3 px-md-5" 
-      style={{ backgroundColor: 'black', color: 'white', minHeight: '100vh' }}
-    >
-      {/* Back button */}
+    <div className="container-fluid py-4 px-3 px-md-5" style={{ backgroundColor: '#121212', color: '#fff', minHeight: '100vh' }}>
+      {/* Back */}
       <div className="mb-4">
-        <button
-          className="btn btn-outline-light"
-          onClick={() => navigate('/playlist')}
-        >
+        <button className="btn btn-outline-light" onClick={() => navigate('/playlist')}>
           ← Back to Playlists
         </button>
       </div>
 
-      {/* Playlist header with delete */}
-      <div className="row align-items-center mb-4">
-        <div className="col-12 col-md-8">
-          <h3 className="text-truncate">{name} Playlist</h3>
-        </div>
-        <div className="col-12 col-md-4 text-md-end mt-3 mt-md-0">
-          <button
-            onClick={handleDeletePlaylist}
-            className="btn btn-danger w-100 w-md-auto"
-          >
-            🗑 Delete Playlist
-          </button>
-        </div>
+      {/* Playlist Header */}
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <h3 className="m-0 text-capitalize">{name} Playlist</h3>
+        <button onClick={handleDeletePlaylist} className="btn btn-danger">
+          🗑 Delete Playlist
+        </button>
       </div>
 
-      {/* Song list */}
+      {/* Song List */}
       {matchedSongs.length > 0 ? (
-        <ul className="list-group mb-4">
+        <div className="list-group">
           {matchedSongs.map((song, index) => (
-            <li
+            <div
               key={index}
-              className={`list-group-item d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center ${
-                index === currentIndex ? 'active text-white' : ''
+              className={`list-group-item list-group-item-action d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 ${
+                index === currentIndex ? 'active' : ''
               }`}
               style={{
-                backgroundColor: index === currentIndex ? '#0d6efd' : 'transparent',
-                color: index === currentIndex ? 'white' : 'inherit'
+                backgroundColor: index === currentIndex ? '#0d6efd' : '#1e1e1e',
+                borderColor: '#333',
+                color: index === currentIndex ? '#fff' : '#ccc',
+                transition: 'background 0.3s ease',
               }}
+              onClick={() => handlePlay(index)}
             >
-              <div className="flex-grow-1 me-sm-3 text-truncate mb-2 mb-sm-0">
-                <strong>{song.song}</strong>{' '}
-                <small className="text-light">by {song.artist}</small>
+              <div className="flex-grow-1">
+                <strong>{song.song}</strong> <span className="text-muted">by {song.artist}</span>
               </div>
-              <div className="btn-group" role="group">
+              <div className="d-flex gap-2">
                 <button
-                  onClick={() => handlePlay(index)}
-                  className={`btn btn-sm ${index === currentIndex ? 'btn-light text-primary' : 'btn-primary'}`}
+                  className={`btn btn-sm ${index === currentIndex ? 'btn-light text-primary' : 'btn-outline-light'}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePlay(index);
+                  }}
                 >
-                  ▶
+                  ▶ Play
                 </button>
                 <button
-                  onClick={() => removeSongFromPlaylist(song)}
                   className="btn btn-sm btn-outline-danger"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeSong(song);
+                  }}
                 >
-                  ✖
+                  ✖ Remove
                 </button>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
         <p className="text-muted fst-italic">No songs found in this playlist.</p>
       )}
@@ -164,36 +138,33 @@ const PlaylistViewer = () => {
       {currentIndex !== null && matchedSongs[currentIndex] && (
         <div
           id="audio-player"
-          className="mt-4 p-3 border rounded bg-light shadow-sm"
-          style={{ color: 'black' }}
+          className="mt-5 p-4 bg-light text-dark rounded shadow"
         >
           <h5 className="mb-3">
-            Now Playing:{' '}
-            <span className="text-primary">{matchedSongs[currentIndex].song}</span>
+            Now Playing: <span className="text-primary">{matchedSongs[currentIndex].song}</span>
           </h5>
           <audio
             ref={audioRef}
             controls
             autoPlay
             onEnded={handleNext}
-            onError={() => alert('Failed to load audio.')}
             className="w-100"
           >
             <source src={matchedSongs[currentIndex].src} type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>
 
-          <div className="mt-3 d-flex flex-column flex-sm-row gap-2 justify-content-center justify-content-sm-start">
+          <div className="mt-3 d-flex flex-wrap gap-2 justify-content-center justify-content-md-start">
             <button
-              onClick={handlePrev}
               className="btn btn-secondary"
+              onClick={handlePrev}
               disabled={currentIndex === 0}
             >
               ⏮ Previous
             </button>
             <button
-              onClick={handleNext}
               className="btn btn-secondary"
+              onClick={handleNext}
               disabled={currentIndex === matchedSongs.length - 1}
             >
               ⏭ Next

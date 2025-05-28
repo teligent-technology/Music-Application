@@ -55,7 +55,7 @@ function App() {
           path="/playlist"
           element={
             <div className="container">
-              <h2 style={{color:  "#fff"}}>🎵 Music App with Playlist</h2>
+              <h2 style={{color:  "#fff"}}></h2>
               <Playlist selectedSongs={selectedSongs} setSelectedSongs={setSelectedSongs} />
               <PlaylistCreator selectedSongs={selectedSongs} />
               <PlaylistSelector selectedSongs={selectedSongs} />

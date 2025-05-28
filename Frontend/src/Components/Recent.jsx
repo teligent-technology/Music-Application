@@ -1,6 +1,12 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Songs } from "../data/song";
-import { FaPlay, FaPause, FaStepBackward, FaStepForward } from "react-icons/fa";
+import {
+  FaPlay,
+  FaPause,
+  FaStepBackward,
+  FaStepForward,
+  FaMusic,
+} from "react-icons/fa";
 
 const Recents = () => {
   const [recentSongs, setRecentSongs] = useState([]);
@@ -13,7 +19,7 @@ const Recents = () => {
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("recentSongs")) || [];
     const mapped = stored
-      .map(id => Songs.find(song => song.Id === id))
+      .map((id) => Songs.find((song) => song.Id === id))
       .filter(Boolean);
     setRecentSongs(mapped);
   }, []);
@@ -27,35 +33,38 @@ const Recents = () => {
     };
   }, []);
 
-  const playSongAtIndex = useCallback((index) => {
-    if (index < 0 || index >= recentSongs.length) return;
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-    const song = recentSongs[index];
-    const audio = new Audio(song.src);
-    audioRef.current = audio;
-
-    audio.play();
-    setIsPlaying(true);
-    setCurrentIndex(index);
-    setProgress(0);
-
-    audio.ontimeupdate = () => {
-      setProgress(audio.currentTime / audio.duration || 0);
-    };
-
-    audio.onended = () => {
-      if (index + 1 < recentSongs.length) {
-        playSongAtIndex(index + 1);
-      } else {
-        setIsPlaying(false);
-        setCurrentIndex(null);
-        setProgress(0);
+  const playSongAtIndex = useCallback(
+    (index) => {
+      if (index < 0 || index >= recentSongs.length) return;
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
       }
-    };
-  }, [recentSongs]);
+      const song = recentSongs[index];
+      const audio = new Audio(song.src);
+      audioRef.current = audio;
+
+      audio.play();
+      setIsPlaying(true);
+      setCurrentIndex(index);
+      setProgress(0);
+
+      audio.ontimeupdate = () => {
+        setProgress(audio.currentTime / audio.duration || 0);
+      };
+
+      audio.onended = () => {
+        if (index + 1 < recentSongs.length) {
+          playSongAtIndex(index + 1);
+        } else {
+          setIsPlaying(false);
+          setCurrentIndex(null);
+          setProgress(0);
+        }
+      };
+    },
+    [recentSongs]
+  );
 
   const togglePlayPause = () => {
     if (!audioRef.current) {
@@ -98,52 +107,68 @@ const Recents = () => {
   };
 
   return (
-    <div className="min-vh-100 py-4" style={{ backgroundColor: "#000", color: "#fff" }}>
+    <div className="min-vh-100 py-4" style={{ backgroundColor: "#121212", color: "#fff" }}>
       <div className="container">
-        <h3 className="mb-4">Recently Played</h3>
+        <h3 className="mb-4 d-flex align-items-center gap-2">
+          <FaMusic />
+          Recently Played
+        </h3>
+
         {recentSongs.length === 0 ? (
-          <p className="text-muted" style={{color: "#fff", backgroundColor: "#000"}}>No recently played songs yet.</p>
+          <p className="text-muted">No recently played songs yet.</p>
         ) : (
           <>
-            <div className="mb-4 p-3 bg-dark text-white rounded shadow d-flex flex-column align-items-center">
-              <div className="mb-2">
-                <strong>
-                  {currentIndex !== null
-                    ? recentSongs[currentIndex].song + " - " + recentSongs[currentIndex].artist
-                    : "Select a song to play"}
-                </strong>
+            <div className="mb-4 p-4 bg-dark rounded shadow text-center">
+              <div className="mb-2 fs-5 fw-semibold">
+                {currentIndex !== null ? (
+                  <>
+                    <span className="text-primary">{recentSongs[currentIndex].song}</span>{" "}
+                    by {recentSongs[currentIndex].artist}
+                  </>
+                ) : (
+                  "Select a song to play"
+                )}
               </div>
 
               <div
                 ref={progressRef}
                 onClick={handleSeek}
-                style={{
-                  width: "100%",
-                  height: 10,
-                  backgroundColor: "#444",
-                  borderRadius: 5,
-                  cursor: "pointer",
-                  marginBottom: 8,
-                }}
+                className="w-100 bg-secondary rounded-pill position-relative mb-3"
+                style={{ height: 8, cursor: "pointer" }}
               >
                 <div
                   style={{
                     width: `${progress * 100}%`,
                     height: "100%",
                     backgroundColor: "#0d6efd",
-                    borderRadius: 5,
+                    borderRadius: 8,
                   }}
                 />
               </div>
 
-              <div>
-                <button className="btn btn-secondary me-3" onClick={playPrevious} disabled={currentIndex === 0 || currentIndex === null}>
+              <div className="d-flex justify-content-center align-items-center gap-3">
+                <button
+                  className="btn btn-outline-light rounded-circle"
+                  onClick={playPrevious}
+                  disabled={currentIndex <= 0}
+                  title="Previous"
+                >
                   <FaStepBackward />
                 </button>
-                <button className="btn btn-primary me-3" onClick={togglePlayPause} disabled={currentIndex === null && recentSongs.length === 0}>
+                <button
+                  className="btn btn-primary rounded-circle"
+                  style={{ width: 50, height: 50 }}
+                  onClick={togglePlayPause}
+                  title={isPlaying ? "Pause" : "Play"}
+                >
                   {isPlaying ? <FaPause /> : <FaPlay />}
                 </button>
-                <button className="btn btn-secondary" onClick={playNext} disabled={currentIndex === recentSongs.length - 1 || currentIndex === null}>
+                <button
+                  className="btn btn-outline-light rounded-circle"
+                  onClick={playNext}
+                  disabled={currentIndex === recentSongs.length - 1}
+                  title="Next"
+                >
                   <FaStepForward />
                 </button>
               </div>
@@ -153,22 +178,34 @@ const Recents = () => {
               {recentSongs.map((song, index) => (
                 <div key={song.Id} className="col">
                   <div
-                    className={`card h-100 bg-dark text-white ${currentIndex === index ? "border border-primary" : ""}`}
-                    style={{ cursor: "pointer" }}
+                    className={`card h-100 bg-dark text-white border-0 shadow-sm ${
+                      currentIndex === index ? "border border-primary" : ""
+                    }`}
+                    style={{
+                      cursor: "pointer",
+                      transition: "transform 0.2s",
+                    }}
                     onClick={() => playSongAtIndex(index)}
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.03)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
                   >
-                    <img src={song.img} className="card-img-top" alt={song.song} />
-                    <div className="card-body">
-                      <h5 className="card-title">{song.song}</h5>
-                      <p className="card-text">{song.artist}</p>
+                    <img
+                      src={song.img}
+                      className="card-img-top"
+                      alt={song.song}
+                      style={{ height: 200, objectFit: "cover" }}
+                    />
+                    <div className="card-body d-flex flex-column justify-content-between">
+                      <h5 className="card-title text-truncate">{song.song}</h5>
+                      <p className="card-text text-muted text-truncate">{song.artist}</p>
                       <button
-                        className="btn btn-sm btn-success"
+                        className="btn btn-sm btn-outline-light mt-auto"
                         onClick={(e) => {
                           e.stopPropagation();
                           playSongAtIndex(index);
                         }}
                       >
-                        <FaPlay className="me-2" />
+                        <FaPlay className="me-1" />
                         Play
                       </button>
                     </div>

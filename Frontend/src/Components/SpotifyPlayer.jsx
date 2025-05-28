@@ -11,10 +11,10 @@ import {
   FaForward,
   FaClock,
   FaSpinner,
+  FaTimes,
 } from "react-icons/fa";
 
 const SpotifyPlayer = () => {
-  
   const { songId, artistName } = useParams();
   const navigate = useNavigate();
 
@@ -46,6 +46,7 @@ const SpotifyPlayer = () => {
     const handleLoadedMetadata = () => {
       setDuration(audio.duration);
       setIsLoading(false);
+      setIsPlaying(true);
     };
 
     const handleError = () => {
@@ -56,8 +57,7 @@ const SpotifyPlayer = () => {
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("error", handleError);
 
-    setTimeout(() => setIsPlaying(true), 300);
-
+    // Save recent songs in localStorage
     const stored = JSON.parse(localStorage.getItem("recentSongs")) || [];
     const filtered = stored.filter((id) => id !== song.Id);
     const updated = [song.Id, ...filtered].slice(0, 20);
@@ -123,68 +123,140 @@ const SpotifyPlayer = () => {
     return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
-  if (!song) return <div className="text-white p-4">Song not found.</div>;
+  const dismissError = () => setError(false);
+
+  if (!song)
+    return (
+      <div className="text-white p-4 text-center">
+        <h4>Song not found.</h4>
+        <Link to="/home" className="btn btn-primary mt-3">
+          Go to Home
+        </Link>
+      </div>
+    );
 
   return (
     <>
-
-        <Link
-      to="/home"
-      className="btn btn-outline-light"
-      style={{ fontSize: "1.1rem" }}
-    >
-      Go to Home
-    </Link>
       <style>{`
         html, body, #root {
-          background-color: #000000 !important;
+          background: linear-gradient(135deg, #1c1c1c, #121212);
           color: white !important;
           height: 100%;
           margin: 0;
           padding: 0;
           overflow-x: hidden;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         a {
           color: white;
+          transition: color 0.3s ease;
         }
         a:hover, a:focus {
           color: #0d6efd; /* bootstrap primary blue */
           text-decoration: underline;
         }
-        /* Override default bootstrap dark btn text for play/pause buttons */
         button.btn.btn-light.rounded-circle {
           color: black !important;
+          transition: transform 0.2s ease;
+        }
+        button.btn.btn-light.rounded-circle:hover {
+          transform: scale(1.1);
+          box-shadow: 0 0 10px #0d6efd88;
+        }
+        /* Progress bar */
+        input[type="range"].form-range {
+          -webkit-appearance: none;
+          width: 100%;
+          height: 10px;
+          border-radius: 5px;
+          background: #333;
+          cursor: pointer;
+          transition: background 0.3s ease;
+        }
+        input[type="range"].form-range::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: #0d6efd;
+          cursor: pointer;
+          box-shadow: 0 0 8px #0d6efdcc;
+          transition: background 0.3s ease;
+          margin-top: -5px;
+        }
+        input[type="range"].form-range::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: #0d6efd;
+          cursor: pointer;
+          box-shadow: 0 0 8px #0d6efdcc;
+          transition: background 0.3s ease;
+        }
+        input[type="range"].form-range:hover {
+          background: #444;
+        }
+        input[type="range"].form-range:active::-webkit-slider-thumb {
+          background: #0b5ed7;
+          box-shadow: 0 0 12px #0b5ed7dd;
+        }
+        /* Spinner Animation */
+        .fa-spin {
+          animation: fa-spin 1s infinite linear;
+        }
+        @keyframes fa-spin {
+          0% { transform: rotate(0deg);}
+          100% { transform: rotate(360deg);}
+        }
+        /* Fade in song info */
+        .fade-in {
+          animation: fadeIn 0.7s ease forwards;
+          opacity: 0;
+        }
+        @keyframes fadeIn {
+          to {opacity: 1;}
+        }
+        /* Error Alert */
+        .error-alert {
+          background: rgba(220, 53, 69, 0.95);
+          padding: 8px 16px;
+          border-radius: 6px;
+          box-shadow: 0 0 10px #dc3545aa;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-weight: 600;
+          cursor: pointer;
         }
       `}</style>
 
-      <div
-        className="bg-dark text-white d-flex flex-column"
-        style={{ minHeight: "100vh" }}
-      >
-
-     
+      <div className="bg-dark text-white d-flex flex-column" style={{ minHeight: "100vh" }}>
         {/* Header */}
         <div className="d-flex justify-content-between align-items-center px-3 py-3 border-bottom border-secondary">
           <Link
             to={`/artist/${artistName}`}
             className="text-white text-decoration-none"
+            aria-label="Back to artist"
           >
-            <FaChevronDown size={20} />
+            <FaChevronDown size={24} />
           </Link>
-          <span className="fw-bold">{song.artist}</span>
-          <FaEllipsisH size={20} />
+          <span className="fw-bold fs-5 text-truncate" title={song.artist}>
+            {song.artist}
+          </span>
+          <FaEllipsisH size={24} className="cursor-pointer" />
         </div>
 
         {/* Main Content */}
-        <div className="flex-grow-1 overflow-auto px-3 py-3 pb-5 text-center">
+        <div className="flex-grow-1 overflow-auto px-4 py-4 pb-5 text-center d-flex flex-column align-items-center justify-content-center fade-in">
           <img
             src={song.img}
             alt={song.title}
-            className="img-fluid rounded shadow mb-3 mx-auto"
-            style={{ maxHeight: 300, objectFit: "contain" }}
+            className="img-fluid rounded shadow-lg mb-4"
+            style={{ maxHeight: 320, objectFit: "cover", boxShadow: "0 0 20px #0d6efd88" }}
           />
-          <h5 className="fw-bold mb-1">{song.title}</h5>
-          <p className="text-light small">{song.artist}</p>
+          <h4 className="fw-bold mb-1 text-break">{song.title}</h4>
+          <p className="text-secondary small mb-0">{song.artist}</p>
 
           <audio
             ref={audioRef}
@@ -195,11 +267,11 @@ const SpotifyPlayer = () => {
 
         {/* Fixed Footer with Controls + Seekbar */}
         <footer
-          className="fixed-bottom bg-dark border-top border-secondary py-3 px-3"
+          className="fixed-bottom bg-dark border-top border-secondary py-3 px-4"
           style={{ zIndex: 1050 }}
         >
           {/* Seekbar */}
-          <div className="mb-2">
+          <div className="mb-3">
             <input
               type="range"
               min="0"
@@ -207,38 +279,40 @@ const SpotifyPlayer = () => {
               value={progress}
               onChange={handleSeek}
               className="form-range"
-              style={{ accentColor: "#fff" }}
+              aria-label="Seek audio"
             />
-            <div className="d-flex justify-content-between small text-white-50">
+            <div className="d-flex justify-content-between small text-white-50 px-2">
               <span>{formatTime(progress)}</span>
               <span>{formatTime(duration)}</span>
             </div>
           </div>
 
           {/* Controls */}
-          <div className="d-flex justify-content-center align-items-center gap-3">
-            <FaMagic className="text-success fs-4" />
+          <div className="d-flex justify-content-center align-items-center gap-4">
+            <FaMagic className="text-success fs-4" title="Magic feature" />
             <button
               onClick={handlePrev}
               className="btn btn-link text-white p-0 fs-4"
               disabled={filteredSongs.length < 2}
               aria-label="Previous Song"
+              title="Previous"
             >
               <FaBackward />
             </button>
 
             <button
               onClick={togglePlayPause}
-              className="btn btn-light rounded-circle d-flex justify-content-center align-items-center"
-              style={{ width: 56, height: 56 }}
+              className="btn btn-light rounded-circle d-flex justify-content-center align-items-center shadow"
+              style={{ width: 64, height: 64 }}
               aria-label={isPlaying ? "Pause" : "Play"}
+              title={isPlaying ? "Pause" : "Play"}
             >
               {isLoading ? (
-                <FaSpinner className="text-dark fa-spin" />
+                <FaSpinner className="text-dark fa-spin fs-4" />
               ) : isPlaying ? (
-                <FaPause className="text-dark" />
+                <FaPause className="text-dark fs-4" />
               ) : (
-                <FaPlay className="text-dark" />
+                <FaPlay className="text-dark fs-4 ms-1" />
               )}
             </button>
 
@@ -247,22 +321,25 @@ const SpotifyPlayer = () => {
               className="btn btn-link text-white p-0 fs-4"
               disabled={currentIndex >= filteredSongs.length - 1}
               aria-label="Next Song"
+              title="Next"
             >
               <FaForward />
             </button>
 
-            <FaClock className="fs-4" />
+            <FaClock className="fs-4" title="Duration" />
           </div>
         </footer>
 
         {/* Error Message */}
         {error && (
           <div
-            className="text-danger text-center small position-fixed w-100"
-            style={{ bottom: "110px", zIndex: 1060 }}
+            className="error-alert position-fixed bottom-0 start-50 translate-middle-x mb-5"
             role="alert"
+            onClick={dismissError}
+            title="Click to dismiss"
           >
-            ⚠️ Failed to load audio. Try again later.
+            <span>⚠️ Failed to load audio. Try again later.</span>
+            <FaTimes />
           </div>
         )}
       </div>
