@@ -180,33 +180,38 @@ const HomePage = () => {
 
       {/* Top Artists */}
      {/* All Artists / Moods Section */}
-<Container className="mt-4">
-  <h5 className="text-info fw-bold mb-3">
-    <i className="bi bi-music-note-list me-2" />
-    Top 7 Artists
-  </h5>
-  <Row xs={2} sm={3} md={4} lg={4} className="g-3">
-    {uniqueArtists.map((artist, index) => (
-      <Col key={index}>
-        <Link
-          to={`/artist/${encodeURIComponent(artist)}`}
-          className="d-flex align-items-center bg-secondary rounded p-2 shadow-sm hover-shadow text-white text-decoration-none"
-          style={{ cursor: "pointer" }}
-          title={artist}
-        >
-          {/* Find one image for this artist from Songs */}
-          <img
-            src={Songs.find(song => song.artist === artist)?.img || "/default-img.jpg"}
-            alt={artist}
-            className="rounded-circle"
-            style={{ width: 48, height: 48, objectFit: "cover" }}
-          />
-          <span className="ms-3 fw-medium flex-grow-1">{artist}</span>
-        </Link>
-      </Col>
-    ))}
-  </Row>
-</Container>
+ <Container className="mt-4">
+      <h5 className="text-info fw-bold mb-3">
+        <i className="bi bi-music-note-list me-2" />
+        Top 7 Artists
+      </h5>
+
+      <div className="d-flex overflow-auto gap-3 pb-2 px-1" style={{ scrollbarWidth: "none" }}>
+        {uniqueArtists.map((artist, index) => {
+          const artistImage = Songs.find(song => song.artist === artist)?.img || "/default-img.jpg";
+
+          return (
+            <Link
+              key={index}
+              to={`/artist/${encodeURIComponent(artist)}`}
+              className="text-decoration-none text-white"
+              style={{ minWidth: "120px", flex: "0 0 auto" }}
+              title={artist}
+            >
+              <div className="d-flex flex-column align-items-center bg-secondary rounded p-2 shadow-sm hover-shadow text-center">
+                <img
+                  src={artistImage}
+                  alt={artist}
+                  className="rounded-circle mb-2"
+                  style={{ width: 64, height: 64, objectFit: "cover", border: "2px solid #0dcaf0" }}
+                />
+                <small className="fw-medium text-truncate w-100">{artist}</small>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </Container>
 
 
       {/* Recently Played */}
