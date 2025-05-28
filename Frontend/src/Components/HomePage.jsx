@@ -381,7 +381,7 @@ const HomePage = () => {
   </Row>
 </Container>
 
-        <Container className="mt-5 mb-5">
+      <Container className="mt-5 mb-5">
   <h5 className="text-light fw-bold mb-3">Recommandation Stations</h5>
   <Row className="flex-row flex-nowrap overflow-auto gx-3">
     {jumpRightInItems.map((item, idx) => (
@@ -401,8 +401,8 @@ const HomePage = () => {
               alt={item.title}
               className="rounded-circle mb-3"
               style={{
-                width: 80,
-                height: 80,
+                width: 100,     // Increased from 80
+                height: 100,    // Increased from 80
                 objectFit: "cover",
                 border: "2px solid #fff",
               }}
@@ -421,6 +421,7 @@ const HomePage = () => {
     ))}
   </Row>
 </Container>
+
 
 
        <Container className="mt-5 mb-5">
@@ -551,8 +552,8 @@ const HomePage = () => {
               alt={item.title}
               className="rounded-circle mb-3"
               style={{
-                width: 80,
-                height: 80,
+                width: 100,  // increased from 80
+                height: 100, // increased from 80
                 objectFit: "cover",
                 border: "2px solid #fff"
               }}
@@ -571,6 +572,7 @@ const HomePage = () => {
     ))}
   </Row>
 </Container>
+
 
 
 
