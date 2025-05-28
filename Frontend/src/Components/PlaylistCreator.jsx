@@ -19,28 +19,29 @@ const PlaylistCreator = ({ selectedSongs }) => {
       return;
     }
 
-    const playlistKey = `playlistSongs_${playlistName}`;
-    const selectedFilenames = selectedSongs.map(song => ({
-      name: song.name,
-      src: song.src
-    }));
+    const playlists = JSON.parse(localStorage.getItem('playlists') || '{}');
 
-    localStorage.setItem(playlistKey, JSON.stringify(selectedFilenames));
-
-    const existingPlaylists = JSON.parse(localStorage.getItem('myPlaylists') || '[]');
-    const exists = existingPlaylists.some(p => p.name === playlistName);
-
-    if (!exists) {
-      existingPlaylists.push({ name: playlistName, type: 'Custom' });
-      localStorage.setItem('myPlaylists', JSON.stringify(existingPlaylists));
+    if (playlists[playlistName]) {
+      const confirmOverwrite = window.confirm(
+        `Playlist "${playlistName}" already exists. Overwrite?`
+      );
+      if (!confirmOverwrite) {
+        inputRef.current?.focus();
+        return;
+      }
     }
 
+    const selectedFilenames = selectedSongs.map(song =>
+      song.src.split('/').pop()
+    );
+
+    playlists[playlistName] = selectedFilenames;
+    localStorage.setItem('playlists', JSON.stringify(playlists));
     alert(`Playlist "${playlistName}" saved!`);
     setPlaylistName('');
     if (typeof window !== "undefined") {
       window.dispatchEvent(new Event("playlist-updated"));
     }
-
     inputRef.current?.focus();
   };
 
@@ -71,7 +72,9 @@ const PlaylistCreator = ({ selectedSongs }) => {
           <input
             type="text"
             id="playlistName"
-            className={`form-control bg-dark text-white border ${error ? 'border-danger is-invalid' : 'border-secondary'}`}
+            className={`form-control bg-dark text-white border ${
+              error ? 'border-danger is-invalid' : 'border-secondary'
+            }`}
             placeholder="Enter playlist name"
             value={playlistName}
             onChange={(e) => setPlaylistName(e.target.value)}

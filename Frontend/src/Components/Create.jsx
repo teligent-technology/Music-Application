@@ -2,19 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const CreatePlaylistPage = () => {
+  const [message, setMessage] = useState('');
   const [playlists, setPlaylists] = useState([]);
   const [expandedPlaylist, setExpandedPlaylist] = useState(null);
 
   useEffect(() => {
-    const loadPlaylists = () => {
-      const existing = JSON.parse(localStorage.getItem('myPlaylists')) || [];
-      setPlaylists(existing);
-    };
-
-    loadPlaylists();
-
-    window.addEventListener("playlist-updated", loadPlaylists);
-    return () => window.removeEventListener("playlist-updated", loadPlaylists);
+    const existing = JSON.parse(localStorage.getItem('myPlaylists')) || [];
+    setPlaylists(existing);
   }, []);
 
   const toggleSongs = (playlistName) => {
@@ -51,14 +45,30 @@ const CreatePlaylistPage = () => {
         <p className="text-muted small">You can’t upgrade to Premium in the app. We know, it's not ideal.</p>
       </div>
 
-      <div className="position-fixed start-0 end-0 bg-dark text-white rounded-top px-4 py-4" style={{ bottom: '70px', margin: '0 20px', zIndex: 20 }}>
+      {/* Playlist Creation Section */}
+      <div
+        className="position-fixed start-0 end-0 bg-dark text-white rounded-top px-4 py-4"
+        style={{ bottom: '70px', margin: '0 20px', zIndex: 20 }}
+      >
+        {message && (
+          <div className="alert alert-success py-2 px-3 small" role="alert">
+            {message}
+          </div>
+        )}
+
+        {/* ONLY the Create Custom Playlist Link */}
         <div className="mb-3">
-          <Link to="/playlist" className="btn btn-light text-dark" style={{ fontSize: "1.1rem" }}>
+          <Link
+            to="/playlist"
+            className="btn btn-light text-dark"
+            style={{ fontSize: "1.1rem" }}
+          >
             Create Custom Playlist
           </Link>
         </div>
       </div>
 
+      {/* Playlist Viewer */}
       <div className="px-4 pt-2 position-relative z-1">
         <h5 className="text-white mt-4">Your Playlists</h5>
         {playlists.map((playlist, idx) => (
@@ -86,6 +96,7 @@ const CreatePlaylistPage = () => {
         ))}
       </div>
 
+      {/* Mobile Footer */}
       <div className="d-md-none position-fixed bottom-0 start-0 end-0 bg-dark text-white border-top border-secondary z-3">
         <div className="d-flex justify-content-around py-2">
           <Link to="/home" className="text-white text-center text-decoration-none">
