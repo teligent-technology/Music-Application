@@ -37,7 +37,7 @@ const CreatePlaylistPage = () => {
             Limited time offer — 4 months Premium free
           </div>
 
-          <p className="text-muted small mb-4">
+          <p className="text-muted small mb-4 text-white">
             You can’t upgrade to Premium in the app. We know, it’s not ideal. But you can still create your perfect playlist!
           </p>
         </div>
