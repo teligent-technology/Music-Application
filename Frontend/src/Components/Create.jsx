@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const CreatePlaylistPage = () => {
-  const [selectedType, setSelectedType] = useState(null);
-  const [playlistName, setPlaylistName] = useState('');
   const [message, setMessage] = useState('');
   const [playlists, setPlaylists] = useState([]);
   const [expandedPlaylist, setExpandedPlaylist] = useState(null);
@@ -12,31 +10,6 @@ const CreatePlaylistPage = () => {
     const existing = JSON.parse(localStorage.getItem('myPlaylists')) || [];
     setPlaylists(existing);
   }, []);
-
-  const handleCreate = () => {
-    if (!playlistName.trim()) {
-      setMessage('Playlist name cannot be empty');
-      return;
-    }
-
-    const newPlaylist = {
-      name: playlistName,
-      type: selectedType,
-      createdAt: new Date().toISOString()
-    };
-
-    const existing = JSON.parse(localStorage.getItem('myPlaylists')) || [];
-    const updated = [...existing, newPlaylist];
-
-    localStorage.setItem('myPlaylists', JSON.stringify(updated));
-    setPlaylists(updated);
-
-    setMessage(`${selectedType} "${playlistName}" created!`);
-    setPlaylistName('');
-    setSelectedType(null);
-
-    setTimeout(() => setMessage(''), 3000);
-  };
 
   const toggleSongs = (playlistName) => {
     setExpandedPlaylist(prev => (prev === playlistName ? null : playlistName));
@@ -83,56 +56,7 @@ const CreatePlaylistPage = () => {
           </div>
         )}
 
-        {[{
-          icon: 'fas fa-music',
-          title: 'Playlist',
-          desc: 'Build a playlist with songs or episodes',
-          type: 'Regular Playlist'
-        }, {
-          icon: 'fas fa-user-friends',
-          title: 'Collaborative Playlist',
-          desc: 'Invite friends and create something together',
-          type: 'Collaborative'
-        }, {
-          icon: 'fas fa-ring',
-          title: 'Blend',
-          desc: 'Combine tastes in a shared playlist with friends',
-          type: 'Blend'
-        }].map((item, index) => (
-          <div key={index} className="mb-3 d-flex align-items-center" role="button" onClick={() => setSelectedType(item.type)}>
-            <div className="bg-secondary p-3 rounded-circle me-3">
-              <i className={`${item.icon} text-white fs-5`} />
-            </div>
-            <div>
-              <h5 className="mb-1">{item.title}</h5>
-              <p className="text-muted small mb-0">{item.desc}</p>
-            </div>
-          </div>
-        ))}
-
-        {selectedType && (
-          <div className="mt-3">
-            <input
-              type="text"
-              className="form-control mb-2"
-              placeholder={`Enter ${selectedType} name`}
-              value={playlistName}
-              onChange={(e) => setPlaylistName(e.target.value)}
-            />
-            <div className="d-flex gap-2">
-              <button className="btn btn-success btn-sm" onClick={handleCreate}>Create</button>
-              <button className="btn btn-outline-light btn-sm" onClick={() => {
-                setSelectedType(null);
-                setPlaylistName('');
-              }}>Cancel</button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Playlist Viewer */}
-      <div className="px-4 pt-2 position-relative z-1">
-        {/* Your Link inserted here */}
+        {/* ONLY the Create Custom Playlist Link */}
         <div className="mb-3">
           <Link
             to="/playlist"
@@ -142,7 +66,10 @@ const CreatePlaylistPage = () => {
             Create Custom Playlist
           </Link>
         </div>
+      </div>
 
+      {/* Playlist Viewer */}
+      <div className="px-4 pt-2 position-relative z-1">
         <h5 className="text-white mt-4">Your Playlists</h5>
         {playlists.map((playlist, idx) => (
           <div key={idx} className="bg-dark rounded my-2 p-3">
