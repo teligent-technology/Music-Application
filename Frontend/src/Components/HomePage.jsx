@@ -180,7 +180,7 @@ const HomePage = () => {
 
       {/* Top Artists */}
      {/* All Artists / Moods Section */}
- <Container className="mt-4">
+  <Container className="mt-4">
       <h5 className="text-info fw-bold mb-3">
         <i className="bi bi-music-note-list me-2" />
         Top 7 Artists
@@ -195,17 +195,36 @@ const HomePage = () => {
               key={index}
               to={`/artist/${encodeURIComponent(artist)}`}
               className="text-decoration-none text-white"
-              style={{ minWidth: "120px", flex: "0 0 auto" }}
-              title={artist}
+              style={{
+                flex: "0 0 auto",
+                minWidth: "200px",
+                maxWidth: "200px",
+              }}
             >
-              <div className="d-flex flex-column align-items-center bg-secondary rounded p-2 shadow-sm hover-shadow text-center">
+              <div className="d-flex align-items-center bg-dark rounded-pill px-2 py-2 shadow-sm">
                 <img
                   src={artistImage}
                   alt={artist}
-                  className="rounded-circle mb-2"
-                  style={{ width: 64, height: 64, objectFit: "cover", border: "2px solid #0dcaf0" }}
+                  className="rounded-circle"
+                  style={{
+                    width: 40,
+                    height: 40,
+                    objectFit: "cover",
+                    border: "1px solid #0dcaf0",
+                  }}
                 />
-                <small className="fw-medium text-truncate w-100">{artist}</small>
+                <span
+                  className="ms-3 fw-semibold text-truncate"
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    fontSize: "0.95rem",
+                    flex: 1,
+                  }}
+                >
+                  {artist}
+                </span>
               </div>
             </Link>
           );
