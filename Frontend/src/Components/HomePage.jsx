@@ -347,7 +347,7 @@ const HomePage = () => {
 </Container>
 
          <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <h5 className="text-light fw-bold mb-3">Recent</h5>
   <Row className="flex-row flex-nowrap overflow-auto gx-3">
     {jumpMoveInItems.map((item, idx) => (
       <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
@@ -382,7 +382,7 @@ const HomePage = () => {
 </Container>
 
         <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <h5 className="text-light fw-bold mb-3">Recommandation Stations</h5>
   <Row className="flex-row flex-nowrap overflow-auto gx-3">
     {jumpRightInItems.map((item, idx) => (
       <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
@@ -395,14 +395,20 @@ const HomePage = () => {
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           aria-label={`Jump back in: ${item.title} by ${item.artist}`}
         >
-          <Card.Img
-            variant="top"
-            src={item.img}
-            alt={item.title}
-            className="rounded mb-2"
-            style={{ objectFit: "cover", height: 120 }}
-          />
-          <Card.Body className="p-0">
+          <div className="d-flex justify-content-center">
+            <img
+              src={item.img}
+              alt={item.title}
+              className="rounded-circle mb-3"
+              style={{
+                width: 80,
+                height: 80,
+                objectFit: "cover",
+                border: "2px solid #fff",
+              }}
+            />
+          </div>
+          <Card.Body className="p-0 text-center">
             <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
               {item.title}
             </Card.Title>
@@ -416,8 +422,9 @@ const HomePage = () => {
   </Row>
 </Container>
 
+
        <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <h5 className="text-light fw-bold mb-3">Your Favourite Artists</h5>
   <Row className="flex-row flex-nowrap overflow-auto gx-3">
     {jumpLeftInItems.map((item, idx) => (
       <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
@@ -453,7 +460,7 @@ const HomePage = () => {
 
 
        <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <h5 className="text-light fw-bold mb-3">India Best</h5>
   <Row className="flex-row flex-nowrap overflow-auto gx-3">
     {jumpMoveInItems.map((item, idx) => (
       <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
@@ -488,7 +495,7 @@ const HomePage = () => {
 </Container>
 
         <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <h5 className="text-light fw-bold mb-3">Recommandation for Today</h5>
   <Row className="flex-row flex-nowrap overflow-auto gx-3">
     {jumpRightInItems.map((item, idx) => (
       <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
@@ -523,27 +530,34 @@ const HomePage = () => {
 </Container>
 
 
-       <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+     <Container className="mt-5 mb-5">
+  <h5 className="text-light fw-bold mb-3">Made For Aditya Kumar</h5>
   <Row className="flex-row flex-nowrap overflow-auto gx-3">
     {jumpLeftInItems.map((item, idx) => (
       <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
         <Card
           bg="dark"
           text="white"
-          className="shadow-sm rounded-lg card-hover p-3"
+          className="shadow-sm rounded-lg card-hover p-3 text-center"
           style={{ cursor: "pointer", transition: "transform 0.2s" }}
           onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
           onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+
           aria-label={`Jump back in: ${item.title} by ${item.artist}`}
         >
-          <Card.Img
-            variant="top"
-            src={item.img}
-            alt={item.title}
-            className="rounded mb-2"
-            style={{ objectFit: "cover", height: 120 }}
-          />
+          <div className="d-flex justify-content-center">
+            <img
+              src={item.img}
+              alt={item.title}
+              className="rounded-circle mb-3"
+              style={{
+                width: 80,
+                height: 80,
+                objectFit: "cover",
+                border: "2px solid #fff"
+              }}
+            />
+          </div>
           <Card.Body className="p-0">
             <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
               {item.title}
@@ -559,8 +573,9 @@ const HomePage = () => {
 </Container>
 
 
+
         <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+  <h5 className="text-light fw-bold mb-3">Garry Sandhu</h5>
   <Row className="flex-row flex-nowrap overflow-auto gx-3">
     {jumpBackInItems.map((item, idx) => (
       <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
