@@ -260,30 +260,55 @@ const HomePage = () => {
 
       {/* New Releases */}
       <Container className="mt-5">
-        <h5 className="text-primary fw-bold mb-3"><i className="bi bi-megaphone me-2" />New Releases</h5>
-        <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
-          {newReleases.map((song, idx) => (
-            <Col key={idx}>
-              <Card
-                className="bg-black text-white shadow-sm h-100 border-0 card-hover text-center"
-                style={{ cursor: "pointer", overflow: "hidden" }}
-                aria-label={`New release: ${song.name} by ${song.artist}`}
-              >
-                <Card.Img
-                  variant="top"
-                  src={song.img}
-                  alt={song.name}
-                  style={{ height: "220px", objectFit: "cover" }}
-                />
-                <Card.Body className="py-3">
-                  <Card.Title className="fw-bold fs-6 text-truncate">{song.name}</Card.Title>
-                  <Card.Text className="text-muted text-truncate">{song.artist}</Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </Container>     
+      <h5 className="text-primary fw-bold mb-3">
+        <i className="bi bi-megaphone me-2" />
+        New Releases
+      </h5>
+
+      <div className="d-flex overflow-auto gap-3 pb-2 px-1" style={{ scrollbarWidth: "none" }}>
+        {newReleases.map((song, idx) => (
+          <Link
+            key={idx}
+            to={`/song/${encodeURIComponent(song.name)}`}
+            className="text-decoration-none text-white"
+            style={{ flex: "0 0 auto", width: "140px" }}
+          >
+            <div
+              className="bg-dark rounded shadow-sm p-2"
+              style={{
+                cursor: "pointer",
+                height: "220px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+              aria-label={`New release: ${song.name} by ${song.artist}`}
+            >
+              <img
+                src={song.img}
+                alt={song.name}
+                style={{
+                  width: "100%",
+                  height: "120px",
+                  objectFit: "cover",
+                  borderRadius: "8px",
+                  marginBottom: "10px",
+                }}
+              />
+              <div className="w-100">
+                <div className="fw-bold text-truncate" style={{ fontSize: "0.9rem" }}>
+                  {song.name}
+                </div>
+                <div className="text-muted text-truncate" style={{ fontSize: "0.75rem" }}>
+                  {song.artist}
+                </div>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </Container> 
 
       {/* Jump Back In Section */}
       <Container className="mt-5 mb-5">
