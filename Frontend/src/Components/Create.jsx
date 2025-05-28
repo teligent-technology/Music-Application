@@ -127,7 +127,7 @@ const CreatePlaylistPage = () => {
             <i className="bi bi-search fs-4 d-block" />
             <small>Search</small>
           </Link>
-          <Link to="/library" className="text-white text-center text-decoration-none">
+          <Link to="/pubjabi" className="text-white text-center text-decoration-none">
             <i className="bi bi-music-note-list fs-4 d-block" />
             <small>Library</small>
           </Link>
