@@ -170,8 +170,8 @@ const HomePage = () => {
           </Link>
           <div className="btn-group bg-secondary rounded-pill p-1 shadow-sm">
             <Link to="/home" className="btn btn-sm btn-dark rounded-pill px-4">All</Link>
-            <Link to="/Music" className="btn btn-sm btn-dark rounded-pill px-4">Music</Link>
-            <Link to="/Podcast" className="btn btn-sm btn-dark rounded-pill px-4">Podcast</Link>
+            <Link to="/home" className="btn btn-sm btn-dark rounded-pill px-4">Music</Link>
+            <Link to="/home" className="btn btn-sm btn-dark rounded-pill px-4">Podcast</Link>
 
           </div>
         </div>
