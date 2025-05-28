@@ -13,7 +13,6 @@ function Login() {
     const shouldClear = location.state?.clearForm;
     if (shouldClear) {
       setForm({ username: '', password: '' });
-
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
@@ -26,21 +25,19 @@ function Login() {
       const res = await axios.post('https://music-application-backend.onrender.com/person/login', form, {
         headers: { 'Content-Type': 'application/json' },
       });
+
       if (res.status === 200) {
-  localStorage.setItem("token", res.data.token);
+        localStorage.setItem("token", res.data.token);
+        const user = {
+          name: res.data.name,
+          username: res.data.username,
+          Mobile: res.data.Mobile
+        };
+        localStorage.setItem("user", JSON.stringify(user));
 
-  const user = {
-    name: res.data.name,
-    username: res.data.username,
-    Mobile: res.data.Mobile
-  };
-  localStorage.setItem("user", JSON.stringify(user));
-
-  alert(res.data.message || "Login successful");
-  navigate('/home');
-}
-
- else {
+        alert(res.data.message || "Login successful");
+        navigate('/home');
+      } else {
         console.warn("Received non-200 response:", res.status);
       }
     } catch (err) {
@@ -51,21 +48,26 @@ function Login() {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
-      <div className="card shadow p-4" style={{ width: "100%", maxWidth: "400px" }}>
-        <h2 className="text-center mb-4">Login</h2>
-<form onSubmit={handleSubmit} autoComplete="off">
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(to right, #6a11cb, #2575fc)"
+      }}
+    >
+      <div className="card p-4 shadow-lg" style={{ width: "100%", maxWidth: "400px", borderRadius: "20px" }}>
+        <h2 className="text-center mb-4" style={{ fontWeight: "bold", color: "#343a40" }}>Welcome Back</h2>
+        
+        <form onSubmit={handleSubmit} autoComplete="off">
           <div className="mb-3">
             <label className="form-label">Username</label>
             <input
               name="username"
               type="text"
-                autoComplete="new-password"   // Prevent password save prompt
-
-              className="form-control"
-              placeholder="Enter username"
+              autoComplete="new-password"
+              className="form-control form-control-lg"
+              placeholder="Enter your username"
               value={form.username}
-
               onChange={handleChange}
               required
             />
@@ -77,27 +79,29 @@ function Login() {
               <input
                 name="password"
                 type={showPassword ? "text" : "password"}
-                className="form-control"
-                placeholder="Enter password"
+                className="form-control form-control-lg"
+                placeholder="Enter your password"
                 value={form.password}
                 onChange={handleChange}
                 required
               />
               <span
-                className="input-group-text"
+                className="input-group-text bg-white border-start-0"
                 style={{ cursor: 'pointer' }}
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
+                {showPassword ? <FaEyeSlash color="#6c757d" /> : <FaEye color="#6c757d" />}
               </span>
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">Login</button>
+          <button type="submit" className="btn btn-primary w-100 btn-lg mt-3">
+            Login
+          </button>
         </form>
 
-        <p className="mt-3 text-center">
-          Don't have an account? <Link to="/">Signup</Link>
+        <p className="text-center mt-4 mb-0 text-muted">
+          Don't have an account? <Link to="/" className="text-primary">Signup</Link>
         </p>
       </div>
     </div>

@@ -12,16 +12,13 @@ function Signup() {
 
   const navigate = useNavigate();
 
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async e => {
     e.preventDefault();
     try {
       const res = await axios.post('https://music-application-backend.onrender.com/person/', form);
       if (res.status === 200) {
-        // ✅ Save user info to localStorage
         const user = {
           name: form.name,
           username: form.username,
@@ -30,9 +27,9 @@ function Signup() {
         localStorage.setItem("user", JSON.stringify(user));
 
         alert(res.data.message || "Signup successful");
-        navigate('/login');
+        navigate('/login', { state: { clearForm: true } });
       } else {
-        console.warn("Received non-200 response:", res.status);
+        console.warn("Non-200 response:", res.status);
       }
     } catch (err) {
       console.error('Error:', err);
@@ -42,17 +39,24 @@ function Signup() {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
-      <div className="card shadow p-4" style={{ width: "100%", maxWidth: "500px" }}>
-        <h2 className="text-center mb-4">Sign Up</h2>
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(to right, #ff512f, #dd2476)"
+      }}
+    >
+      <div className="card p-4 shadow-lg" style={{ width: "100%", maxWidth: "500px", borderRadius: "20px" }}>
+        <h2 className="text-center mb-4 fw-bold text-dark">Create Account</h2>
+
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label">Full Name</label>
             <input
               name="name"
               type="text"
-              className="form-control"
-              placeholder="Enter your name"
+              className="form-control form-control-lg"
+              placeholder="Enter your full name"
               value={form.name}
               onChange={handleChange}
               required
@@ -60,11 +64,11 @@ function Signup() {
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Mobile</label>
+            <label className="form-label">Mobile Number</label>
             <input
               name="Mobile"
               type="number"
-              className="form-control"
+              className="form-control form-control-lg"
               placeholder="Enter mobile number"
               value={form.Mobile}
               onChange={handleChange}
@@ -77,31 +81,34 @@ function Signup() {
             <input
               name="username"
               type="text"
-              className="form-control"
-              placeholder="Enter username"
+              className="form-control form-control-lg"
+              placeholder="Choose a username"
               value={form.username}
               onChange={handleChange}
               required
             />
           </div>
 
-          <div className="mb-3">
+          <div className="mb-4">
             <label className="form-label">Password</label>
             <input
               name="password"
               type="password"
-              className="form-control"
-              placeholder="Enter password"
+              className="form-control form-control-lg"
+              placeholder="Create a password"
               value={form.password}
               onChange={handleChange}
               required
             />
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">Sign Up</button>
+          <button type="submit" className="btn btn-success w-100 btn-lg">
+            Sign Up
+          </button>
         </form>
-        <p className="mt-3 text-center">
-          Already have an account? <Link to="/login">Login</Link>
+
+        <p className="text-center mt-4 text-muted">
+          Already have an account? <Link to="/login" className="text-primary">Login</Link>
         </p>
       </div>
     </div>
