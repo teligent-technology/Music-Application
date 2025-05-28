@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const CreatePlaylistPage = () => {
   const [selectedType, setSelectedType] = useState(null);
   const [playlistName, setPlaylistName] = useState('');
   const [message, setMessage] = useState('');
+  const [playlists, setPlaylists] = useState([]);
+  const [expandedPlaylist, setExpandedPlaylist] = useState(null);
+
+  useEffect(() => {
+    const existing = JSON.parse(localStorage.getItem('myPlaylists')) || [];
+    setPlaylists(existing);
+  }, []);
 
   const handleCreate = () => {
     if (!playlistName.trim()) {
@@ -19,19 +26,28 @@ const CreatePlaylistPage = () => {
     };
 
     const existing = JSON.parse(localStorage.getItem('myPlaylists')) || [];
-    localStorage.setItem('myPlaylists', JSON.stringify([...existing, newPlaylist]));
+    const updated = [...existing, newPlaylist];
+
+    localStorage.setItem('myPlaylists', JSON.stringify(updated));
+    setPlaylists(updated);
 
     setMessage(`${selectedType} "${playlistName}" created!`);
     setPlaylistName('');
     setSelectedType(null);
 
-    // Auto-hide message after 3s
     setTimeout(() => setMessage(''), 3000);
+  };
+
+  const toggleSongs = (playlistName) => {
+    setExpandedPlaylist(prev => (prev === playlistName ? null : playlistName));
+  };
+
+  const getSongs = (playlistName) => {
+    return JSON.parse(localStorage.getItem(`playlistSongs_${playlistName}`)) || [];
   };
 
   return (
     <div className="bg-black text-white position-relative min-vh-100" style={{ paddingBottom: '120px' }}>
-      {/* Background */}
       <div className="position-absolute top-0 start-0 w-100 h-100 z-0">
         <img
           src="your-hero-image.jpg"
@@ -41,7 +57,6 @@ const CreatePlaylistPage = () => {
         />
       </div>
 
-      {/* Content */}
       <div className="position-relative z-1 p-4 pt-5">
         <div className="d-flex align-items-center text-secondary mb-2">
           <i className="fab fa-spotify text-white me-2" />
@@ -57,10 +72,10 @@ const CreatePlaylistPage = () => {
         <p className="text-muted small">You can’t upgrade to Premium in the app. We know, it's not ideal.</p>
       </div>
 
-      {/* Playlist Options */}
+      {/* Playlist Creation Section */}
       <div
         className="position-fixed start-0 end-0 bg-dark text-white rounded-top px-4 py-4"
-        style={{ bottom: '70px', margin: '0 20px', height: '320px', zIndex: 20 }}
+        style={{ bottom: '70px', margin: '0 20px', zIndex: 20 }}
       >
         {message && (
           <div className="alert alert-success py-2 px-3 small" role="alert">
@@ -84,7 +99,7 @@ const CreatePlaylistPage = () => {
           desc: 'Combine tastes in a shared playlist with friends',
           type: 'Blend'
         }].map((item, index) => (
-          <div key={index} className="mb-4 d-flex align-items-center" role="button" onClick={() => setSelectedType(item.type)}>
+          <div key={index} className="mb-3 d-flex align-items-center" role="button" onClick={() => setSelectedType(item.type)}>
             <div className="bg-secondary p-3 rounded-circle me-3">
               <i className={`${item.icon} text-white fs-5`} />
             </div>
@@ -95,7 +110,6 @@ const CreatePlaylistPage = () => {
           </div>
         ))}
 
-        {/* Modal-Like Input */}
         {selectedType && (
           <div className="mt-3">
             <input
@@ -116,7 +130,35 @@ const CreatePlaylistPage = () => {
         )}
       </div>
 
-      {/* Bottom Navigation */}
+      {/* Playlist Viewer */}
+      <div className="px-4 pt-2 position-relative z-1">
+        <h5 className="text-white mt-4">Your Playlists</h5>
+        {playlists.map((playlist, idx) => (
+          <div key={idx} className="bg-dark rounded my-2 p-3">
+            <div className="d-flex justify-content-between align-items-center">
+              <div>
+                <strong>{playlist.name}</strong> <span className="text-muted small">({playlist.type})</span>
+              </div>
+              <button className="btn btn-sm btn-outline-light" onClick={() => toggleSongs(playlist.name)}>
+                {expandedPlaylist === playlist.name ? 'Hide Songs' : 'Show Songs'}
+              </button>
+            </div>
+            {expandedPlaylist === playlist.name && (
+              <ul className="mt-2 mb-0 ps-3">
+                {getSongs(playlist.name).length > 0 ? (
+                  getSongs(playlist.name).map((song, i) => (
+                    <li key={i}>{song.name}</li>
+                  ))
+                ) : (
+                  <li className="text-muted small">No songs added yet.</li>
+                )}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Mobile Footer */}
       <div className="d-md-none position-fixed bottom-0 start-0 end-0 bg-dark text-white border-top border-secondary z-3">
         <div className="d-flex justify-content-around py-2">
           <Link to="/home" className="text-white text-center text-decoration-none">
