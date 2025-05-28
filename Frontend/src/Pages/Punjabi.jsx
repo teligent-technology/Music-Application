@@ -30,13 +30,7 @@ const Punjabi = () => {
       <div 
       style={{ marginTop: 60 }} className="d-flex justify-content-center gap-5"
       >
-<Link
-              to="/playlist"
-              className="btn btn-light text-dark"
-              style={{ fontSize: "1.1rem" }}
-            >
-              Create Custom Playlist
-            </Link>  
+
     </div>
     
           </nav>
