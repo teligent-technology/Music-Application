@@ -93,7 +93,7 @@ const PremiumPage = () => {
           {[
             { to: "/home", icon: "bi-house-door-fill", label: "Home" },
             { to: "/search", icon: "bi-search", label: "Search" },
-            { to: "/punjabi", icon: "bi-music-note-list", label: "punjabi" },
+            { to: "/punjabi", icon: "bi-music-note-list", label: "Library" },
             { to: "/create", icon: "bi-plus-circle-fill", label: "Create" },
             { to: "/premium", icon: "bi-gem", label: "Premium" },
           ].map((item, idx) => (
