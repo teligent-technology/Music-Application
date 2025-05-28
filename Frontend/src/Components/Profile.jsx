@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import LogoutButton from "./LogoutButton";
 
 const Profile = () => {
@@ -52,10 +52,12 @@ const Profile = () => {
       </style>
 
       <div
-        className={`profile-container d-flex flex-column justify-content-between p-4 ${darkMode ? "text-white" : "text-dark"}`}
+        className={`profile-container d-flex flex-column justify-content-between p-4 ${
+          darkMode ? "text-white" : "text-dark"
+        }`}
         style={{
           backgroundColor: darkMode ? "black" : "white",
-          minHeight: "100vh",
+          minHeight: "100vh"
         }}
       >
         {/* Profile Info */}
@@ -69,13 +71,18 @@ const Profile = () => {
                 width: "48px",
                 height: "48px",
                 fontSize: "1.2rem",
-                fontWeight: "bold",
+                fontWeight: "bold"
               }}
             >
               {user?.name?.charAt(0)?.toUpperCase() || "?"}
             </div>
             <div>
               <div className="fw-bold fs-5">{user.name}</div>
+              {user.isPremium && (
+                <div className="badge bg-warning text-dark mt-1">
+                  🌟 Premium User
+                </div>
+              )}
               <div className="text-secondary" style={{ fontSize: "0.85rem" }}>
                 View profile
               </div>
@@ -115,29 +122,16 @@ const Profile = () => {
               <span>⚙️</span> <span>Settings and privacy</span>
             </div>
 
+            {/* Go Premium (Link) */}
             {!user.isPremium && (
-              <div
-                className="d-flex align-items-center gap-2 menu-option text-warning"
-                role="button"
-                onClick={() => handleNavigate("/premium")}
+              <Link
+                to="/premium"
+                className="d-flex align-items-center gap-2 menu-option text-warning text-decoration-none"
               >
                 <span>🌟</span> <span>Go Premium</span>
-              </div>
+              </Link>
             )}
           </div>
-
-          {/* Premium Section */}
-          {user.isPremium && (
-            <div className="mt-4 p-3 bg-success bg-opacity-10 rounded">
-              <h5>🎉 Premium Features</h5>
-              <ul className="mb-0">
-                <li>Ad-free music</li>
-                <li>High-quality audio</li>
-                <li>Offline downloads</li>
-                <li>Exclusive albums & songs</li>
-              </ul>
-            </div>
-          )}
 
           {/* Theme Toggle */}
           <div className="form-check form-switch mt-4">
