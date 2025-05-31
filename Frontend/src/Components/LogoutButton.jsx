@@ -9,7 +9,7 @@ const LogoutButton = () => {
 
     try {
       // Call backend logout API
-      await fetch('https://music-application-backend.onrender.com/person/logout', {
+      await fetch('http://localhost:3000/person/logout', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
