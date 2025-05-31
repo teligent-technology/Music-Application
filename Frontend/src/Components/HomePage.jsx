@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
 import {
-  Container, Row, Col, Form, Button, Card, InputGroup
+  Container, Row, Col, Form, Button, Card
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Songs } from "../data/song";
 
-// Utility Functions
 const getUniqueArtists = (songs) => {
   const artistSet = new Set();
   songs.forEach(song => artistSet.add(song.artist.trim()));
-  return Array.from(artistSet).slice(0, 7);
+  return Array.from(artistSet);
 };
+
+// Extract unique artist names from Songs array
+const uniqueArtists = Array.from(
+  new Set(Songs.map((song) => song.artist))
+).slice(0, 7);
+
 
 const getTopArtists = (songs) => {
   const count = {};
@@ -38,26 +43,23 @@ const chunkArray = (arr, n) => {
   return chunks;
 };
 
-// Main Component
 const HomePage = () => {
   const [favorites, setFavorites] = useState([]);
   const [genreFilter, setGenreFilter] = useState("");
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
 
   const uniqueArtists = getUniqueArtists(Songs);
   const topArtists = getTopArtists(Songs);
   const genres = getGenres(Songs);
-  const topArtistChunks = chunkArray(topArtists, 3);
 
-  const filteredArtists = uniqueArtists.filter(artist =>
-    !genreFilter || Songs.some(song => song.artist === artist && song.genre === genreFilter)
-  );
+  const filteredArtists = uniqueArtists.filter(artist => {
+    if (!genreFilter) return true;
+    return Songs.some(song => song.artist === artist && song.genre === genreFilter);
+  });
 
-  const filteredSongs = Songs.filter(song =>
-    song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    song.artist.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem("favArtists") || "[]");
+    setFavorites(stored);
+  }, []);
 
   const toggleFavorite = (artist) => {
     const updated = favorites.includes(artist)
@@ -67,11 +69,6 @@ const HomePage = () => {
     localStorage.setItem("favArtists", JSON.stringify(updated));
   };
 
-  useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("favArtists") || "[]");
-    setFavorites(stored);
-  }, []);
-
   const recentlyPlayed = JSON.parse(localStorage.getItem("recentlyPlayed") || "[]");
 
   const newReleases = Songs
@@ -79,42 +76,98 @@ const HomePage = () => {
     .sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate))
     .slice(0, 5);
 
-  // Dummy Sections
+  const topArtistChunks = chunkArray(topArtists, 3);
+
+  // Dummy jump back in items (you can replace these with your dynamic data)
   const jumpBackInItems = [
-    { img: "https://i.pravatar.cc/150?img=10", title: "Notes", artist: "Laddi Chahal" },
-    { img: "https://i.pravatar.cc/150?img=11", title: "Reflections", artist: "Gurdeep Singh" },
-    { img: "https://i.pravatar.cc/150?img=12", title: "Waves", artist: "Simran Kaur" },
+    {
+      img: "https://i.pravatar.cc/150?img=10",
+      title: "Notes",
+      artist: "Laddi Chahal",
+    },
+    {
+      img: "https://i.pravatar.cc/150?img=11",
+      title: "Reflections",
+      artist: "Gurdeep Singh",
+    },
+    {
+      img: "https://i.pravatar.cc/150?img=12",
+      title: "Waves",
+      artist: "Simran Kaur",
+    },
   ];
 
   const jumpMoveInItems = [
-    { img: "/Images/image1.jpg", title: "Rich & Famous", artist: "Diljit Dosjanj" },
-    { img: "/Images/image2.jpg", title: "Harnoor All songs", artist: "Karan Aujla" },
-    { img: "/Images/image3.jpg", title: "Jass Manak", artist: "karun nair" },
+    {
+      img: "/Images/image1.jpg",
+      title: "Rich & Famous ",
+      artist: "Diljit Dosjanj"
+    },
+    {
+      img: "/Images/image2.jpg",
+      title: "Harnoor All songs",
+      artist: "Karan Aujla",
+    },
+    {
+      img: "/Images/image3.jpg",
+      title: "Jass Manak",
+      artist: "karun nair",
+    },
   ];
 
   const jumpRightInItems = [
-    { img: "/Images/image4.jpg", title: "Diljit Dosanjh, Shubh, Badshah...", artist: "Laddi Chahal" },
-    { img: "/Images/image5.jpg", title: "Pritam, Anirudh Ravichandra...", artist: "Gurdeep Singh" },
-    { img: "/Images/image6.jpg", title: "Diljit Dosanjh", artist: "Simran Kaur" },
+    {
+      img: "/Images/image4.jpg",
+      title: "Diljit Dosanjh, Shubh, Badshah, Jasleen Roy...",
+      artist: "Laddi Chahal",
+    },
+    {
+      img: "/Images/image5.jpg",
+      title: "Pritam, Anirudh Ravichandra, Sachet Tandon",
+      artist: "Gurdeep Singh",
+    },
+    {
+      img: "/Images/image6.jpg",
+      title: "Diljit Dosanjh",
+      artist: "Simran Kaur",
+    },
   ];
 
   const jumpLeftInItems = [
-    { img: "/Images/image7.jpg", title: "Lekh (Original Motion Picture)", artist: "Laddi Chahal" },
-    { img: "/Images/image8.jpg", title: "Roi na (From Siddhat)", artist: "Gurdeep Singh" },
-    { img: "/Images/image9.jpg", title: "Karan Aujla , Dj & Snake -P&D", artist: "Simran Kaur" },
+    {
+      img: "/Images/image7.jpg",
+      title: "Lekh (Original Motion Picture)",
+      artist: "Laddi Chahal",
+    },
+    {
+      img: "/Images/image8.jpg",
+      title: "Roi na (From Siddhat)",
+      artist: "Gurdeep Singh",
+    },
+    {
+      img: "/Images/image9.jpg",
+      title: "Karan Aujla , Dj & Snake -P&D",
+      artist: "Simran Kaur",
+    },
   ];
 
+
+
   return (
+
     <div className="bg-dark text-white w-100 min-vh-100">
+      {/* "bg-dark text-white min-vh-100 pb-5" */}
       {/* Header */}
       <Container fluid className="py-3 px-4 border-bottom border-secondary sticky-top bg-black z-3">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <Link to="/profile" aria-label="Profile">
-            <div className="bg-primary rounded-circle d-flex justify-content-center align-items-center text-white fw-bold shadow" style={{ width: 40, height: 40, fontSize: '1.2rem' }}>
+            <div
+              className="bg-primary rounded-circle d-flex justify-content-center align-items-center text-white fw-bold shadow"
+              style={{ width: 40, height: 40, fontSize: '1.2rem' }}
+            >
               D
             </div>
           </Link>
-
           <div className="btn-group bg-secondary rounded-pill p-1 shadow-sm">
             <Link to="/home" className="btn btn-sm btn-dark rounded-pill px-4">All</Link>
             <Button
@@ -123,8 +176,9 @@ const HomePage = () => {
               onClick={() => setShowSearch(prev => !prev)}
             >
               Search
-            </Button>
+            </Button>            
             <Link to="/home" className="btn btn-sm btn-dark rounded-pill px-4">Podcast</Link>
+
           </div>
         </div>
 
@@ -140,7 +194,12 @@ const HomePage = () => {
         )}
       </Container>
 
-      {/* Top 7 Artists */}
+      {/* Filter by Genre */}
+
+
+
+      {/* Top Artists */}
+      {/* All Artists / Moods Section */}
       <Container className="mt-4">
         <h5 className="text-info fw-bold mb-3">
           <i className="bi bi-music-note-list me-2" />
@@ -148,14 +207,19 @@ const HomePage = () => {
         </h5>
 
         <div className="d-flex overflow-auto gap-3 pb-2 px-1" style={{ scrollbarWidth: "none" }}>
-          {filteredArtists.map((artist, index) => {
+          {uniqueArtists.map((artist, index) => {
             const artistImage = Songs.find(song => song.artist === artist)?.img || "/default-img.jpg";
+
             return (
               <Link
                 key={index}
                 to={`/artist/${encodeURIComponent(artist)}`}
                 className="text-decoration-none text-white"
-                style={{ flex: "0 0 auto", minWidth: "200px", maxWidth: "200px" }}
+                style={{
+                  flex: "0 0 auto",
+                  minWidth: "200px",
+                  maxWidth: "200px",
+                }}
               >
                 <div className="d-flex align-items-center bg-dark rounded-pill px-2 py-2 shadow-sm">
                   <img
@@ -187,10 +251,6 @@ const HomePage = () => {
           })}
         </div>
       </Container>
-
-
-
-
 
 
       {/* Recently Played */}
