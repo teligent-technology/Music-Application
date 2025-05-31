@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from "react";
 import {
-  Container, Row, Col, Form, Button, Card
+  Container, Row, Col, Form, Button, Card, InputGroup
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Songs } from "../data/song";
 
+// Utility Functions
 const getUniqueArtists = (songs) => {
   const artistSet = new Set();
   songs.forEach(song => artistSet.add(song.artist.trim()));
-  return Array.from(artistSet);
+  return Array.from(artistSet).slice(0, 7);
 };
-
-// Extract unique artist names from Songs array
-const uniqueArtists = Array.from(
-  new Set(Songs.map((song) => song.artist))
-).slice(0, 7);
-
 
 const getTopArtists = (songs) => {
   const count = {};
@@ -43,23 +38,26 @@ const chunkArray = (arr, n) => {
   return chunks;
 };
 
+// Main Component
 const HomePage = () => {
   const [favorites, setFavorites] = useState([]);
   const [genreFilter, setGenreFilter] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const uniqueArtists = getUniqueArtists(Songs);
   const topArtists = getTopArtists(Songs);
   const genres = getGenres(Songs);
+  const topArtistChunks = chunkArray(topArtists, 3);
 
-  const filteredArtists = uniqueArtists.filter(artist => {
-    if (!genreFilter) return true;
-    return Songs.some(song => song.artist === artist && song.genre === genreFilter);
-  });
+  const filteredArtists = uniqueArtists.filter(artist =>
+    !genreFilter || Songs.some(song => song.artist === artist && song.genre === genreFilter)
+  );
 
-  useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("favArtists") || "[]");
-    setFavorites(stored);
-  }, []);
+  const filteredSongs = Songs.filter(song =>
+    song.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    song.artist.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const toggleFavorite = (artist) => {
     const updated = favorites.includes(artist)
@@ -69,6 +67,11 @@ const HomePage = () => {
     localStorage.setItem("favArtists", JSON.stringify(updated));
   };
 
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem("favArtists") || "[]");
+    setFavorites(stored);
+  }, []);
+
   const recentlyPlayed = JSON.parse(localStorage.getItem("recentlyPlayed") || "[]");
 
   const newReleases = Songs
@@ -76,164 +79,118 @@ const HomePage = () => {
     .sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate))
     .slice(0, 5);
 
-  const topArtistChunks = chunkArray(topArtists, 3);
-
-  // Dummy jump back in items (you can replace these with your dynamic data)
+  // Dummy Sections
   const jumpBackInItems = [
-    {
-      img: "https://i.pravatar.cc/150?img=10",
-      title: "Notes",
-      artist: "Laddi Chahal",
-    },
-    {
-      img: "https://i.pravatar.cc/150?img=11",
-      title: "Reflections",
-      artist: "Gurdeep Singh",
-    },
-    {
-      img: "https://i.pravatar.cc/150?img=12",
-      title: "Waves",
-      artist: "Simran Kaur",
-    },
+    { img: "https://i.pravatar.cc/150?img=10", title: "Notes", artist: "Laddi Chahal" },
+    { img: "https://i.pravatar.cc/150?img=11", title: "Reflections", artist: "Gurdeep Singh" },
+    { img: "https://i.pravatar.cc/150?img=12", title: "Waves", artist: "Simran Kaur" },
   ];
 
-   const jumpMoveInItems = [
-    {
-      img: "/Images/image1.jpg",
-      title: "Rich & Famous ",
-      artist: "Diljit Dosjanj"
-    },
-    {
-      img: "/Images/image2.jpg",
-      title: "Harnoor All songs",
-      artist: "Karan Aujla",
-    },
-    {
-      img: "/Images/image3.jpg",
-      title: "Jass Manak",
-      artist: "karun nair",
-    },
+  const jumpMoveInItems = [
+    { img: "/Images/image1.jpg", title: "Rich & Famous", artist: "Diljit Dosjanj" },
+    { img: "/Images/image2.jpg", title: "Harnoor All songs", artist: "Karan Aujla" },
+    { img: "/Images/image3.jpg", title: "Jass Manak", artist: "karun nair" },
   ];
 
-   const jumpRightInItems = [
-    {
-      img: "/Images/image4.jpg",
-      title: "Diljit Dosanjh, Shubh, Badshah, Jasleen Roy...",
-      artist: "Laddi Chahal",
-    },
-    {
-      img: "/Images/image5.jpg",
-      title: "Pritam, Anirudh Ravichandra, Sachet Tandon",
-      artist: "Gurdeep Singh",
-    },
-    {
-      img: "/Images/image6.jpg",
-      title: "Diljit Dosanjh",
-      artist: "Simran Kaur",
-    },
+  const jumpRightInItems = [
+    { img: "/Images/image4.jpg", title: "Diljit Dosanjh, Shubh, Badshah...", artist: "Laddi Chahal" },
+    { img: "/Images/image5.jpg", title: "Pritam, Anirudh Ravichandra...", artist: "Gurdeep Singh" },
+    { img: "/Images/image6.jpg", title: "Diljit Dosanjh", artist: "Simran Kaur" },
   ];
 
-   const jumpLeftInItems = [
-    {
-      img: "/Images/image7.jpg",
-      title: "Lekh (Original Motion Picture)",
-      artist: "Laddi Chahal",
-    },
-    {
-      img: "/Images/image8.jpg",
-      title: "Roi na (From Siddhat)",
-      artist: "Gurdeep Singh",
-    },
-    {
-      img: "/Images/image9.jpg",
-      title: "Karan Aujla , Dj & Snake -P&D",
-      artist: "Simran Kaur",
-    },
+  const jumpLeftInItems = [
+    { img: "/Images/image7.jpg", title: "Lekh (Original Motion Picture)", artist: "Laddi Chahal" },
+    { img: "/Images/image8.jpg", title: "Roi na (From Siddhat)", artist: "Gurdeep Singh" },
+    { img: "/Images/image9.jpg", title: "Karan Aujla , Dj & Snake -P&D", artist: "Simran Kaur" },
   ];
-
-  
 
   return (
-    
-<div className="bg-dark text-white w-100 min-vh-100">
-      {/* "bg-dark text-white min-vh-100 pb-5" */}
+    <div className="bg-dark text-white w-100 min-vh-100">
       {/* Header */}
       <Container fluid className="py-3 px-4 border-bottom border-secondary sticky-top bg-black z-3">
         <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
           <Link to="/profile" aria-label="Profile">
-            <div
-              className="bg-primary rounded-circle d-flex justify-content-center align-items-center text-white fw-bold shadow"
-              style={{ width: 40, height: 40, fontSize: '1.2rem' }}
-            >
+            <div className="bg-primary rounded-circle d-flex justify-content-center align-items-center text-white fw-bold shadow" style={{ width: 40, height: 40, fontSize: '1.2rem' }}>
               D
             </div>
           </Link>
+
           <div className="btn-group bg-secondary rounded-pill p-1 shadow-sm">
             <Link to="/home" className="btn btn-sm btn-dark rounded-pill px-4">All</Link>
-            <Link to="/home" className="btn btn-sm btn-dark rounded-pill px-4">Music</Link>
+            <Button
+              variant="dark"
+              className="btn-sm rounded-pill px-4"
+              onClick={() => setShowSearch(prev => !prev)}
+            >
+              Search
+            </Button>
             <Link to="/home" className="btn btn-sm btn-dark rounded-pill px-4">Podcast</Link>
-
           </div>
+        </div>
+
+        {showSearch && (
+          <InputGroup className="mt-3">
+            <Form.Control
+              placeholder="Search songs or artists..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="bg-dark text-white border-secondary"
+            />
+          </InputGroup>
+        )}
+      </Container>
+
+      {/* Top 7 Artists */}
+      <Container className="mt-4">
+        <h5 className="text-info fw-bold mb-3">
+          <i className="bi bi-music-note-list me-2" />
+          Top 7 Artists
+        </h5>
+
+        <div className="d-flex overflow-auto gap-3 pb-2 px-1" style={{ scrollbarWidth: "none" }}>
+          {filteredArtists.map((artist, index) => {
+            const artistImage = Songs.find(song => song.artist === artist)?.img || "/default-img.jpg";
+            return (
+              <Link
+                key={index}
+                to={`/artist/${encodeURIComponent(artist)}`}
+                className="text-decoration-none text-white"
+                style={{ flex: "0 0 auto", minWidth: "200px", maxWidth: "200px" }}
+              >
+                <div className="d-flex align-items-center bg-dark rounded-pill px-2 py-2 shadow-sm">
+                  <img
+                    src={artistImage}
+                    alt={artist}
+                    className="rounded-circle"
+                    style={{
+                      width: 40,
+                      height: 40,
+                      objectFit: "cover",
+                      border: "1px solid #0dcaf0",
+                    }}
+                  />
+                  <span
+                    className="ms-3 fw-semibold text-truncate"
+                    style={{
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      fontSize: "0.95rem",
+                      flex: 1,
+                    }}
+                  >
+                    {artist}
+                  </span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </Container>
 
-      {/* Filter by Genre */}
-      
-             
 
-      {/* Top Artists */}
-     {/* All Artists / Moods Section */}
-  <Container className="mt-4">
-      <h5 className="text-info fw-bold mb-3">
-        <i className="bi bi-music-note-list me-2" />
-        Top 7 Artists
-      </h5>
 
-      <div className="d-flex overflow-auto gap-3 pb-2 px-1" style={{ scrollbarWidth: "none" }}>
-        {uniqueArtists.map((artist, index) => {
-          const artistImage = Songs.find(song => song.artist === artist)?.img || "/default-img.jpg";
 
-          return (
-            <Link
-              key={index}
-              to={`/artist/${encodeURIComponent(artist)}`}
-              className="text-decoration-none text-white"
-              style={{
-                flex: "0 0 auto",
-                minWidth: "200px",
-                maxWidth: "200px",
-              }}
-            >
-              <div className="d-flex align-items-center bg-dark rounded-pill px-2 py-2 shadow-sm">
-                <img
-                  src={artistImage}
-                  alt={artist}
-                  className="rounded-circle"
-                  style={{
-                    width: 40,
-                    height: 40,
-                    objectFit: "cover",
-                    border: "1px solid #0dcaf0",
-                  }}
-                />
-                <span
-                  className="ms-3 fw-semibold text-truncate"
-                  style={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    fontSize: "0.95rem",
-                    flex: 1,
-                  }}
-                >
-                  {artist}
-                </span>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
-    </Container>
 
 
       {/* Recently Played */}
@@ -263,501 +220,422 @@ const HomePage = () => {
 
       {/* New Releases */}
       <Container className="mt-5">
-      <h5 className="text-primary fw-bold mb-3">
-        <i className="bi bi-megaphone me-2" />
-        New Releases
-      </h5>
+        <h5 className="text-primary fw-bold mb-3">
+          <i className="bi bi-megaphone me-2" />
+          New Releases
+        </h5>
 
-      <div className="d-flex overflow-auto gap-3 pb-2 px-1" style={{ scrollbarWidth: "none" }}>
-        {newReleases.map((song, idx) => (
-          <Link
-            key={idx}
-            to={`/song/${encodeURIComponent(song.name)}`}
-            className="text-decoration-none text-white"
-            style={{ flex: "0 0 auto", width: "140px" }}
-          >
-            <div
-              className="bg-dark rounded shadow-sm p-2"
-              style={{
-                cursor: "pointer",
-                height: "220px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                textAlign: "center",
-              }}
-              aria-label={`New release: ${song.name} by ${song.artist}`}
+        <div className="d-flex overflow-auto gap-3 pb-2 px-1" style={{ scrollbarWidth: "none" }}>
+          {newReleases.map((song, idx) => (
+            <Link
+              key={idx}
+              to={`/song/${encodeURIComponent(song.name)}`}
+              className="text-decoration-none text-white"
+              style={{ flex: "0 0 auto", width: "140px" }}
             >
-              <img
-                src={song.img}
-                alt={song.name}
+              <div
+                className="bg-dark rounded shadow-sm p-2"
                 style={{
-                  width: "100%",
-                  height: "120px",
-                  objectFit: "cover",
-                  borderRadius: "8px",
-                  marginBottom: "10px",
+                  cursor: "pointer",
+                  height: "220px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  textAlign: "center",
                 }}
-              />
-              <div className="w-100">
-                <div className="fw-bold text-truncate" style={{ fontSize: "0.9rem" }}>
-                  {song.name}
-                </div>
-                <div className="text-muted text-truncate" style={{ fontSize: "0.75rem" }}>
-                  {song.artist}
+                aria-label={`New release: ${song.name} by ${song.artist}`}
+              >
+                <img
+                  src={song.img}
+                  alt={song.name}
+                  style={{
+                    width: "100%",
+                    height: "120px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                    marginBottom: "10px",
+                  }}
+                />
+                <div className="w-100">
+                  <div className="fw-bold text-truncate" style={{ fontSize: "0.9rem" }}>
+                    {song.name}
+                  </div>
+                  <div className="text-muted text-truncate" style={{ fontSize: "0.75rem" }}>
+                    {song.artist}
+                  </div>
                 </div>
               </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </Container> 
+            </Link>
+          ))}
+        </div>
+      </Container>
 
       {/* Jump Back In Section */}
       <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Jump back in</h5>
-  <Row className="flex-row flex-nowrap overflow-auto gx-3">
-    {jumpBackInItems.map((item, idx) => (
-      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-        <Card
-          bg="dark"
-          text="white"
-          className="shadow-sm rounded-lg card-hover p-3"
-          style={{ cursor: "pointer", transition: "transform 0.2s" }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-        >
-          <Card.Img
-            variant="top"
-            src={item.img}
-            alt={item.title}
-            className="rounded mb-2"
-            style={{ objectFit: "cover", height: 120 }}
-          />
-          <Card.Body className="p-0">
-            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-              {item.title}
-            </Card.Title>
-            <Card.Text className="fs-7 mb-0 text-truncate text-light">
-              {item.artist}
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      </Col>
-    ))}
-  </Row>
-</Container>
-
-         <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Recent</h5>
-  <Row className="flex-row flex-nowrap overflow-auto gx-3">
-    {jumpMoveInItems.map((item, idx) => (
-      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-        <Card
-          bg="dark"
-          text="white"
-          className="shadow-sm rounded-lg card-hover p-3"
-          style={{ cursor: "pointer", transition: "transform 0.2s" }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-        >
-          <Card.Img
-            variant="top"
-            src={item.img}
-            alt={item.title}
-            className="rounded mb-2"
-            style={{ objectFit: "cover", height: 120 }}
-          />
-          <Card.Body className="p-0">
-            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-              {item.title}
-            </Card.Title>
-            <Card.Text className="fs-7 mb-0 text-truncate text-light">
-              {item.artist}
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      </Col>
-    ))}
-  </Row>
-</Container>
+        <h5 className="text-light fw-bold mb-3">Jump back in</h5>
+        <Row className="flex-row flex-nowrap overflow-auto gx-3">
+          {jumpBackInItems.map((item, idx) => (
+            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+              <Card
+                bg="dark"
+                text="white"
+                className="shadow-sm rounded-lg card-hover p-3"
+                style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+              >
+                <Card.Img
+                  variant="top"
+                  src={item.img}
+                  alt={item.title}
+                  className="rounded mb-2"
+                  style={{ objectFit: "cover", height: 120 }}
+                />
+                <Card.Body className="p-0">
+                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+                    {item.title}
+                  </Card.Title>
+                  <Card.Text className="fs-7 mb-0 text-truncate text-light">
+                    {item.artist}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
 
       <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Recommandation Stations</h5>
-  <Row className="flex-row flex-nowrap overflow-auto gx-3">
-    {jumpRightInItems.map((item, idx) => (
-      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-        <Card
-          bg="dark"
-          text="white"
-          className="shadow-sm rounded-lg card-hover p-3"
-          style={{ cursor: "pointer", transition: "transform 0.2s" }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-        >
-          <div className="d-flex justify-content-center">
+        <h5 className="text-light fw-bold mb-3">Recent</h5>
+        <Row className="flex-row flex-nowrap overflow-auto gx-3">
+          {jumpMoveInItems.map((item, idx) => (
+            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+              <Card
+                bg="dark"
+                text="white"
+                className="shadow-sm rounded-lg card-hover p-3"
+                style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+              >
+                <Card.Img
+                  variant="top"
+                  src={item.img}
+                  alt={item.title}
+                  className="rounded mb-2"
+                  style={{ objectFit: "cover", height: 120 }}
+                />
+                <Card.Body className="p-0">
+                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+                    {item.title}
+                  </Card.Title>
+                  <Card.Text className="fs-7 mb-0 text-truncate text-light">
+                    {item.artist}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+
+      <Container className="mt-5 mb-5">
+        <h5 className="text-light fw-bold mb-3">Recommandation Stations</h5>
+        <Row className="flex-row flex-nowrap overflow-auto gx-3">
+          {jumpRightInItems.map((item, idx) => (
+            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+              <Card
+                bg="dark"
+                text="white"
+                className="shadow-sm rounded-lg card-hover p-3"
+                style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+              >
+                <div className="d-flex justify-content-center">
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    className="rounded-circle mb-3"
+                    style={{
+                      width: 100,     // Increased from 80
+                      height: 100,    // Increased from 80
+                      objectFit: "cover",
+                      border: "2px solid #fff",
+                    }}
+                  />
+                </div>
+                <Card.Body className="p-0 text-center">
+                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+                    {item.title}
+                  </Card.Title>
+                  <Card.Text className="fs-7 mb-0 text-truncate text-light">
+                    {item.artist}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+
+
+
+      <Container className="mt-5 mb-5">
+        <h5 className="text-light fw-bold mb-3">Your Favourite Artists</h5>
+        <Row className="flex-row flex-nowrap overflow-auto gx-3">
+          {jumpLeftInItems.map((item, idx) => (
+            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+              <Card
+                bg="dark"
+                text="white"
+                className="shadow-sm rounded-lg card-hover p-3"
+                style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+              >
+                <Card.Img
+                  variant="top"
+                  src={item.img}
+                  alt={item.title}
+                  className="rounded mb-2"
+                  style={{ objectFit: "cover", height: 120 }}
+                />
+                <Card.Body className="p-0">
+                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+                    {item.title}
+                  </Card.Title>
+                  <Card.Text className="fs-7 mb-0 text-truncate text-light">
+                    {item.artist}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+
+
+      <Container className="mt-5 mb-5">
+        <h5 className="text-light fw-bold mb-3">India Best</h5>
+        <Row className="flex-row flex-nowrap overflow-auto gx-3">
+          {jumpMoveInItems.map((item, idx) => (
+            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+              <Card
+                bg="dark"
+                text="white"
+                className="shadow-sm rounded-lg card-hover p-3"
+                style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+              >
+                <Card.Img
+                  variant="top"
+                  src={item.img}
+                  alt={item.title}
+                  className="rounded mb-2"
+                  style={{ objectFit: "cover", height: 120 }}
+                />
+                <Card.Body className="p-0">
+                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+                    {item.title}
+                  </Card.Title>
+                  <Card.Text className="fs-7 mb-0 text-truncate text-light">
+                    {item.artist}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+
+      <Container className="mt-5 mb-5">
+        <h5 className="text-light fw-bold mb-3">Recommandation for Today</h5>
+        <Row className="flex-row flex-nowrap overflow-auto gx-3">
+          {jumpRightInItems.map((item, idx) => (
+            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+              <Card
+                bg="dark"
+                text="white"
+                className="shadow-sm rounded-lg card-hover p-3"
+                style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+              >
+                <Card.Img
+                  variant="top"
+                  src={item.img}
+                  alt={item.title}
+                  className="rounded mb-2"
+                  style={{ objectFit: "cover", height: 120 }}
+                />
+                <Card.Body className="p-0">
+                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+                    {item.title}
+                  </Card.Title>
+                  <Card.Text className="fs-7 mb-0 text-truncate text-light">
+                    {item.artist}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+
+
+      <Container className="mt-5 mb-5">
+        <h5 className="text-light fw-bold mb-3">Made For Aditya Kumar</h5>
+        <Row className="flex-row flex-nowrap overflow-auto gx-3">
+          {jumpLeftInItems.map((item, idx) => (
+            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+              <Card
+                bg="dark"
+                text="white"
+                className="shadow-sm rounded-lg card-hover p-3 text-center"
+                style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+
+                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+              >
+                <div className="d-flex justify-content-center">
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    className="rounded-circle mb-3"
+                    style={{
+                      width: 100,  // increased from 80
+                      height: 100, // increased from 80
+                      objectFit: "cover",
+                      border: "2px solid #fff"
+                    }}
+                  />
+                </div>
+                <Card.Body className="p-0">
+                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+                    {item.title}
+                  </Card.Title>
+                  <Card.Text className="fs-7 mb-0 text-truncate text-light">
+                    {item.artist}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+
+
+
+
+      <Container className="mt-5 mb-5">
+        <h5 className="text-light fw-bold mb-3">Garry Sandhu</h5>
+        <Row className="flex-row flex-nowrap overflow-auto gx-3">
+          {jumpBackInItems.map((item, idx) => (
+            <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
+              <Card
+                bg="dark"
+                text="white"
+                className="shadow-sm rounded-lg card-hover p-3"
+                style={{ cursor: "pointer", transition: "transform 0.2s" }}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                aria-label={`Jump back in: ${item.title} by ${item.artist}`}
+              >
+                <Card.Img
+                  variant="top"
+                  src={item.img}
+                  alt={item.title}
+                  className="rounded mb-2"
+                  style={{ objectFit: "cover", height: 120 }}
+                />
+                <Card.Body className="p-0">
+                  <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
+                    {item.title}
+                  </Card.Title>
+                  <Card.Text className="fs-7 mb-0 text-truncate text-light">
+                    {item.artist}
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+
+
+
+      <Container className="bg-dark text-white rounded p-4 my-4 mx-2">
+        {/* Header Row */}
+        <Row className="align-items-center mb-3">
+          <Col xs="auto">
             <img
-              src={item.img}
-              alt={item.title}
-              className="rounded-circle mb-3"
-              style={{
-                width: 100,     // Increased from 80
-                height: 100,    // Increased from 80
-                objectFit: "cover",
-                border: "2px solid #fff",
-              }}
+              src="Jass.jpeg"
+              alt="Punjabi Gaming"
+              className="rounded"
+              style={{ width: 64, height: 64 }}
             />
-          </div>
-          <Card.Body className="p-0 text-center">
-            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-              {item.title}
-            </Card.Title>
-            <Card.Text className="fs-7 mb-0 text-truncate text-light">
-              {item.artist}
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      </Col>
-    ))}
-  </Row>
-</Container>
+          </Col>
+          <Col>
+            <h5 className="mb-0 fw-bold">Punjabi Gaming</h5>
+            <small className="text-muted">Playlist • Spotify</small>
+          </Col>
+          <Col xs="auto">
+            <Button
+              variant="light"
+              className="rounded-circle p-0 d-flex align-items-center justify-content-center"
+              style={{ width: 28, height: 28, fontSize: "1.1rem", fontWeight: "bold" }}
+              aria-label="Add playlist"
+            >
+              +
+            </Button>
+          </Col>
+        </Row>
 
-
-
-       <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Your Favourite Artists</h5>
-  <Row className="flex-row flex-nowrap overflow-auto gx-3">
-    {jumpLeftInItems.map((item, idx) => (
-      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-        <Card
-          bg="dark"
-          text="white"
-          className="shadow-sm rounded-lg card-hover p-3"
-          style={{ cursor: "pointer", transition: "transform 0.2s" }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-        >
-          <Card.Img
-            variant="top"
-            src={item.img}
-            alt={item.title}
-            className="rounded mb-2"
-            style={{ objectFit: "cover", height: 120 }}
-          />
-          <Card.Body className="p-0">
-            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-              {item.title}
-            </Card.Title>
-            <Card.Text className="fs-7 mb-0 text-truncate text-light">
-              {item.artist}
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      </Col>
-    ))}
-  </Row>
-</Container>
-
-
-       <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">India Best</h5>
-  <Row className="flex-row flex-nowrap overflow-auto gx-3">
-    {jumpMoveInItems.map((item, idx) => (
-      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-        <Card
-          bg="dark"
-          text="white"
-          className="shadow-sm rounded-lg card-hover p-3"
-          style={{ cursor: "pointer", transition: "transform 0.2s" }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-        >
-          <Card.Img
-            variant="top"
-            src={item.img}
-            alt={item.title}
-            className="rounded mb-2"
-            style={{ objectFit: "cover", height: 120 }}
-          />
-          <Card.Body className="p-0">
-            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-              {item.title}
-            </Card.Title>
-            <Card.Text className="fs-7 mb-0 text-truncate text-light">
-              {item.artist}
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      </Col>
-    ))}
-  </Row>
-</Container>
-
-        <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Recommandation for Today</h5>
-  <Row className="flex-row flex-nowrap overflow-auto gx-3">
-    {jumpRightInItems.map((item, idx) => (
-      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-        <Card
-          bg="dark"
-          text="white"
-          className="shadow-sm rounded-lg card-hover p-3"
-          style={{ cursor: "pointer", transition: "transform 0.2s" }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-        >
-          <Card.Img
-            variant="top"
-            src={item.img}
-            alt={item.title}
-            className="rounded mb-2"
-            style={{ objectFit: "cover", height: 120 }}
-          />
-          <Card.Body className="p-0">
-            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-              {item.title}
-            </Card.Title>
-            <Card.Text className="fs-7 mb-0 text-truncate text-light">
-              {item.artist}
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      </Col>
-    ))}
-  </Row>
-</Container>
-
-
-     <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Made For Aditya Kumar</h5>
-  <Row className="flex-row flex-nowrap overflow-auto gx-3">
-    {jumpLeftInItems.map((item, idx) => (
-      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-        <Card
-          bg="dark"
-          text="white"
-          className="shadow-sm rounded-lg card-hover p-3 text-center"
-          style={{ cursor: "pointer", transition: "transform 0.2s" }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-
-          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-        >
-          <div className="d-flex justify-content-center">
-            <img
-              src={item.img}
-              alt={item.title}
-              className="rounded-circle mb-3"
-              style={{
-                width: 100,  // increased from 80
-                height: 100, // increased from 80
-                objectFit: "cover",
-                border: "2px solid #fff"
-              }}
-            />
-          </div>
-          <Card.Body className="p-0">
-            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-              {item.title}
-            </Card.Title>
-            <Card.Text className="fs-7 mb-0 text-truncate text-light">
-              {item.artist}
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      </Col>
-    ))}
-  </Row>
-</Container>
-
-
-
-
-        <Container className="mt-5 mb-5">
-  <h5 className="text-light fw-bold mb-3">Garry Sandhu</h5>
-  <Row className="flex-row flex-nowrap overflow-auto gx-3">
-    {jumpBackInItems.map((item, idx) => (
-      <Col key={idx} xs="auto" style={{ minWidth: 150 }}>
-        <Card
-          bg="dark"
-          text="white"
-          className="shadow-sm rounded-lg card-hover p-3"
-          style={{ cursor: "pointer", transition: "transform 0.2s" }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          aria-label={`Jump back in: ${item.title} by ${item.artist}`}
-        >
-          <Card.Img
-            variant="top"
-            src={item.img}
-            alt={item.title}
-            className="rounded mb-2"
-            style={{ objectFit: "cover", height: 120 }}
-          />
-          <Card.Body className="p-0">
-            <Card.Title className="fs-6 fw-semibold text-truncate mb-1">
-              {item.title}
-            </Card.Title>
-            <Card.Text className="fs-7 mb-0 text-truncate text-light">
-              {item.artist}
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      </Col>
-    ))}
-  </Row>
-</Container>
-
-
-       
-    <Container className="bg-dark text-white rounded p-4 my-4 mx-2">
-      {/* Header Row */}
-      <Row className="align-items-center mb-3">
-        <Col xs="auto">
+        {/* Playlist Art with Arrows */}
+        <div className="position-relative mb-4">
           <img
             src="Jass.jpeg"
-            alt="Punjabi Gaming"
-            className="rounded"
-            style={{ width: 64, height: 64 }}
+            alt="Playlist Art"
+            className="img-fluid rounded"
           />
-        </Col>
-        <Col>
-          <h5 className="mb-0 fw-bold">Punjabi Gaming</h5>
-          <small className="text-muted">Playlist • Spotify</small>
-        </Col>
-        <Col xs="auto">
-          <Button
-            variant="light"
-            className="rounded-circle p-0 d-flex align-items-center justify-content-center"
-            style={{ width: 28, height: 28, fontSize: "1.1rem", fontWeight: "bold" }}
-            aria-label="Add playlist"
-          >
-            +
-          </Button>
-        </Col>
-      </Row>
-
-      {/* Playlist Art with Arrows */}
-      <div className="position-relative mb-4">
-        <img
-          src="Jass.jpeg"
-          alt="Playlist Art"
-          className="img-fluid rounded"
-        />
-        <Button
-          variant="dark"
-          className="position-absolute top-50 start-0 translate-middle-y opacity-75 rounded-circle"
-          style={{ width: 32, height: 32, left: "10px" }}
-          aria-label="Previous"
-        >
-          &#8592;
-        </Button>
-        <Button
-          variant="dark"
-          className="position-absolute top-50 end-0 translate-middle-y opacity-75 rounded-circle"
-          style={{ width: 32, height: 32, right: "10px" }}
-          aria-label="Next"
-        >
-          &#8594;
-        </Button>
-      </div>
-
-      {/* Artist Names */}
-      <p className="fw-semibold mb-2">
-        Diljit Dosanjh, Sidhu Moose Wala, Shubh, Cheema Y, Arjan Dhillon
-      </p>
-
-      {/* Action Buttons */}
-      <div className="d-flex align-items-center gap-3">
-        <Button
-          variant="dark"
-          className="d-flex align-items-center gap-2 py-1 px-3 rounded-pill text-white border border-secondary"
-          style={{ fontSize: "0.85rem" }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            viewBox="0 0 24 24"
-          >
-            <path d="M16 6l-6 6 6 6" />
-          </svg>
-          <span>Preview playlist</span>
-        </Button>
-
-        <Button
-          variant="light"
-          className="rounded-circle d-flex align-items-center justify-content-center"
-          style={{ width: 40, height: 40, fontSize: "1.2rem", fontWeight: "bold" }}
-          aria-label="Play"
-        >
-          ▶
-        </Button>
-
-        <Button
-          variant="link"
-          className="text-white fs-4 fw-bold ms-auto p-0"
-          aria-label="More options"
-        >
-          ...
-        </Button>
-      </div>
-    </Container>
-
-    <div className="position-relative px-3 py-4">
-      {/* Image with rounded corners */}
-      <div className="rounded overflow-hidden position-relative">
-        <img
-          src="Jass.jpeg"
-          alt="The Four"
-          className="img-fluid w-100 rounded"
-          style={{ objectFit: "cover" }}
-        />
-
-        {/* Left Arrow */}
-        <Button
-          variant="dark"
-          className="position-absolute top-50 start-0 translate-middle-y opacity-75 rounded-circle d-flex align-items-center justify-content-center"
-          style={{ width: 32, height: 32, left: "16px" }}
-          aria-label="Previous"
-        >
-          &#8592;
-        </Button>
-
-        {/* Right Arrow */}
-        <Button
-          variant="dark"
-          className="position-absolute top-50 end-0 translate-middle-y opacity-75 rounded-circle d-flex align-items-center justify-content-center"
-          style={{ width: 32, height: 32, right: "16px" }}
-          aria-label="Next"
-        >
-          &#8594;
-        </Button>
-
-        {/* Text and Preview Button */}
-        <div
-          className="position-absolute bottom-0 start-0 end-0 text-white d-flex justify-between align-items-center px-3 py-2"
-          style={{ fontSize: "0.9rem", fontWeight: "600", background: "rgba(0,0,0,0.4)" }}
-        >
-          <span>
-            Balle Jatta • Surme Di Dabbi • Fallin For You • Bimbo
-          </span>
-
           <Button
             variant="dark"
-            className="d-flex align-items-center gap-2 rounded-pill px-3 py-1 text-white border-0"
-            style={{ backgroundColor: "rgba(0,0,0,0.6)", fontSize: "0.8rem" }}
+            className="position-absolute top-50 start-0 translate-middle-y opacity-75 rounded-circle"
+            style={{ width: 32, height: 32, left: "10px" }}
+            aria-label="Previous"
+          >
+            &#8592;
+          </Button>
+          <Button
+            variant="dark"
+            className="position-absolute top-50 end-0 translate-middle-y opacity-75 rounded-circle"
+            style={{ width: 32, height: 32, right: "10px" }}
+            aria-label="Next"
+          >
+            &#8594;
+          </Button>
+        </div>
+
+        {/* Artist Names */}
+        <p className="fw-semibold mb-2">
+          Diljit Dosanjh, Sidhu Moose Wala, Shubh, Cheema Y, Arjan Dhillon
+        </p>
+
+        {/* Action Buttons */}
+        <div className="d-flex align-items-center gap-3">
+          <Button
+            variant="dark"
+            className="d-flex align-items-center gap-2 py-1 px-3 rounded-pill text-white border border-secondary"
+            style={{ fontSize: "0.85rem" }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -772,87 +650,166 @@ const HomePage = () => {
             >
               <path d="M16 6l-6 6 6 6" />
             </svg>
-            <span>Preview EP</span>
+            <span>Preview playlist</span>
+          </Button>
+
+          <Button
+            variant="light"
+            className="rounded-circle d-flex align-items-center justify-content-center"
+            style={{ width: 40, height: 40, fontSize: "1.2rem", fontWeight: "bold" }}
+            aria-label="Play"
+          >
+            ▶
+          </Button>
+
+          <Button
+            variant="link"
+            className="text-white fs-4 fw-bold ms-auto p-0"
+            aria-label="More options"
+          >
+            ...
           </Button>
         </div>
-      </div>
-    </div>
+      </Container>
 
-      <div
-      className="position-absolute d-flex align-items-center gap-3"
-      style={{ bottom: "1rem", right: "1rem" }}
-    >
-      {/* Ellipsis Button */}
-      <Button
-        variant="link"
-        className="text-white fw-bold fs-3 p-0 m-0"
-        style={{ lineHeight: 1, textDecoration: "none" }}
-      >
-        ...
-      </Button>
-
-      {/* Play Button */}
-      <Button
-        variant="light"
-        className="rounded-circle d-flex align-items-center justify-content-center p-0"
-        style={{ width: "40px", height: "40px", fontSize: "1.25rem", fontWeight: "bold" }}
-        aria-label="Play"
-      >
-        ▶
-      </Button>
-    </div>
-<section className="px-4 py-3" style={{ marginBottom: "80px" }}>
-      <div
-        className="bg-dark rounded-4 overflow-hidden position-relative mx-auto"
-        style={{ maxWidth: "28rem" }} // ~max-w-md
-      >
-        {/* Background/Main Image */}
-        <img
-          src="Jass.jpeg"
-          alt="Dil Te Na Laeen"
-          className="w-100"
-          style={{ height: "12rem", objectFit: "cover" }}
-        />
-
-        {/* Top-left Album Thumbnail */}
-        <div
-          className="position-absolute shadow border border-white rounded overflow-hidden"
-          style={{ top: "0.75rem", left: "0.75rem", width: "5rem", height: "5rem" }}
-        >
+      <div className="position-relative px-3 py-4">
+        {/* Image with rounded corners */}
+        <div className="rounded overflow-hidden position-relative">
           <img
             src="Jass.jpeg"
-            alt="Dil Te Na Laeen Album"
-            className="w-100 h-100"
+            alt="The Four"
+            className="img-fluid w-100 rounded"
             style={{ objectFit: "cover" }}
           />
-        </div>
 
-        {/* Content */}
-        <div className="p-4 pt-5">
-          <h2 className="text-white fs-4 fw-bold mb-1">Dil Te Na Laeen</h2>
-          <p className="text-secondary fw-semibold mb-2">Album • Manmohan Waris</p>
-
-          {/* Add Button (top-right) */}
+          {/* Left Arrow */}
           <Button
-            variant="outline-light"
-            className="position-absolute d-flex align-items-center justify-content-center fw-bold"
-            style={{
-              top: "1rem",
-              right: "1rem",
-              width: "2rem",
-              height: "2rem",
-              borderRadius: "50%",
-              padding: 0,
-              lineHeight: 1,
-              transition: "0.3s",
-            }}
-            aria-label="Add Album"
+            variant="dark"
+            className="position-absolute top-50 start-0 translate-middle-y opacity-75 rounded-circle d-flex align-items-center justify-content-center"
+            style={{ width: 32, height: 32, left: "16px" }}
+            aria-label="Previous"
           >
-            +
+            &#8592;
           </Button>
+
+          {/* Right Arrow */}
+          <Button
+            variant="dark"
+            className="position-absolute top-50 end-0 translate-middle-y opacity-75 rounded-circle d-flex align-items-center justify-content-center"
+            style={{ width: 32, height: 32, right: "16px" }}
+            aria-label="Next"
+          >
+            &#8594;
+          </Button>
+
+          {/* Text and Preview Button */}
+          <div
+            className="position-absolute bottom-0 start-0 end-0 text-white d-flex justify-between align-items-center px-3 py-2"
+            style={{ fontSize: "0.9rem", fontWeight: "600", background: "rgba(0,0,0,0.4)" }}
+          >
+            <span>
+              Balle Jatta • Surme Di Dabbi • Fallin For You • Bimbo
+            </span>
+
+            <Button
+              variant="dark"
+              className="d-flex align-items-center gap-2 rounded-pill px-3 py-1 text-white border-0"
+              style={{ backgroundColor: "rgba(0,0,0,0.6)", fontSize: "0.8rem" }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                viewBox="0 0 24 24"
+              >
+                <path d="M16 6l-6 6 6 6" />
+              </svg>
+              <span>Preview EP</span>
+            </Button>
+          </div>
         </div>
       </div>
-    </section>
+
+      <div
+        className="position-absolute d-flex align-items-center gap-3"
+        style={{ bottom: "1rem", right: "1rem" }}
+      >
+        {/* Ellipsis Button */}
+        <Button
+          variant="link"
+          className="text-white fw-bold fs-3 p-0 m-0"
+          style={{ lineHeight: 1, textDecoration: "none" }}
+        >
+          ...
+        </Button>
+
+        {/* Play Button */}
+        <Button
+          variant="light"
+          className="rounded-circle d-flex align-items-center justify-content-center p-0"
+          style={{ width: "40px", height: "40px", fontSize: "1.25rem", fontWeight: "bold" }}
+          aria-label="Play"
+        >
+          ▶
+        </Button>
+      </div>
+      <section className="px-4 py-3" style={{ marginBottom: "80px" }}>
+        <div
+          className="bg-dark rounded-4 overflow-hidden position-relative mx-auto"
+          style={{ maxWidth: "28rem" }} // ~max-w-md
+        >
+          {/* Background/Main Image */}
+          <img
+            src="Jass.jpeg"
+            alt="Dil Te Na Laeen"
+            className="w-100"
+            style={{ height: "12rem", objectFit: "cover" }}
+          />
+
+          {/* Top-left Album Thumbnail */}
+          <div
+            className="position-absolute shadow border border-white rounded overflow-hidden"
+            style={{ top: "0.75rem", left: "0.75rem", width: "5rem", height: "5rem" }}
+          >
+            <img
+              src="Jass.jpeg"
+              alt="Dil Te Na Laeen Album"
+              className="w-100 h-100"
+              style={{ objectFit: "cover" }}
+            />
+          </div>
+
+          {/* Content */}
+          <div className="p-4 pt-5">
+            <h2 className="text-white fs-4 fw-bold mb-1">Dil Te Na Laeen</h2>
+            <p className="text-secondary fw-semibold mb-2">Album • Manmohan Waris</p>
+
+            {/* Add Button (top-right) */}
+            <Button
+              variant="outline-light"
+              className="position-absolute d-flex align-items-center justify-content-center fw-bold"
+              style={{
+                top: "1rem",
+                right: "1rem",
+                width: "2rem",
+                height: "2rem",
+                borderRadius: "50%",
+                padding: 0,
+                lineHeight: 1,
+                transition: "0.3s",
+              }}
+              aria-label="Add Album"
+            >
+              +
+            </Button>
+          </div>
+        </div>
+      </section>
       {/* Sticky Footer (mobile only) */}
       <div className="d-md-none position-fixed bottom-0 start-0 end-0 bg-dark text-white border-top border-secondary z-3">
         <div className="d-flex justify-content-around py-2">
@@ -868,7 +825,7 @@ const HomePage = () => {
             <i className="bi bi-music-note-list fs-4 d-block" />
             <small>Library</small>
 
-                        {/* <Link to="/punjabi" className="btn btn-sm btn-dark rounded-pill px-4">Songs</Link> */}
+            {/* <Link to="/punjabi" className="btn btn-sm btn-dark rounded-pill px-4">Songs</Link> */}
 
           </Link>
           <Link to="/create" className="text-white text-center text-decoration-none">
