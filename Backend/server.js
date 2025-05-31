@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://music-application-frontend-ygvo.onrender.com',
     credentials: true,
   }));
 // Enable CORS globally with correct config
