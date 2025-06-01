@@ -13,15 +13,6 @@ const ArtistSongs = () => {
 
   return (
     <>
-
-
-     <Link
-      to="/home"
-      className="btn btn-outline-light"
-      style={{ fontSize: "1.1rem" }}
-    >
-      Go to Home
-    </Link>
       <style>{`
         html, body, #root {
           background-color: #000000 !important;
@@ -35,33 +26,55 @@ const ArtistSongs = () => {
           color: white;
         }
         a:hover, a:focus {
-          color: #0d6efd; /* bootstrap primary blue for hover */
-          text-decoration: underline;
+          color: #0d6efd;
+          text-decoration: none;
+        }
+        .song-card {
+          transition: transform 0.2s ease, box-shadow 0.3s ease;
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        .song-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 20px rgba(13, 110, 253, 0.4);
+        }
+        .card-img-top {
+          border-top-left-radius: 12px;
+          border-top-right-radius: 12px;
         }
       `}</style>
 
-      <Container
-        fluid
-        className="py-4"
-        style={{
-          minHeight: "85vh",
-          backgroundColor: "#000000",
-          color: "white",
-          borderBottom: "none",
-          boxShadow: "none",
-        }}
-      >
-        <Row xs={2} sm={3} md={4} lg={5} xl={6} className="g-3">
+      <div className="px-3 pt-4">
+        <Link
+  to="/home"
+  className="btn btn-outline-light d-inline-flex align-items-center gap-2 mb-4 px-4 py-2"
+  style={{
+    fontSize: "1rem",
+    borderRadius: "30px",
+    borderWidth: "2px",
+    transition: "all 0.3s ease",
+  }}
+>
+  <i className="bi bi-arrow-left"></i> Go to Home
+</Link>
+
+        <h3 className="mb-4 fw-bold text-white">
+          Songs by <span className="text-primary">{name}</span>
+        </h3>
+      </div>
+
+      <Container fluid className="pb-5">
+        <Row xs={2} sm={3} md={4} lg={5} xl={6} className="g-4 px-3">
           {filteredSongs.map((song) => (
             <Col key={song.Id}>
               <Link
                 to={`/player/${song.artist}/${song.Id}`}
                 className="text-decoration-none"
               >
-                <Card className="bg-black border-0 h-100">
+                <Card className="bg-dark text-white border-0 song-card h-100">
                   <div
                     style={{
-                      height: "160px",
+                      height: "200px",
                       backgroundColor: "#1e1e1e",
                       display: "flex",
                       alignItems: "center",
@@ -75,15 +88,15 @@ const ArtistSongs = () => {
                       style={{
                         height: "100%",
                         width: "100%",
-                        objectFit: "contain",
+                        objectFit: "cover",
                       }}
                     />
                   </div>
                   <Card.Body className="p-2">
-                    <h6 className="mb-1 text-truncate" style={{ color: "white" }}>
+                    <h6 className="mb-1 text-truncate text-white">
                       {song.song}
                     </h6>
-                    <p className="mb-0 small" style={{ color: "lightgray" }}>
+                    <p className="mb-0 small text-secondary text-truncate">
                       {song.artist}
                     </p>
                   </Card.Body>

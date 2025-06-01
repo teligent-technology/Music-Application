@@ -103,3 +103,11 @@ button:focus-visible {
 /* #root {
   min-height: 100vh;
 } */  
+
+
+/* inside your CSS file or styled component */
+.app-root, 
+.app-root * {
+  color: white !important;
+}
+

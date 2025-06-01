@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const benefits = [
@@ -22,18 +23,42 @@ const PremiumPage = () => {
     }
   }, [navigate]);
 
-  const handleUpgradeClick = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) return;
+  const handleUpgradeClick = async () => {
+    try {
+      const res = await axios.post("http://localhost:3000/api/payment/create-order");
 
-    const updatedUser = {
-      ...user,
-      isPremium: true,
-    };
+      console.log("Response status:", res.status);
+      const orderData = res.data;
 
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    alert("🎉 Congratulations! You are now a premium user.");
-    navigate("/profile");
+      const options = {
+        key: "rzp_live_LgRDZ7vi3PvenR", // Your Razorpay public key
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Music App Premium",
+        description: "Upgrade to Premium",
+        order_id: orderData.id,
+        handler: function (response) {
+          const user = JSON.parse(localStorage.getItem("user"));
+          const updatedUser = { ...user, isPremium: true };
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          alert("🎉 Payment successful! You are now a premium user.");
+          navigate("/profile");
+        },
+        prefill: {
+          name: "Music User",
+          email: "user@example.com",
+        },
+        theme: {
+          color: "#0d6efd",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      alert("Something went wrong during payment.");
+      console.error(error);
+    }
   };
 
   return (
