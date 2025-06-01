@@ -25,7 +25,7 @@ const PremiumPage = () => {
 
   const handleUpgradeClick = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/api/payment/create-order");
+      const res = await axios.post("https://music-application-backend.onrender.com/api/payment/create-order");
 
       console.log("Response status:", res.status);
       const orderData = res.data;
