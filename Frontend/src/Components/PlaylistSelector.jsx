@@ -1,9 +1,9 @@
 // src/components/PlaylistSelector.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./PlaylistSelector.css"; // ✅ Import stylesheet
+import "./PlaylistSelector.css";
 
-const PlaylistSelector = ({ selectedSongs }) => {
+const PlaylistSelector = ({ selectedSongs = [] }) => {
   const [playlists, setPlaylists] = useState({});
   const [selected, setSelected] = useState("");
   const navigate = useNavigate();
@@ -22,29 +22,25 @@ const PlaylistSelector = ({ selectedSongs }) => {
   const handleSelect = (e) => setSelected(e.target.value);
 
   const handleOpenPlaylist = () => {
-    if (!selected) return alert("Please select a playlist first!");
+    if (!selected) return alert("Please select a playlist!");
     navigate(`/playlist/${encodeURIComponent(selected)}`);
   };
 
   const handleSave = () => {
-    if (!selected) return alert("Please select a playlist first!");
+    if (!selected) return alert("Select a playlist to save into!");
     if (!Array.isArray(selectedSongs) || selectedSongs.length === 0)
-      return alert("No songs selected to add!");
+      return alert("No songs selected!");
 
     const stored = JSON.parse(localStorage.getItem("playlists") || "{}");
     const existingSongs = stored[selected] || [];
+    const newSongs = selectedSongs.map((s) => s.src.split("/").pop());
 
-    const selectedFilenames = selectedSongs.map((song) =>
-      song.src.split("/").pop()
-    );
-
-    const updatedSongs = [...new Set([...existingSongs, ...selectedFilenames])];
-    stored[selected] = updatedSongs;
-
+    const updated = [...new Set([...existingSongs, ...newSongs])];
+    stored[selected] = updated;
     localStorage.setItem("playlists", JSON.stringify(stored));
-    setPlaylists({ ...stored });
 
-    alert(`Added ${selectedFilenames.length} songs to "${selected}" playlist.`);
+    setPlaylists({ ...stored });
+    alert(`Added songs to "${selected}" playlist.`);
     window.dispatchEvent(new Event("playlist-updated"));
   };
 
@@ -55,7 +51,7 @@ const PlaylistSelector = ({ selectedSongs }) => {
       <h4 className="mb-4 fw-bold border-bottom pb-2">Select Playlist to View</h4>
 
       {playlistNames.length === 0 ? (
-        <p className="text-light fst-italic">No playlists available. Create one first!</p>
+        <p className="text-light fst-italic">No playlists yet.</p>
       ) : (
         <div className="row g-3 align-items-center">
           <div className="col-12 col-md-6">
@@ -66,19 +62,16 @@ const PlaylistSelector = ({ selectedSongs }) => {
             >
               <option value="">-- Select Playlist --</option>
               {playlistNames.map((name, index) => (
-                <option key={index} value={name}>
-                  {name}
-                </option>
+                <option key={index} value={name}>{name}</option>
               ))}
             </select>
           </div>
 
           <div className="col-6 col-md-3 d-grid">
             <button
-              className="btn btn-primary playlist-btn"
+              className="btn btn-primary"
               onClick={handleOpenPlaylist}
               disabled={!selected}
-              type="button"
             >
               <i className="bi bi-folder2-open"></i> Open
             </button>
@@ -86,10 +79,9 @@ const PlaylistSelector = ({ selectedSongs }) => {
 
           <div className="col-6 col-md-3 d-grid">
             <button
-              className="btn btn-success playlist-btn"
+              className="btn btn-success"
               onClick={handleSave}
               disabled={!selected || !selectedSongs.length}
-              type="button"
             >
               <i className="bi bi-save"></i> Save Songs
             </button>

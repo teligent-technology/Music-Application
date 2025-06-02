@@ -1,8 +1,8 @@
 // src/components/PlaylistCreator.jsx
 import React, { useState } from "react";
-import "./Playlist.css"; // Ensure this import exists to apply background styles
+import "./Playlist.css";
 
-const PlaylistCreator = ({ selectedSongs }) => {
+const PlaylistCreator = ({ selectedSongs = [] }) => {
   const [playlistName, setPlaylistName] = useState("");
 
   const savePlaylist = () => {
@@ -11,21 +11,24 @@ const PlaylistCreator = ({ selectedSongs }) => {
       return;
     }
 
+    const filenames = selectedSongs.map(song => song.src.split("/").pop());
+
     const existing = JSON.parse(localStorage.getItem("playlists") || "{}");
-    existing[playlistName] = selectedSongs;
+    existing[playlistName] = filenames;
     localStorage.setItem("playlists", JSON.stringify(existing));
 
     alert("Playlist saved!");
     setPlaylistName("");
+
+    // Notify PlaylistSelector to refresh
+    window.dispatchEvent(new Event("playlist-updated"));
   };
 
   return (
-    <div
-      className="playlist-container animate-fade-in text-white mb-5"
+    <div className="playlist-container animate-fade-in text-white mb-5"
       style={{
         background: "rgba(255,255,255,0.1)",
         backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
         maxWidth: 600,
         margin: "2rem auto",
         padding: "2rem",
@@ -40,7 +43,6 @@ const PlaylistCreator = ({ selectedSongs }) => {
         placeholder="Enter playlist name"
         value={playlistName}
         onChange={(e) => setPlaylistName(e.target.value)}
-        style={{ boxShadow: "none" }}
       />
       <button
         className="btn btn-success w-100 fw-semibold"

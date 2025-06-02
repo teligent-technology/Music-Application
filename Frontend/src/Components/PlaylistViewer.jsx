@@ -1,3 +1,4 @@
+// src/components/PlaylistViewer.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Songs } from '../data/song';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -34,25 +35,16 @@ const PlaylistViewer = () => {
     }
   }, [currentIndex]);
 
-  useEffect(() => {
-    if (currentIndex === null && audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-  }, [currentIndex]);
-
   const handlePlay = (index) => setCurrentIndex(index);
   const handleNext = () => currentIndex < matchedSongs.length - 1 && setCurrentIndex(i => i + 1);
   const handlePrev = () => currentIndex > 0 && setCurrentIndex(i => i - 1);
 
   const handleDeletePlaylist = () => {
     if (!name) return;
-    if (window.confirm(`Are you sure you want to delete "${name}" playlist?`)) {
+    if (window.confirm(`Delete "${name}" playlist?`)) {
       const updated = { ...playlists };
       delete updated[name];
       localStorage.setItem('playlists', JSON.stringify(updated));
-      setPlaylists(updated);
-      setMatchedSongs([]);
       navigate('/playlist');
     }
   };
@@ -71,58 +63,41 @@ const PlaylistViewer = () => {
   };
 
   return (
-    <div className="container-fluid py-4 px-3 px-md-5" style={{ backgroundColor: '#121212', color: '#fff', minHeight: '100vh' }}>
-      {/* Back */}
+    <div className="container py-4 text-white" style={{ backgroundColor: '#121212', minHeight: '100vh' }}>
       <div className="mb-4">
         <button className="btn btn-outline-light" onClick={() => navigate('/playlist')}>
           ← Back to Playlists
         </button>
       </div>
 
-      {/* Playlist Header */}
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
-        <h3 className="m-0 text-capitalize">{name} Playlist</h3>
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+        <h3 className="text-capitalize">{name} Playlist</h3>
         <button onClick={handleDeletePlaylist} className="btn btn-danger">
           🗑 Delete Playlist
         </button>
       </div>
 
-      {/* Song List */}
       {matchedSongs.length > 0 ? (
         <div className="list-group">
           {matchedSongs.map((song, index) => (
             <div
               key={index}
-              className={`list-group-item list-group-item-action d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 ${
-                index === currentIndex ? 'active' : ''
-              }`}
-              style={{
-                backgroundColor: index === currentIndex ? '#0d6efd' : '#1e1e1e',
-                borderColor: '#333',
-                color: index === currentIndex ? '#fff' : '#ccc',
-                transition: 'background 0.3s ease',
-              }}
+              className={`list-group-item d-flex justify-content-between align-items-center ${index === currentIndex ? 'bg-primary text-white' : 'bg-dark text-light'}`}
               onClick={() => handlePlay(index)}
             >
-              <div className="flex-grow-1">
-                <strong>{song.song}</strong> <span className="text-muted">by {song.artist}</span>
+              <div>
+                <strong>{song.song}</strong> by <em>{song.artist}</em>
               </div>
               <div className="d-flex gap-2">
                 <button
-                  className={`btn btn-sm ${index === currentIndex ? 'btn-light text-primary' : 'btn-outline-light'}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePlay(index);
-                  }}
+                  className="btn btn-sm btn-outline-light"
+                  onClick={(e) => { e.stopPropagation(); handlePlay(index); }}
                 >
                   ▶ Play
                 </button>
                 <button
                   className="btn btn-sm btn-outline-danger"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeSong(song);
-                  }}
+                  onClick={(e) => { e.stopPropagation(); removeSong(song); }}
                 >
                   ✖ Remove
                 </button>
@@ -131,44 +106,19 @@ const PlaylistViewer = () => {
           ))}
         </div>
       ) : (
-        <p className="text-muted fst-italic">No songs found in this playlist.</p>
+        <p className="text-muted">No songs in this playlist.</p>
       )}
 
-      {/* Audio Player */}
       {currentIndex !== null && matchedSongs[currentIndex] && (
-        <div
-          id="audio-player"
-          className="mt-5 p-4 bg-light text-dark rounded shadow"
-        >
-          <h5 className="mb-3">
-            Now Playing: <span className="text-primary">{matchedSongs[currentIndex].song}</span>
-          </h5>
-          <audio
-            ref={audioRef}
-            controls
-            autoPlay
-            onEnded={handleNext}
-            className="w-100"
-          >
+        <div id="audio-player" className="mt-5 p-4 bg-light text-dark rounded">
+          <h5>Now Playing: <span className="text-primary">{matchedSongs[currentIndex].song}</span></h5>
+          <audio ref={audioRef} controls autoPlay onEnded={handleNext} className="w-100">
             <source src={matchedSongs[currentIndex].src} type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>
-
-          <div className="mt-3 d-flex flex-wrap gap-2 justify-content-center justify-content-md-start">
-            <button
-              className="btn btn-secondary"
-              onClick={handlePrev}
-              disabled={currentIndex === 0}
-            >
-              ⏮ Previous
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={handleNext}
-              disabled={currentIndex === matchedSongs.length - 1}
-            >
-              ⏭ Next
-            </button>
+          <div className="mt-3 d-flex gap-2">
+            <button className="btn btn-secondary" onClick={handlePrev} disabled={currentIndex === 0}>⏮ Previous</button>
+            <button className="btn btn-secondary" onClick={handleNext} disabled={currentIndex === matchedSongs.length - 1}>⏭ Next</button>
           </div>
         </div>
       )}
