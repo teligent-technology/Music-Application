@@ -9,16 +9,20 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Clear form on navigation if location.state.clearForm is true
   useEffect(() => {
-    const shouldClear = location.state?.clearForm;
-    if (shouldClear) {
+    if (location.state?.clearForm) {
       setForm({ username: '', password: '' });
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+  // Form input change handler
+  const handleChange = e => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
+  // Form submit handler - login
   const handleSubmit = async e => {
     e.preventDefault();
     try {
@@ -27,15 +31,21 @@ function Login() {
       });
 
       if (res.status === 200) {
+        // Save auth token
         localStorage.setItem("token", res.data.token);
+
+        // Save user details including premium status
         const user = {
           name: res.data.name,
           username: res.data.username,
-          Mobile: res.data.Mobile
+          Mobile: res.data.Mobile,
+          isPremium: res.data.isPremium, // ✅ save premium status
         };
         localStorage.setItem("user", JSON.stringify(user));
 
         alert(res.data.message || "Login successful");
+
+        // Redirect to home or dashboard
         navigate('/home');
       } else {
         console.warn("Received non-200 response:", res.status);
@@ -52,12 +62,17 @@ function Login() {
       className="d-flex justify-content-center align-items-center"
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(to right, #6a11cb, #2575fc)"
+        background: "linear-gradient(to right, #6a11cb, #2575fc)",
       }}
     >
-      <div className="card p-4 shadow-lg" style={{ width: "100%", maxWidth: "400px", borderRadius: "20px" }}>
-        <h2 className="text-center mb-4" style={{ fontWeight: "bold", color: "#343a40" }}>Welcome Back</h2>
-        
+      <div
+        className="card p-4 shadow-lg"
+        style={{ width: "100%", maxWidth: "400px", borderRadius: "20px" }}
+      >
+        <h2 className="text-center mb-4" style={{ fontWeight: "bold", color: "#343a40" }}>
+          Welcome Back
+        </h2>
+
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="mb-3">
             <label className="form-label">Username</label>

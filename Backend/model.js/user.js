@@ -21,7 +21,12 @@ const userSchema=mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+
+     isPremium: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 

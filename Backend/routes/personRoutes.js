@@ -6,29 +6,19 @@ const { jwtMiddleWare, generateToken } = require('./../jwt');
 
 // Register new user
 router.post('/', async (req, res) => {
+  const { username, password } = req.body;
+
   try {
-    const data = req.body;
-    const newPerson = new person(data);
-    const savedPerson = await newPerson.save();
-    console.log("Data saved");
-
-    const payload = {
-      id: savedPerson.id,
-      username: savedPerson.name,
-    };
-    console.log(payload);
-
-    const token = generateToken(payload);
-    console.log("Token generated:", token);
-
-    res.status(200).json({
-      savedPerson,
-      token,
-      message: "User registered successfully",
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new person({
+      username,
+      password: hashedPassword,
+      isPremium: false,
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    await user.save();
+    res.status(201).json({ message: 'User created' });
+  } catch (err) {
+    res.status(500).json({ error: 'Signup failed' });
   }
 });
 
@@ -86,42 +76,36 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Login route
+// Backend: /login route
 router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
   try {
-    const { username, password } = req.body;
     const user = await person.findOne({ username });
+    if (!user) return res.status(404).json({ error: "User not found" });
 
-    if (!user || !(await user.comparePassword(password))) {
-      return res.status(401).json({ error: "Invalid username or password" });
-    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
-    const payload = {
-      id: user.id,
-      username: user.username,
-    };
-
-    const token = generateToken(payload);
-
-    // ✅ Send user info along with token
+    // Send user data including premium status to client
     res.json({
-      message: "Login successful",
-      token,
-      name: user.name,
       username: user.username,
-      Mobile: user.Mobile
+      isPremium: user.isPremium,
+      // other info or token
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: 'Login failed' });
   }
 });
-
 
 // Logout route
 router.post('/logout', (req, res) => {
   // Backend side pe JWT stateless hota hai, so hum kuch nahi karte
   return res.status(200).json({ message: 'Logout successful' });
 });
+
+
+
 
 
 

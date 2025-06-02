@@ -2,6 +2,8 @@
 const express = require("express");
 const Razorpay = require("razorpay");
 const router = express.Router();
+const person = require('../model.js/user');
+
 require("dotenv").config();
 
 // ✅ Initialize Razorpay with credentials from .env
@@ -30,6 +32,22 @@ router.post("/create-order", async (req, res) => {
       error: "Failed to create Razorpay order",
       details: err,
     });
+  }
+});
+
+router.post('/person/upgrade', async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    const user = await person.findOne({ username });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    user.isPremium = true;
+    await user.save();
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Upgrade failed" });
   }
 });
 

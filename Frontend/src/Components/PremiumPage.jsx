@@ -27,9 +27,8 @@ const benefits = [
 ];
 
 const PremiumPage = () => {
-  const [offer, setOffer] = useState(
-    "4 months of Premium Individual for free"
-  );
+  const [offer, setOffer] = useState("4 months of Premium Individual for free");
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,35 +36,52 @@ const PremiumPage = () => {
     if (!storedUser) {
       alert("Please login first");
       navigate("/");
+      return;
     }
+    setUser(JSON.parse(storedUser));
   }, [navigate]);
 
   const handleUpgradeClick = async () => {
+    if (!user) return;
+
+    if (user.isPremium) {
+      alert("You already have Premium access!");
+      return;
+    }
+
     try {
       const res = await axios.post(
         "https://music-application-backend.onrender.com/api/payment/create-order"
       );
-
-      console.log("Response status:", res.status);
       const orderData = res.data;
 
       const options = {
-        key: "rzp_live_LgRDZ7vi3PvenR", // Your Razorpay public key
+        key: "rzp_live_LgRDZ7vi3PvenR",
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "Music App Premium",
+        name: user.name || "Music User",
         description: "Upgrade to Premium",
         order_id: orderData.id,
-        handler: function (response) {
-          const user = JSON.parse(localStorage.getItem("user"));
-          const updatedUser = { ...user, isPremium: true };
-          localStorage.setItem("user", JSON.stringify(updatedUser));
-          alert("🎉 Payment successful! You are now a premium user.");
-          navigate("/profile");
+        handler: async function (response) {
+          try {
+            await axios.post("https://music-application-backend.onrender.com/api/payment/person/upgrade", {
+              username: user.username,
+            });
+
+            const updatedUser = { ...user, isPremium: true };
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+            setUser(updatedUser);
+
+            alert("🎉 Payment successful! You are now a premium user.");
+            navigate("/profile");
+          } catch (err) {
+            console.error("Upgrade failed:", err);
+            alert("Payment succeeded but upgrade failed. Please contact support.");
+          }
         },
         prefill: {
-          name: "Music User",
-          email: "user@example.com",
+          name: user.name || "Music User",
+          email: user.email || "user@example.com",
         },
         theme: {
           color: "#0d6efd",
@@ -75,18 +91,15 @@ const PremiumPage = () => {
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error) {
+      console.error("Payment error:", error);
       alert("Something went wrong during payment.");
-      console.error(error);
     }
   };
 
   return (
     <div className="bg-black text-white pb-5" style={{ paddingBottom: "120px" }}>
-      {/* Hero Image Grid */}
-      <div
-        className="position-relative overflow-hidden"
-        style={{ height: "220px" }}
-      >
+      {/* Hero Cover Grid */}
+      <div className="position-relative overflow-hidden" style={{ height: "220px" }}>
         <div
           className="position-absolute w-100 h-100"
           style={{
@@ -116,7 +129,7 @@ const PremiumPage = () => {
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Section */}
       <div className="container mt-4 position-relative" style={{ zIndex: 5 }}>
         <div className="d-flex align-items-center gap-2 mb-2">
           <img
@@ -154,43 +167,29 @@ const PremiumPage = () => {
           You can't upgrade to Premium in the app. We know, it's not ideal.
         </p>
 
-        <button className="btn btn-primary w-100 mb-5" onClick={handleUpgradeClick}>
-          Upgrade Now
+        <button
+          className="btn btn-primary w-100 mb-5"
+          onClick={handleUpgradeClick}
+          disabled={user?.isPremium}
+          title={user?.isPremium ? "You already have Premium access" : "Upgrade Now"}
+        >
+          {user?.isPremium ? "Premium Active" : "Upgrade Now"}
         </button>
 
-        <div className="bg-dark rounded p-4">
-          <h5 className="fw-bold mb-3">Why join Premium?</h5>
-          <ul className="list-unstyled">
-            {benefits.map((b, i) => (
-              <li key={i} className="d-flex align-items-center mb-3">
-                <img src={b.icon} alt="" className="me-3" />
-                {b.text}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* Mobile Footer Navigation */}
-      <div className="d-md-none position-fixed bottom-0 start-0 end-0 bg-dark text-white border-top border-secondary z-3">
-        <div className="d-flex justify-content-around py-2">
-          {[
-            { to: "/home", icon: "bi-house-door-fill", label: "Home" },
-            { to: "/search", icon: "bi-search", label: "Search" },
-            { to: "/punjabi", icon: "bi-music-note-list", label: "Library" },
-            { to: "/create", icon: "bi-plus-circle-fill", label: "Create" },
-            { to: "/premium", icon: "bi-gem", label: "Premium" },
-          ].map((item, idx) => (
-            <Link
-              key={idx}
-              to={item.to}
-              className="text-white text-center text-decoration-none"
-            >
-              <i className={`bi ${item.icon} fs-4 d-block`} />
-              <small>{item.label}</small>
-            </Link>
+        <ul className="list-unstyled text-white small">
+          {benefits.map(({ icon, text }, i) => (
+            <li key={i} className="d-flex align-items-center mb-2 gap-2">
+              <img src={icon} alt="icon" />
+              {text}
+            </li>
           ))}
-        </div>
+        </ul>
+
+        <p className="small text-center mt-5">
+          <Link to="/" className="text-white text-decoration-underline">
+            Terms & conditions
+          </Link>
+        </p>
       </div>
     </div>
   );
