@@ -14,29 +14,29 @@ function Signup() {
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    try {
-      const res = await axios.post('https://music-application-backend.onrender.com/person/', form);
-      if (res.status === 200) {
-        const user = {
-          name: form.name,
-          username: form.username,
-          Mobile: form.Mobile,
-        };
-        localStorage.setItem("user", JSON.stringify(user));
+ const handleSubmit = async e => {
+  e.preventDefault();
+  try {
+    const res = await axios.post('https://music-application-backend.onrender.com/signup', form);
+    if (res.status >= 200 && res.status < 300) {
+      const user = {
+        name: form.name,
+        username: form.username,
+        Mobile: form.Mobile,
+      };
+      localStorage.setItem("user", JSON.stringify(user));
 
-        alert(res.data.message || "Signup successful");
-        navigate('/login', { state: { clearForm: true } });
-      } else {
-        console.warn("Non-200 response:", res.status);
-      }
-    } catch (err) {
-      console.error('Error:', err);
-      const error = err.response?.data?.error || 'Signup failed';
-      alert(error);
+      alert(res.data.message || "Signup successful");
+      navigate('/login', { state: { clearForm: true } });
+    } else {
+      console.warn("Non-2xx response:", res.status);
     }
-  };
+  } catch (err) {
+    console.error('Error:', err);
+    const error = err.response?.data?.error || 'Signup failed';
+    alert(error);
+  }
+};
 
   return (
     <div
