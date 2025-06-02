@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, Form, Image } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
-import { Songs } from "../data/song";
-import "./SearchCategories.css"; // ✅ Custom animation & style classes
+import { Songs } from "../data/song"; // Songs data is imported here
+import "./SearchCategories.css"; // Custom styles for animations and UI
 
 const colors = [
   "#e74c3c", "#e67e22", "#3498db", "#2ecc71", "#9b59b6",
@@ -14,10 +14,9 @@ const SearchCategories = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  const filteredSongs = Songs.slice(0, 15).filter(
-    (song) =>
-      song.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      song.song.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredSongs = Songs.slice(0, 15).filter((song) =>
+    song.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    song.song.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleClick = (artistName) => {
@@ -53,7 +52,7 @@ const SearchCategories = () => {
                 >
                   {idx >= 4 && (
                     <Image
-                      src={song.img}
+                      src={song.artistBg}
                       alt={song.artist}
                       rounded
                       className="artist-img"
