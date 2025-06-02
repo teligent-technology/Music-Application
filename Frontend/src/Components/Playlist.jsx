@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import {Songs} from "../data/song";
 import { Link } from "react-router-dom";
-import "./Playlist.css";
+// import "./Playlist.css";
 
 const Playlist = ({ selectedSongs, setSelectedSongs }) => {
   const [searchQuery, setSearchQuery] = useState("");
