@@ -1,0 +1,75 @@
+/* SearchCategories.css */
+
+.animated-input {
+  transition: box-shadow 0.3s ease;
+  border-radius: 12px;
+}
+.animated-input:focus {
+  box-shadow: 0 0 8px #1abc9c;
+  border-color: #1abc9c;
+}
+
+.search-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: white;
+  cursor: pointer;
+  height: 200px;
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease both;
+}
+.search-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.artist-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 15px;
+  animation: slideInLeft 0.6s ease both;
+}
+
+.card-title-text {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.card-subtitle-text {
+  font-size: 1.1rem;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.animate-title {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.footer-icon {
+  transition: transform 0.2s ease;
+}
+.footer-icon:hover {
+  transform: scale(1.15);
+}
+
+.animated-fade {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { transform: translateX(-50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
