@@ -1,5 +1,7 @@
+// src/components/PlaylistSelector.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./PlaylistSelector.css"; // ✅ Import stylesheet
 
 const PlaylistSelector = ({ selectedSongs }) => {
   const [playlists, setPlaylists] = useState({});
@@ -17,27 +19,17 @@ const PlaylistSelector = ({ selectedSongs }) => {
     setPlaylists(stored);
   };
 
-  const handleSelect = (e) => {
-    setSelected(e.target.value);
-  };
+  const handleSelect = (e) => setSelected(e.target.value);
 
   const handleOpenPlaylist = () => {
-    if (!selected) {
-      alert("Please select a playlist first!");
-      return;
-    }
+    if (!selected) return alert("Please select a playlist first!");
     navigate(`/playlist/${encodeURIComponent(selected)}`);
   };
 
   const handleSave = () => {
-    if (!selected) {
-      alert("Please select a playlist first!");
-      return;
-    }
-    if (!Array.isArray(selectedSongs) || selectedSongs.length === 0) {
-      alert("No songs selected to add!");
-      return;
-    }
+    if (!selected) return alert("Please select a playlist first!");
+    if (!Array.isArray(selectedSongs) || selectedSongs.length === 0)
+      return alert("No songs selected to add!");
 
     const stored = JSON.parse(localStorage.getItem("playlists") || "{}");
     const existingSongs = stored[selected] || [];
@@ -47,8 +39,8 @@ const PlaylistSelector = ({ selectedSongs }) => {
     );
 
     const updatedSongs = [...new Set([...existingSongs, ...selectedFilenames])];
-
     stored[selected] = updatedSongs;
+
     localStorage.setItem("playlists", JSON.stringify(stored));
     setPlaylists({ ...stored });
 
@@ -59,28 +51,18 @@ const PlaylistSelector = ({ selectedSongs }) => {
   const playlistNames = Object.keys(playlists);
 
   return (
-    <div
-      className="container my-5 p-4 bg-dark text-white rounded shadow-lg mx-auto"
-      style={{ maxWidth: 700 }}
-    >
-      <h4
-        className="mb-4 fw-bold border-bottom pb-2"
-        style={{ borderColor: "#444" }}
-      >
-        Select Playlist to View
-      </h4>
+    <div className="playlist-selector-glass container my-5 p-4 text-white rounded shadow-lg">
+      <h4 className="mb-4 fw-bold border-bottom pb-2">Select Playlist to View</h4>
 
       {playlistNames.length === 0 ? (
-        <p className="text-muted fst-italic">No playlists available. Create one first!</p>
+        <p className="text-light fst-italic">No playlists available. Create one first!</p>
       ) : (
         <div className="row g-3 align-items-center">
           <div className="col-12 col-md-6">
             <select
               value={selected}
               onChange={handleSelect}
-              className="form-select bg-secondary text-white border-0"
-              aria-label="Select Playlist"
-              style={{ boxShadow: "none" }}
+              className="form-select playlist-dropdown"
             >
               <option value="">-- Select Playlist --</option>
               {playlistNames.map((name, index) => (
@@ -93,33 +75,23 @@ const PlaylistSelector = ({ selectedSongs }) => {
 
           <div className="col-6 col-md-3 d-grid">
             <button
-              className="btn btn-primary fw-semibold d-flex align-items-center justify-content-center gap-2"
+              className="btn btn-primary playlist-btn"
               onClick={handleOpenPlaylist}
               disabled={!selected}
-              aria-disabled={!selected}
-              title={!selected ? "Select a playlist first" : "Open selected playlist"}
               type="button"
             >
-              <i className="bi bi-folder2-open"></i> Open Playlist
+              <i className="bi bi-folder2-open"></i> Open
             </button>
           </div>
 
           <div className="col-6 col-md-3 d-grid">
             <button
-              className="btn btn-success fw-semibold d-flex align-items-center justify-content-center gap-2"
+              className="btn btn-success playlist-btn"
               onClick={handleSave}
               disabled={!selected || !selectedSongs.length}
-              aria-disabled={!selected || !selectedSongs.length}
-              title={
-                !selected
-                  ? "Select a playlist first"
-                  : !selectedSongs.length
-                  ? "No songs selected to add"
-                  : "Save selected songs to playlist"
-              }
               type="button"
             >
-              <i className="bi bi-save"></i> Save Selected Songs
+              <i className="bi bi-save"></i> Save Songs
             </button>
           </div>
         </div>

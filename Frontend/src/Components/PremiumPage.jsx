@@ -1,18 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const benefits = [
-  { icon: "https://img.icons8.com/ios-filled/20/ffffff/no-audio--v1.png", text: "Ad-free music listening" },
-  { icon: "https://img.icons8.com/ios-filled/20/ffffff/download--v1.png", text: "Download to listen offline" },
-  { icon: "https://img.icons8.com/ios-filled/20/ffffff/shuffle.png", text: "Play songs in any order" },
-  { icon: "https://img.icons8.com/ios-filled/20/ffffff/high-volume--v1.png", text: "High audio quality" },
-  { icon: "https://img.icons8.com/ios-filled/20/ffffff/group-foreground-selected.png", text: "Listen with friends in real time" }
+  {
+    icon: "https://img.icons8.com/ios-filled/20/ffffff/no-audio--v1.png",
+    text: "Ad-free music listening",
+  },
+  {
+    icon: "https://img.icons8.com/ios-filled/20/ffffff/download--v1.png",
+    text: "Download to listen offline",
+  },
+  {
+    icon: "https://img.icons8.com/ios-filled/20/ffffff/shuffle.png",
+    text: "Play songs in any order",
+  },
+  {
+    icon: "https://img.icons8.com/ios-filled/20/ffffff/high-volume--v1.png",
+    text: "High audio quality",
+  },
+  {
+    icon: "https://img.icons8.com/ios-filled/20/ffffff/group-foreground-selected.png",
+    text: "Listen with friends in real time",
+  },
 ];
 
 const PremiumPage = () => {
-  const [offer, setOffer] = useState('4 months of Premium Individual for free');
+  const [offer, setOffer] = useState(
+    "4 months of Premium Individual for free"
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +42,9 @@ const PremiumPage = () => {
 
   const handleUpgradeClick = async () => {
     try {
-      const res = await axios.post("https://music-application-backend.onrender.com/api/payment/create-order");
+      const res = await axios.post(
+        "https://music-application-backend.onrender.com/api/payment/create-order"
+      );
 
       console.log("Response status:", res.status);
       const orderData = res.data;
@@ -62,17 +81,20 @@ const PremiumPage = () => {
   };
 
   return (
-    <div className="bg-black text-white pb-5" style={{ paddingBottom: '120px' }}>
+    <div className="bg-black text-white pb-5" style={{ paddingBottom: "120px" }}>
       {/* Hero Image Grid */}
-      <div className="position-relative overflow-hidden" style={{ height: '220px' }}>
+      <div
+        className="position-relative overflow-hidden"
+        style={{ height: "220px" }}
+      >
         <div
           className="position-absolute w-100 h-100"
           style={{
-            transform: 'rotate(-3deg) scale(1.1)',
+            transform: "rotate(-3deg) scale(1.1)",
             top: 0,
             left: 0,
             zIndex: 1,
-            opacity: 0.6
+            opacity: 0.6,
           }}
         >
           <div className="container-fluid p-0">
@@ -80,7 +102,12 @@ const PremiumPage = () => {
               <div className="row g-1" key={rIdx}>
                 {[...Array(3)].map((_, i) => (
                   <div className="col" key={`img-${rIdx}-${i}`}>
-                    <img src="Jass.jpeg" className="img-fluid" style={{ height: '112px', objectFit: 'cover' }} alt="cover" />
+                    <img
+                      src="Jass.jpeg"
+                      className="img-fluid"
+                      style={{ height: "112px", objectFit: "cover" }}
+                      alt="cover"
+                    />
                   </div>
                 ))}
               </div>
@@ -92,19 +119,32 @@ const PremiumPage = () => {
       {/* Main Content */}
       <div className="container mt-4 position-relative" style={{ zIndex: 5 }}>
         <div className="d-flex align-items-center gap-2 mb-2">
-          <img src="Jass.jpeg" alt="Premium Logo" width={24} height={24} className="rounded-circle" />
+          <img
+            src="Jass.jpeg"
+            alt="Premium Logo"
+            width={24}
+            height={24}
+            className="rounded-circle"
+          />
           <span className="text-white-50 small fw-medium">Premium</span>
         </div>
 
         <h1 className="fs-3 fw-bold mb-3">
-          Listen without limits. Try<br />
+          Listen without limits. Try
+          <br />
           {offer}.
         </h1>
 
         <div
           className="d-inline-flex align-items-center gap-2 bg-secondary text-white px-3 py-2 rounded mb-2 small fw-medium"
           role="button"
-          onClick={() => setOffer(offer.includes("4 months") ? "3 months of Premium Duo for free" : "4 months of Premium Individual for free")}
+          onClick={() =>
+            setOffer(
+              offer.includes("4 months")
+                ? "3 months of Premium Duo for free"
+                : "4 months of Premium Individual for free"
+            )
+          }
         >
           <i className="bi bi-info-circle text-primary" />
           Limited time offer — Click to switch
@@ -141,7 +181,11 @@ const PremiumPage = () => {
             { to: "/create", icon: "bi-plus-circle-fill", label: "Create" },
             { to: "/premium", icon: "bi-gem", label: "Premium" },
           ].map((item, idx) => (
-            <Link key={idx} to={item.to} className="text-white text-center text-decoration-none">
+            <Link
+              key={idx}
+              to={item.to}
+              className="text-white text-center text-decoration-none"
+            >
               <i className={`bi ${item.icon} fs-4 d-block`} />
               <small>{item.label}</small>
             </Link>

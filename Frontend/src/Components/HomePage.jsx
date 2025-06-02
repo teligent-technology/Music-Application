@@ -12,9 +12,8 @@ const getUniqueArtists = (songs) => {
 };
 
 // Extract unique artist names from Songs array
-const uniqueArtists = Array.from(
-  new Set(Songs.map((song) => song.artist))
-).slice(0, 7);
+  const allArtists = [...new Set(Songs.map(song => song.artist))].slice(0, 30);
+
 
 
 const getTopArtists = (songs) => {
@@ -251,52 +250,60 @@ const filteredResults = Songs.filter(song =>
 
       {/* Top 7 Artists Section */}
       {!showSearch && (
-        <Container className="mt-4">
-          <h5 className="text-info fw-bold mb-3">
-            <i className="bi bi-music-note-list me-2" />
-            Top 7 Artists
-          </h5>
-          <div className="d-flex overflow-auto gap-3 pb-2 px-1" style={{ scrollbarWidth: "none" }}>
-            {topArtists.map((artist, index) => {
-              const artistImage = Songs.find(song => song.artist === artist)?.img || "/default-img.jpg";
+       <Container className="mt-4">
+      <h5 className="text-info fw-bold mb-3">
+        <i className="bi bi-music-note-list me-2" />
+        All Artists
+      </h5>
+      <div
+        className="d-flex overflow-auto gap-3 pb-2 px-1"
+        style={{ scrollbarWidth: "none" }}
+      >
+        {allArtists.map((artist, index) => {
+          const artistImage =
+            Songs.find(song => song.artist === artist)?.img || "/default-img.jpg";
 
-              return (
-                <Link
-                  key={index}
-                  to={`/artist/${encodeURIComponent(artist)}`}
-                  className="text-decoration-none text-white"
-                  style={{ flex: "0 0 auto", minWidth: "200px", maxWidth: "200px" }}
+          return (
+            <Link
+              key={index}
+              to={`/artist/${encodeURIComponent(artist)}`}
+              className="text-decoration-none text-white"
+              style={{
+                flex: "0 0 auto",
+                minWidth: "200px",
+                maxWidth: "200px",
+              }}
+            >
+              <div className="d-flex align-items-center bg-dark rounded-pill px-2 py-2 shadow-sm">
+                <img
+                  src={artistImage}
+                  alt={artist}
+                  className="rounded-circle"
+                  style={{
+                    width: 40,
+                    height: 40,
+                    objectFit: "cover",
+                    border: "1px solid #0dcaf0",
+                  }}
+                />
+                <span
+                  className="ms-3 fw-semibold text-truncate"
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    fontSize: "0.95rem",
+                    flex: 1,
+                  }}
                 >
-                  <div className="d-flex align-items-center bg-dark rounded-pill px-2 py-2 shadow-sm">
-                    <img
-                      src={artistImage}
-                      alt={artist}
-                      className="rounded-circle"
-                      style={{
-                        width: 40,
-                        height: 40,
-                        objectFit: "cover",
-                        border: "1px solid #0dcaf0",
-                      }}
-                    />
-                    <span
-                      className="ms-3 fw-semibold text-truncate"
-                      style={{
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        fontSize: "0.95rem",
-                        flex: 1,
-                      }}
-                    >
-                      {artist}
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </Container>
+                  {artist}
+                </span>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </Container>
       )}
 
       {/* New Releases */}

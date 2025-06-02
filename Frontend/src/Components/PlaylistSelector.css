@@ -1,0 +1,28 @@
+.playlist-selector-glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.playlist-dropdown {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+}
+
+.playlist-dropdown:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.playlist-btn {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.playlist-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 255, 100, 0.3);
+}

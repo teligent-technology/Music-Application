@@ -65,6 +65,7 @@ function App() {
         <Route path="/playlist/:name" element={<PlaylistViewer />} />
         <Route path="/CreatePlaylistPage" element={<CreatePlaylistPage />} />
                 <Route path="/premium" element={<PremiumPage />} />
+     
 
                 <Route path="/create" element={<Create />} />
 
