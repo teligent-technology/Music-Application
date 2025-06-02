@@ -1,0 +1,96 @@
+/* === Signup Page Styling === */
+.signup-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff512f, #dd2476);
+  padding: 1rem;
+}
+
+/* === Glass Card Animation === */
+.signup-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* === Button Styling === */
+.signup-btn {
+  background: linear-gradient(135deg, #1db954, #1ed760);
+  color: white;
+  font-weight: bold;
+  border: none;
+  transition: all 0.3s ease-in-out;
+  border-radius: 50px;
+}
+
+.signup-btn:hover {
+  background: linear-gradient(135deg, #1ed760, #1db954);
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(30, 215, 96, 0.3);
+}
+
+/* === Input Field Glow === */
+.input-glow {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-glow:focus {
+  border-color: #1ed760;
+  box-shadow: 0 0 10px rgba(30, 215, 96, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* === Animations === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.7s ease-in-out;
+}
+
+/* === Input Appear Animation === */
+.animated-input {
+  animation: fadeSlideIn 0.6s ease forwards;
+  opacity: 0;
+}
+
+.animated-input:nth-child(1) { animation-delay: 0.2s; }
+.animated-input:nth-child(2) { animation-delay: 0.4s; }
+.animated-input:nth-child(3) { animation-delay: 0.6s; }
+.animated-input:nth-child(4) { animation-delay: 0.8s; }
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+}
+
+/* === Link Styling === */
+a.text-light:hover {
+  text-decoration: underline;
+}

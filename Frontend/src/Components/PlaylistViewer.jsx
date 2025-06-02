@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Songs } from '../data/song';
 import { useParams, useNavigate } from 'react-router-dom';
+import "./Playlist.css";
 
 const PlaylistViewer = () => {
   const { name } = useParams();
