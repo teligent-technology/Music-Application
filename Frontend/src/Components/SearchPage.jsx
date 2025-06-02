@@ -13,9 +13,22 @@ const SearchCategories = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  const filteredSongs = Songs.slice(0, 20).filter((song) =>
-    song.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    song.song.toLowerCase().includes(searchTerm.toLowerCase())
+  // Extract unique artists
+  const uniqueArtistsMap = {};
+  Songs.forEach((song) => {
+    const artistKey = song.artist.toLowerCase();
+    if (!uniqueArtistsMap[artistKey]) {
+      uniqueArtistsMap[artistKey] = song;
+    }
+  });
+
+  const uniqueArtists = Object.values(uniqueArtistsMap);
+
+  // Filter based on search term
+  const filteredArtists = uniqueArtists.filter(
+    (song) =>
+      song.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      song.song.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleClick = (artistName) => {
@@ -39,12 +52,12 @@ const SearchCategories = () => {
         </Form>
 
         <Row className="g-4">
-          {filteredSongs.length > 0 ? (
-            filteredSongs.map((song, idx) => {
+          {filteredArtists.length > 0 ? (
+            filteredArtists.map((song, idx) => {
               const accentColor = generateAccentColor(idx);
 
               return (
-                <Col xs={12} md={6} lg={4} key={song.Id}>
+                <Col xs={12} md={6} lg={4} key={song.artist}>
                   <Card
                     onClick={() => handleClick(song.artist)}
                     className="search-card"
@@ -54,7 +67,7 @@ const SearchCategories = () => {
                   >
                     <div className="img-container">
                       <Image
-                        src={song.artistBg}
+                        src={song.artistBg || song.img || "/default-img.jpg"}
                         alt={song.artist}
                         className="artist-image"
                         roundedCircle
@@ -75,14 +88,14 @@ const SearchCategories = () => {
           )}
         </Row>
 
-      {/* Mobile Footer */}
-      <nav className="mobile-footer d-md-none">
-        <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
-        <FooterIcon to="/search" icon="bi-search" label="Search" />
-        <FooterIcon to="/library" icon="bi-music-note-list" label="Library" />
-        <FooterIcon to="/create" icon="bi-plus-circle-fill" label="Create" />
-        <FooterIcon to="/premium" icon="bi-gem" label="Premium" />
-      </nav>
+        {/* Mobile Footer */}
+        <nav className="mobile-footer d-md-none">
+          <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
+          <FooterIcon to="/search" icon="bi-search" label="Search" />
+          <FooterIcon to="/library" icon="bi-music-note-list" label="Library" />
+          <FooterIcon to="/create" icon="bi-plus-circle-fill" label="Create" />
+          <FooterIcon to="/premium" icon="bi-gem" label="Premium" />
+        </nav>
       </Container>
     </>
   );
