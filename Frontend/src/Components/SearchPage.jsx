@@ -1,14 +1,25 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card, Form, Image } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
-import { Songs } from "../data/song"; // Songs data is imported here
-import "./SearchCategories.css"; // Custom styles for animations and UI
+import { Songs } from "../data/song";
+import "./SearchCategories.css";
 
-const colors = [
-  "#e74c3c", "#e67e22", "#3498db", "#2ecc71", "#9b59b6",
-  "#f1c40f", "#1abc9c", "#e84393", "#34495e", "#d35400",
-  "#16a085", "#8e44ad", "#27ae60", "#c0392b", "#2980b9"
-];
+const generateColor = (index) => {
+  const hue = (index * 45) % 360;
+  return `hsl(${hue}, 70%, 50%)`;
+};
+
+const getTextColor = (bgColor) => {
+  const div = document.createElement("div");
+  div.style.color = bgColor;
+  document.body.appendChild(div);
+  const computedColor = getComputedStyle(div).color;
+  document.body.removeChild(div);
+
+  const [r, g, b] = computedColor.match(/\d+/g).map(Number);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 125 ? "#000" : "#fff";
+};
 
 const SearchCategories = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,29 +54,38 @@ const SearchCategories = () => {
 
         <Row className="g-4">
           {filteredSongs.length > 0 ? (
-            filteredSongs.map((song, idx) => (
-              <Col xs={12} md={6} key={song.Id}>
-                <Card
-                  onClick={() => handleClick(song.artist)}
-                  className="search-card"
-                  style={{ backgroundColor: colors[idx % colors.length] }}
-                >
-                  {idx >= 4 && (
-                    <Image
-                      src={song.artistBg}
-                      alt={song.artist}
-                      rounded
-                      className="artist-img"
-                    />
-                  )}
-                  <div>
-                    <Card.Title className="card-title-text">
-                      {song.artist}
-                    </Card.Title>
-                  </div>
-                </Card>
-              </Col>
-            ))
+            filteredSongs.map((song, idx) => {
+              const bgColor = generateColor(idx);
+              const textColor = getTextColor(bgColor);
+
+              return (
+                <Col xs={12} md={6} key={song.Id}>
+                  <Card
+                    onClick={() => handleClick(song.artist)}
+                    className="search-card transition-card"
+                    style={{
+                      backgroundColor: bgColor,
+                      color: textColor,
+                      cursor: "pointer"
+                    }}
+                  >
+                    {idx >= 4 && (
+                      <Image
+                        src={song.artistBg}
+                        alt={song.artist}
+                        className="artist-img-circular"
+                        roundedCircle
+                      />
+                    )}
+                    <div>
+                      <Card.Title className="card-title-text">
+                        {song.artist}
+                      </Card.Title>
+                    </div>
+                  </Card>
+                </Col>
+              );
+            })
           ) : (
             <div className="w-100 text-center animated-fade">
               <p className="text-muted fs-5">😔 No songs found.</p>
@@ -75,7 +95,7 @@ const SearchCategories = () => {
       </Container>
 
       {/* Mobile Footer Bar */}
-      <div className="d-md-none position-fixed bottom-0 start-0 end-0 text-white border-top border-secondary z-3 footer-bar">
+      <div className="d-md-none position-fixed bottom-0 start-0 end-0 text-white border-top border-secondary z-3 footer-bar bg-dark">
         <div className="d-flex justify-content-around py-2">
           <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
           <FooterIcon to="/search" icon="bi-search" label="Search" />

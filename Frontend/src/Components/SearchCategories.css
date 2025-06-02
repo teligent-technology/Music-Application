@@ -1,4 +1,6 @@
-/* Page background with soft animated gradient */
+/* ----------------------------
+   Page Background & Animations
+----------------------------- */
 body, .search-page {
   background: linear-gradient(-45deg, #1e1e2f, #2c2c54, #3a3a8c, #1f1f3f);
   background-size: 400% 400%;
@@ -7,58 +9,69 @@ body, .search-page {
 }
 
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Title animations */
+/* ----------------------------
+   Title Animations & Styling
+----------------------------- */
 .animate-title {
   font-weight: 700;
   font-size: 2rem;
   animation: fadeIn 0.5s ease forwards;
 }
 
-/* Search input styling with glass effect */
+/* ----------------------------
+   Search Input Styling
+----------------------------- */
 .animated-input {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   color: white;
-  transition: box-shadow 0.3s ease, background 0.3s ease;
   border-radius: 12px;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
 }
+
 .animated-input::placeholder {
   color: rgba(255, 255, 255, 0.6);
 }
+
 .animated-input:focus {
   box-shadow: 0 0 8px #1abc9c;
   border-color: #1abc9c;
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Search card design */
+/* ----------------------------
+   Search Card Design & Animation
+----------------------------- */
 .search-card {
   display: flex;
   align-items: center;
   gap: 20px;
   padding: 20px;
   border-radius: 20px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  color: white;
   cursor: pointer;
   height: 200px;
   overflow: hidden;
-  animation: fadeInUp 0.6s ease both;
+  color: white;
   backdrop-filter: blur(8px);
   background: rgba(255, 255, 255, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeInUp 0.6s ease both;
 }
+
 .search-card:hover {
   transform: scale(1.03);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Artist image inside cards */
+/* ----------------------------
+   Artist Image Styling & Animation
+----------------------------- */
 .artist-img {
   width: 100px;
   height: 100px;
@@ -67,23 +80,30 @@ body, .search-page {
   animation: slideInLeft 0.6s ease both;
 }
 
-/* Text styling */
+/* ----------------------------
+   Text Styling
+----------------------------- */
 .card-title-text {
   font-size: 1.6rem;
   font-weight: 700;
 }
+
 .card-subtitle-text {
   font-size: 1.1rem;
   font-weight: 400;
   opacity: 0.9;
 }
 
-/* Fade animation for empty results */
+/* ----------------------------
+   Empty Results Animation
+----------------------------- */
 .animated-fade {
   animation: fadeIn 0.8s ease forwards;
 }
 
-/* Footer bar for mobile */
+/* ----------------------------
+   Footer Bar Styling (Mobile)
+----------------------------- */
 .footer-bar {
   backdrop-filter: blur(10px);
   background: rgba(0, 0, 0, 0.7) !important;
@@ -92,27 +112,34 @@ body, .search-page {
 .footer-icon {
   transition: transform 0.2s ease;
 }
+
 .footer-icon:hover {
   transform: scale(1.15);
 }
+
 .footer-icon i {
   transition: transform 0.3s ease;
 }
+
 .footer-icon:hover i {
   transform: scale(1.2);
   color: #1abc9c !important;
 }
 
-/* Animations */
+/* ----------------------------
+   Keyframes Animations
+----------------------------- */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
+
 @keyframes slideInLeft {
   from { transform: translateX(-50px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(0); opacity: 1; }
 }
