@@ -168,14 +168,15 @@
 }
 
 .song-title {
-  font-weight: 600;
-  color: #fff;
+  font-weight: 700;
+  color: #f2f2f2;
 }
 
 .song-artist {
-  font-size: 0.85rem;
-  color: #ccc;
+  font-size: 0.9rem;
+  color: #d0d0d0;
 }
+
 
 /* === Responsive tweaks === */
 @media (max-width: 576px) {
