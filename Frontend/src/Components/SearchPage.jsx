@@ -4,28 +4,16 @@ import { useNavigate, Link } from "react-router-dom";
 import { Songs } from "../data/song";
 import "./SearchCategories.css";
 
-const generateColor = (index) => {
-  const hue = (index * 45) % 360;
-  return `hsl(${hue}, 70%, 50%)`;
-};
-
-const getTextColor = (bgColor) => {
-  const div = document.createElement("div");
-  div.style.color = bgColor;
-  document.body.appendChild(div);
-  const computedColor = getComputedStyle(div).color;
-  document.body.removeChild(div);
-
-  const [r, g, b] = computedColor.match(/\d+/g).map(Number);
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  return brightness > 125 ? "#000" : "#fff";
+const generateAccentColor = (index) => {
+  const hues = [190, 240, 280, 320, 360];
+  return `hsl(${hues[index % hues.length]}, 85%, 55%)`;
 };
 
 const SearchCategories = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  const filteredSongs = Songs.slice(0, 15).filter((song) =>
+  const filteredSongs = Songs.slice(0, 20).filter((song) =>
     song.artist.toLowerCase().includes(searchTerm.toLowerCase()) ||
     song.song.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -36,82 +24,74 @@ const SearchCategories = () => {
 
   return (
     <>
-      <Container className="pt-4 pb-5 search-page">
-        <h2 className="text-white mb-3 animate-title">🔍 Search Music</h2>
+      <Container className="pt-5 pb-5 search-page">
+        <h1 className="search-title">Discover Your Sound</h1>
 
-        <Form className="mb-4">
+        <Form className="search-form mb-5">
           <Form.Control
             type="search"
-            placeholder="Search songs or artists..."
+            placeholder="Type artist or song name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             autoFocus
-            className="animated-input"
+            className="search-input"
           />
         </Form>
-
-        <h5 className="text-white mb-4 animate-title">🎧 Start Browsing</h5>
 
         <Row className="g-4">
           {filteredSongs.length > 0 ? (
             filteredSongs.map((song, idx) => {
-              const bgColor = generateColor(idx);
-              const textColor = getTextColor(bgColor);
+              const accentColor = generateAccentColor(idx);
 
               return (
-                <Col xs={12} md={6} key={song.Id}>
+                <Col xs={12} md={6} lg={4} key={song.Id}>
                   <Card
                     onClick={() => handleClick(song.artist)}
-                    className="search-card transition-card"
-                    style={{
-                      backgroundColor: bgColor,
-                      color: textColor,
-                      cursor: "pointer"
-                    }}
+                    className="search-card"
+                    style={{ "--accent-color": accentColor }}
+                    tabIndex={0}
+                    aria-label={`View songs by ${song.artist}`}
                   >
-                    {idx >= 4 && (
+                    <div className="img-container">
                       <Image
                         src={song.artistBg}
                         alt={song.artist}
-                        className="artist-img-circular"
+                        className="artist-image"
                         roundedCircle
                       />
-                    )}
-                    <div>
-                      <Card.Title className="card-title-text">
-                        {song.artist}
-                      </Card.Title>
                     </div>
+                    <Card.Body>
+                      <Card.Title className="card-title">{song.artist}</Card.Title>
+                      <Card.Text className="card-subtitle">{song.song}</Card.Text>
+                    </Card.Body>
                   </Card>
                 </Col>
               );
             })
           ) : (
-            <div className="w-100 text-center animated-fade">
-              <p className="text-muted fs-5">😔 No songs found.</p>
+            <div className="no-results">
+              <p>😔 Sorry, no matches found!</p>
             </div>
           )}
         </Row>
-      </Container>
 
-      {/* Mobile Footer Bar */}
-      <div className="d-md-none position-fixed bottom-0 start-0 end-0 text-white border-top border-secondary z-3 footer-bar bg-dark">
-        <div className="d-flex justify-content-around py-2">
-          <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
-          <FooterIcon to="/search" icon="bi-search" label="Search" />
-          <FooterIcon to="/punjabi" icon="bi-music-note-list" label="Library" />
-          <FooterIcon to="/create" icon="bi-plus-circle-fill" label="Create" />
-          <FooterIcon to="/premium" icon="bi-gem" label="Premium" />
-        </div>
-      </div>
+      {/* Mobile Footer */}
+      <nav className="mobile-footer d-md-none">
+        <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
+        <FooterIcon to="/search" icon="bi-search" label="Search" />
+        <FooterIcon to="/library" icon="bi-music-note-list" label="Library" />
+        <FooterIcon to="/create" icon="bi-plus-circle-fill" label="Create" />
+        <FooterIcon to="/premium" icon="bi-gem" label="Premium" />
+      </nav>
+      </Container>
     </>
   );
 };
 
 const FooterIcon = ({ to, icon, label }) => (
-  <Link to={to} className="text-white text-center text-decoration-none footer-icon">
-    <i className={`bi ${icon} fs-4 d-block`} />
-    <small>{label}</small>
+  <Link to={to} className="footer-icon" aria-label={label}>
+    <i className={`bi ${icon}`} />
+    <span>{label}</span>
   </Link>
 );
 
