@@ -169,12 +169,16 @@
 
 .song-title {
   font-weight: 700;
-  color: #f2f2f2;
+  font-size: 1rem;
+  color: #fafafa; /* brighter white for visibility */
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3); /* optional glow */
 }
 
 .song-artist {
   font-size: 0.9rem;
-  color: #d0d0d0;
+  font-weight: 500;
+  color: #e0e0e0;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.25); /* optional glow */
 }
 
 
@@ -189,6 +193,7 @@
   }
 
   .song-artist {
+
     font-size: 0.8rem;
   }
 }
