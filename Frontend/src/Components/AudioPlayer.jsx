@@ -242,165 +242,206 @@ const AudioPlayer = ({ songsList = [] }) => {
 
   return (
     <div
-      className="d-flex flex-column justify-content-center align-items-center p-3"
-      style={{ minHeight: "100vh", width: "100vw", backgroundColor: "#121212", color: "white" }}
-    >
-      {/* Search */}
-      <div className="d-flex flex-column flex-sm-row gap-2 w-100" style={{ maxWidth: "700px" }}>
-        <input
-          type="text"
-          onKeyDown={handleKeyDown}
-          value={searchTerm}
-          onChange={handleSearchChange}
-          placeholder="Search by song or artist"
-          className="form-control"
-          style={{ height: "45px" }}
-        />
-        <button className="btn btn-primary px-4 py-2 rounded shadow-sm" onClick={handleSearchClick}>
-          Search
-        </button>
-      </div>
-
-      {/* Song Image */}
-      {currentSong?.img && (
-        <div className="mt-4 text-center">
-          <img
-            src={currentSong.img}
-            alt={currentSong.song}
-            className="img-fluid rounded shadow"
-            style={{ maxWidth: "300px", maxHeight: "300px", objectFit: "cover" }}
-          />
-          <h5 className="mt-2">{currentSong.song}</h5>
-          <p className="text-secondary">{currentSong.artist}</p>
-        </div>
-      )}
-
-      {/* Song List / Playlist */}
-      <div
-        className="custom-scrollbar mt-4"
-        style={{ maxHeight: "250px", overflowY: "auto", width: "100%", maxWidth: "700px" }}
-      >
-        {showPlaylist ? (
-          <div className="bg-dark text-white p-3 rounded">
-            <h5 className="mb-3">Playlist</h5>
-            {playlist.length === 0 ? (
-              <p>No songs in playlist.</p>
-            ) : (
-              playlist.map(song => (
-                <div
-                  key={song.Id}
-                  className="d-flex justify-content-between align-items-center mb-2"
-                >
-                  <span
-                    onClick={() => handleSongClick(song.Id)}
-                    style={{ cursor: "pointer" }}
-                    className={currentSong?.Id === song.Id ? "text-primary fw-bold" : ""}
-                  >
-                    {song.song}
-                  </span>
-                  <span
-                    onClick={() => handleDeleteSong(song.Id)}
-                    className="text-danger"
-                    style={{ cursor: "pointer" }}
-                  >
-                    &times;
-                  </span>
-                </div>
-              ))
-            )}
-          </div>
-        ) : (
-          filteredSongs.map(song => (
-            <div
-              key={song.Id}
-              className="d-flex align-items-center justify-content-between gap-2 rounded px-3 py-2"
-              style={{ cursor: "pointer" }}
-            >
-              <span
-                onClick={() => handleSongClick(song.Id)}
-                className={currentSong?.Id === song.Id ? "text-primary fw-bold" : ""}
-                style={{ flexGrow: 1 }}
-              >
-                {song.song}
-              </span>
-              <button
-                className="btn btn-sm btn-outline-primary"
-                onClick={() => handleAddToPlaylist(song)}
-              >
-                <FaPlus />
-              </button>
-            </div>
-          ))
-        )}
-      </div>
-
-      {/* Playback controls: all buttons in a single horizontal row */}
-      <div
-        className="d-flex align-items-center gap-3 mt-3 px-3 w-100"
-        style={{ maxWidth: "700px", justifyContent: "center" }}
-      >
-        <button
-          onClick={handlePrevious}
-          className="btn btn-outline-primary px-3 py-2 rounded shadow-sm"
-          aria-label="Previous"
-        >
-          <FaStepBackward />
-        </button>
-
-        <button
-          onClick={handlePlayPause}
-          className="btn btn-primary px-4 py-2 rounded shadow-sm d-flex align-items-center gap-2"
-          aria-label={isPlaying ? "Pause" : "Play"}
-        >
-          {isPlaying ? <FaPause /> : <FaPlay />} 
-          <span>{isPlaying ? "Pause" : "Play"}</span>
-        </button>
-
-        <button
-          onClick={handleNext}
-          className="btn btn-outline-primary px-3 py-2 rounded shadow-sm"
-          aria-label="Next"
-        >
-          <FaStepForward />
-        </button>
-
-        <a
-          href={currentSong?.src || "#"}
-          download={currentSong?.song}
-          className={`btn btn-outline-success px-3 py-2 rounded shadow-sm ${!currentSong ? "disabled" : ""}`}
-        >
-          <FaDownload /> Download
-        </a>
-      </div>
-
-      {/* Seekbar */}
-      <div
-        className="d-flex align-items-center gap-2 w-100 mt-2 px-3"
-        style={{ maxWidth: "700px" }}
-      >
-        <span>{formatTime(currentTime)}</span>
-        <input
-          type="range"
-          className="form-range flex-grow-1"
-          min="0"
-          max={duration || 0}
-          value={currentTime}
-          onChange={handleSeek}
-        />
-        <span>{formatTime(duration)}</span>
-      </div>
-
-      <audio
-        ref={audioRef}
-        onTimeUpdate={handleTimeUpdate}
-        onLoadedMetadata={handleLoadedMetadata}
-        onEnded={handleEnded}
+    className="d-flex flex-column justify-content-center align-items-center p-3"
+    style={{
+      minHeight: "100vh",
+      width: "100vw",
+      background: "linear-gradient(to bottom, #1e1e1e, #121212)",
+      color: "white",
+      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      transition: "all 0.4s ease-in-out",
+    }}
+  >
+    {/* Search */}
+    <div className="d-flex flex-column flex-sm-row gap-2 w-100" style={{ maxWidth: "700px" }}>
+      <input
+        type="text"
+        onKeyDown={handleKeyDown}
+        value={searchTerm}
+        onChange={handleSearchChange}
+        placeholder="Search by song or artist"
+        className="form-control shadow-sm"
+        style={{ height: "45px", borderRadius: "10px" }}
       />
-
-      <button className="btn btn-link mt-3" onClick={togglePlaylist} style={{ color: "white" }}>
-        {showPlaylist ? "Show All Songs" : "Show Playlist"}
+      <button
+        className="btn btn-primary px-4 py-2 rounded shadow"
+        style={{ transition: "all 0.3s ease" }}
+        onClick={handleSearchClick}
+      >
+        Search
       </button>
     </div>
+
+    {/* Song Image */}
+    {currentSong?.img && (
+      <div className="mt-4 text-center animate__animated animate__fadeIn">
+        <img
+          src={currentSong.img}
+          alt={currentSong.song}
+          className={`img-fluid rounded shadow-lg ${isPlaying ? "animate__pulse animate__infinite" : ""}`}
+          style={{
+            maxWidth: "300px",
+            maxHeight: "300px",
+            objectFit: "cover",
+            transition: "transform 0.4s ease-in-out",
+            transform: isPlaying ? "scale(1.05)" : "scale(1)",
+          }}
+        />
+        <h5 className="mt-3 fw-bold text-glow">{currentSong.song}</h5>
+        <p className="text-secondary mb-0">{currentSong.artist}</p>
+      </div>
+    )}
+
+    {/* Song List / Playlist */}
+    <div
+      className="custom-scrollbar mt-4"
+      style={{
+        maxHeight: "250px",
+        overflowY: "auto",
+        width: "100%",
+        maxWidth: "700px",
+        borderRadius: "10px",
+        backgroundColor: "#1a1a1a",
+        padding: "15px",
+      }}
+    >
+      {showPlaylist ? (
+        <div className="text-white">
+          <h5 className="mb-3">🎵 Your Playlist</h5>
+          {playlist.length === 0 ? (
+            <p className="text-muted">No songs in playlist.</p>
+          ) : (
+            playlist.map(song => (
+              <div
+                key={song.Id}
+                className={`d-flex justify-content-between align-items-center mb-2 p-2 rounded transition-all ${
+                  currentSong?.Id === song.Id ? "bg-primary text-white" : "bg-dark text-light"
+                }`}
+                style={{
+                  cursor: "pointer",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.3)",
+                }}
+              >
+                <span
+                  onClick={() => handleSongClick(song.Id)}
+                  className="flex-grow-1"
+                >
+                  {song.song}
+                </span>
+                <span
+                  onClick={() => handleDeleteSong(song.Id)}
+                  className="text-danger fw-bold ms-3"
+                >
+                  &times;
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+      ) : (
+        filteredSongs.map(song => (
+          <div
+            key={song.Id}
+            className="d-flex align-items-center justify-content-between gap-2 rounded px-3 py-2 mb-2 bg-dark text-white shadow-sm transition-all"
+            style={{ cursor: "pointer", transition: "all 0.3s ease" }}
+          >
+            <span
+              onClick={() => handleSongClick(song.Id)}
+              className={currentSong?.Id === song.Id ? "text-primary fw-bold" : ""}
+              style={{ flexGrow: 1 }}
+            >
+              {song.song}
+            </span>
+            <button
+              className="btn btn-sm btn-outline-primary rounded-circle"
+              onClick={() => handleAddToPlaylist(song)}
+              title="Add to Playlist"
+            >
+              <FaPlus />
+            </button>
+          </div>
+        ))
+      )}
+    </div>
+
+    {/* Playback Controls */}
+    <div
+      className="d-flex align-items-center gap-3 mt-4 px-3 w-100 flex-wrap justify-content-center"
+      style={{ maxWidth: "700px" }}
+    >
+      <button
+        onClick={handlePrevious}
+        className="btn btn-outline-light rounded-circle shadow-sm px-3 py-2"
+        title="Previous"
+        style={{ transition: "all 0.3s ease" }}
+      >
+        <FaStepBackward />
+      </button>
+
+      <button
+        onClick={handlePlayPause}
+        className="btn btn-primary rounded-pill shadow px-4 py-2 d-flex align-items-center gap-2"
+        title={isPlaying ? "Pause" : "Play"}
+        style={{ fontWeight: "bold", fontSize: "1rem", transition: "background 0.3s ease" }}
+      >
+        {isPlaying ? <FaPause /> : <FaPlay />} {isPlaying ? "Pause" : "Play"}
+      </button>
+
+      <button
+        onClick={handleNext}
+        className="btn btn-outline-light rounded-circle shadow-sm px-3 py-2"
+        title="Next"
+        style={{ transition: "all 0.3s ease" }}
+      >
+        <FaStepForward />
+      </button>
+
+      <a
+        href={currentSong?.src || "#"}
+        download={currentSong?.song}
+        className={`btn btn-outline-success shadow-sm px-3 py-2 rounded-pill ${
+          !currentSong ? "disabled" : ""
+        }`}
+        title="Download Song"
+      >
+        <FaDownload className="me-1" /> Download
+      </a>
+    </div>
+
+    {/* Seekbar */}
+    <div
+      className="d-flex align-items-center gap-2 w-100 mt-3 px-3"
+      style={{ maxWidth: "700px" }}
+    >
+      <span style={{ width: "45px", textAlign: "center" }}>{formatTime(currentTime)}</span>
+      <input
+        type="range"
+        className="form-range flex-grow-1"
+        min="0"
+        max={duration || 0}
+        value={currentTime}
+        onChange={handleSeek}
+        style={{ accentColor: "#1db954", height: "5px" }}
+      />
+      <span style={{ width: "45px", textAlign: "center" }}>{formatTime(duration)}</span>
+    </div>
+
+    {/* Audio Element */}
+    <audio
+      ref={audioRef}
+      onTimeUpdate={handleTimeUpdate}
+      onLoadedMetadata={handleLoadedMetadata}
+      onEnded={handleEnded}
+    />
+
+    {/* Toggle Button */}
+    <button
+      className="btn btn-outline-secondary mt-4 px-4 py-2 rounded-pill"
+      onClick={togglePlaylist}
+    >
+      {showPlaylist ? "Show All Songs" : "Show Playlist"}
+    </button>
+  </div>
   );
 };
 
