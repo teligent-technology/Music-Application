@@ -6,21 +6,26 @@ const { jwtMiddleWare, generateToken } = require('./../jwt');
 
 // Register new user
 router.post('/', async (req, res) => {
-  const { username, password } = req.body;
+  const { name, Mobile, username, password } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // You can skip manual hashing here if you have pre-save hook
+    // Just create new user with raw password, pre-save will hash it
     const user = new person({
+      name,
+      Mobile,
       username,
-      password: hashedPassword,
+      password,
       isPremium: false,
     });
     await user.save();
     res.status(201).json({ message: 'User created' });
   } catch (err) {
+    console.error('Signup error:', err);
     res.status(500).json({ error: 'Signup failed' });
   }
 });
+
 
 // Get all users (protected)
 router.get('/', jwtMiddleWare, async (req, res) => {
@@ -78,25 +83,36 @@ router.delete('/:id', async (req, res) => {
 // Login route
 // Backend: /login route
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-
   try {
+    const { username, password } = req.body;
     const user = await person.findOne({ username });
-    if (!user) return res.status(404).json({ error: "User not found" });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
+    if (!user || !(await user.comparePassword(password))) {
+      return res.status(401).json({ error: "Invalid username or password" });
+    }
 
-    // Send user data including premium status to client
-    res.json({
+    const payload = {
+      id: user.id,
       username: user.username,
-      isPremium: user.isPremium,
-      // other info or token
+    };
+
+    const token = generateToken(payload);
+
+    res.json({
+      message: "Login successful",
+      token,
+      name: user.name,
+      username: user.username,
+      Mobile: user.Mobile,
+      isPremium: user.isPremium || false
     });
   } catch (err) {
-    res.status(500).json({ error: 'Login failed' });
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
+
+
 
 // Logout route
 router.post('/logout', (req, res) => {
