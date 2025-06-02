@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import {Songs} from "../data/song";
 import { Link } from "react-router-dom";
-// import "./Playlist.css";
+import "./Playlist.css";
 
 const Playlist = ({ selectedSongs, setSelectedSongs }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,40 +48,38 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
         />
       </div>
 
-      <div className="song-list"
-        style={{ maxHeight: "400px", overflowY: "auto" }}
-
-      >
-        {filteredSongs.length > 0 ? (
-          filteredSongs.map((song, index) => {
-            const isChecked = selectedSongs.some((s) => s.src === song.src);
-            return (
-              <div
-                key={index}
-                className={`song-card ${isChecked ? "selected" : ""}`}
-                onClick={() => toggleSelect(song)}
-              >
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    checked={isChecked}
-                    onChange={() => toggleSelect(song)}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  <label className="form-check-label">
-                    {song.song} <small className="text-muted">- {song.artist}</small>
-                  </label>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <p className="text-muted text-center fst-italic mt-4">
-            No songs found matching your search.
-          </p>
-        )}
-      </div>
+     <div className="song-list">
+  {filteredSongs.length > 0 ? (
+    filteredSongs.map((song, index) => {
+      const isChecked = selectedSongs.some((s) => s.src === song.src);
+      return (
+        <div
+          key={index}
+          className={`song-card ${isChecked ? "selected" : ""}`}
+          onClick={() => toggleSelect(song)}
+        >
+          <div className="form-check d-flex align-items-center">
+            <input
+              className="form-check-input me-3"
+              type="checkbox"
+              checked={isChecked}
+              onChange={() => toggleSelect(song)}
+              onClick={(e) => e.stopPropagation()}
+            />
+            <div className="song-card-content">
+              <span className="song-title">{song.song}</span>
+              <span className="song-artist"> — {song.artist}</span>
+            </div>
+          </div>
+        </div>
+      );
+    })
+  ) : (
+    <p className="text-muted text-center fst-italic mt-4">
+      No songs found matching your search.
+    </p>
+  )}
+</div>
     </div>
   );
 };
