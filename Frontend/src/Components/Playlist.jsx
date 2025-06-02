@@ -48,7 +48,10 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
         />
       </div>
 
-      <div className="song-list">
+      <div className="song-list"
+        style={{ maxHeight: "400px", overflowY: "auto" }}
+
+      >
         {filteredSongs.length > 0 ? (
           filteredSongs.map((song, index) => {
             const isChecked = selectedSongs.some((s) => s.src === song.src);
