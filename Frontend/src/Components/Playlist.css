@@ -1,162 +1,122 @@
-/* Playlist.css */
-
-/* === Glassmorphism Base === */
-.glass-box {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+/* === Full Page Background === */
+body {
+  background: url('/images/music-bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
-.glass-box:hover {
-  transform: translateY(-4px) scale(1.015);
+/* === Fade Animation === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* === Playlist Container Glassmorphism === */
+.playlist-container {
+  max-width: 700px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 20px;
+  backdrop-filter: blur(18px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  color: #fff;
 }
 
-/* === Scrollable Song List with Glassmorphism === */
+/* === Header & Button === */
+.playlist-container h3 {
+  font-size: 1.8rem;
+  color: #1ed760;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.btn-outline-primary {
+  border-radius: 30px;
+  transition: all 0.3s ease-in-out;
+  font-weight: 600;
+  color: #1ed760;
+  border-color: #1ed760;
+}
+
+.btn-outline-primary:hover {
+  background: #1ed760;
+  color: #000;
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(30, 215, 96, 0.4);
+}
+
+/* === Search Bar === */
+.input-group-text {
+  background-color: #1ed760;
+  border: none;
+  color: #000;
+}
+
+.form-control {
+  border-radius: 0 10px 10px 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  box-shadow: 0 0 10px rgba(30, 215, 96, 0.3);
+}
+
+/* === Scrollable Song List === */
 .song-list {
-  max-height: 400px;       /* fixed height */
-  overflow-y: auto;        /* vertical scroll */
-  padding-right: 10px;     /* prevent scrollbar overlap */
-  background: rgba(255, 255, 255, 0.07);
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 8px;
+  background: rgba(255, 255, 255, 0.03);
   border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px);
-  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
   transition: box-shadow 0.3s ease;
 }
 
 .song-list:hover {
-  box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
 }
-
-/* Scrollbar Styling */
-.song-list::-webkit-scrollbar {
-  width: 8px;
-}
-
-.song-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-}
-
-.song-list::-webkit-scrollbar-thumb {
-  background-color: rgba(30, 215, 96, 0.7);
-  border-radius: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.song-list {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(30, 215, 96, 0.7) rgba(255, 255, 255, 0.05);
-}
-
-/* === Button Animations === */
-.save-btn,
-.btn-outline-light,
-.btn-outline-success {
-  transition: all 0.3s ease-in-out;
-  font-weight: 600;
-  border-radius: 999px;
-}
-
-.save-btn:hover {
-  background: linear-gradient(135deg, #1db954, #1ed760);
-  color: #fff;
-  transform: scale(1.05);
-  box-shadow: 0 6px 18px rgba(30, 215, 96, 0.4);
-}
-
-.btn-outline-light:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: scale(1.05);
-  color: #fff;
-}
-
-.btn-outline-success:hover {
-  background-color: #1ed760;
-  color: #000;
-  transform: scale(1.05);
-}
-
-/* === Custom Dropdown === */
-.custom-dropdown {
-  background-color: #111;
-  color: #fff;
-  border: 1px solid #333;
-  border-radius: 10px;
-  padding: 0.5rem;
-  transition: all 0.25s ease-in-out;
-}
-
-.custom-dropdown:hover,
-.custom-dropdown:focus {
-  border-color: #1ed760;
-  background-color: #222;
-  transform: scale(1.02);
-}
-
-/* === List Item Animations for Playlist Viewer === */
-.list-group-item {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
-  color: #fff;
-  transition: background 0.3s ease, transform 0.2s ease;
-  cursor: pointer;
-  border-radius: 8px;
-  margin-bottom: 0.5rem;
-}
-
-.list-group-item:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  transform: translateX(5px) scale(1.01);
-}
-
-/* === Responsive Extras === */
-@media (max-width: 576px) {
-  .glass-box {
-    padding: 1rem;
-  }
-
-  .save-btn {
-    font-size: 0.9rem;
-  }
-
-  .custom-dropdown {
-    font-size: 0.9rem;
-  }
-}
-
-.playlist-container {
-  max-width: 600px;
-  margin: 0 auto;
-  color: #fff;
-}
-
 
 /* === Song Card === */
 .song-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 12px;
-  padding: 12px 16px;
-  margin-bottom: 10px;
-  transition: background 0.3s ease, transform 0.2s ease;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 1rem;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
   cursor: pointer;
   color: #fff;
+  animation: fadeInUp 0.4s ease;
 }
 
 .song-card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  transform: scale(1.01);
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.015) translateX(4px);
+  box-shadow: 0 4px 20px rgba(30, 215, 96, 0.1);
 }
 
 .song-card.selected {
-  background: rgba(30, 215, 96, 0.15);
-  border-color: rgba(30, 215, 96, 0.4);
+  background: rgba(30, 215, 96, 0.2);
+  border-color: rgba(30, 215, 96, 0.5);
 }
 
 /* === Song Content === */
@@ -164,38 +124,47 @@
   display: flex;
   flex-direction: column;
   font-size: 0.95rem;
-  line-height: 1.2;
 }
 
 .song-title {
   font-weight: 700;
-  font-size: 1rem;
-  color: #fafafa; /* brighter white for visibility */
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3); /* optional glow */
+  font-size: 1.1rem;
+  color: #ffffff;
 }
 
 .song-artist {
   font-size: 0.9rem;
-  font-weight: 500;
-  color: #e0e0e0;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.25); /* optional glow */
+  color: #cccccc;
 }
 
+/* === Checkbox === */
+.form-check-input {
+  background-color: transparent;
+  border: 2px solid #1ed760;
+  cursor: pointer;
+}
 
-/* === Responsive tweaks === */
+.form-check-input:checked {
+  background-color: #1ed760;
+  border-color: #1ed760;
+}
+
+/* === Mobile Tweaks === */
 @media (max-width: 576px) {
-  .song-card-content {
-    font-size: 0.85rem;
+  .playlist-container {
+    margin: 1rem;
+    padding: 1rem;
   }
 
   .song-title {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
 
   .song-artist {
-
     font-size: 0.8rem;
   }
+
+  .btn-outline-primary {
+    font-size: 0.9rem;
+  }
 }
-
-
