@@ -5,6 +5,7 @@ body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
+  color: #fff;
 }
 
 /* === Fade Animation === */
@@ -32,7 +33,7 @@ body {
   border-radius: 20px;
   backdrop-filter: blur(18px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  color: #fff;
+  animation: fadeInUp 0.6s ease-in-out;
 }
 
 /* === Header & Button === */
@@ -147,6 +148,28 @@ body {
 .form-check-input:checked {
   background-color: #1ed760;
   border-color: #1ed760;
+}
+
+/* === Audio Player Styling === */
+#audio-player {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.5s ease-in-out;
+}
+
+/* === Audio Controls Buttons === */
+#audio-player .btn {
+  border-radius: 50px;
+  transition: all 0.3s ease-in-out;
+}
+
+#audio-player .btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(30, 215, 96, 0.3);
 }
 
 /* === Mobile Tweaks === */

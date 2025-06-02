@@ -64,7 +64,7 @@ const PlaylistViewer = () => {
   };
 
   return (
-    <div className="container py-4 text-white" style={{ backgroundColor: '#121212', minHeight: '100vh' }}>
+    <div className="container playlist-viewer py-4 text-white">
       <div className="mb-4">
         <button className="btn btn-outline-light" onClick={() => navigate('/playlist')}>
           ← Back to Playlists
@@ -83,7 +83,7 @@ const PlaylistViewer = () => {
           {matchedSongs.map((song, index) => (
             <div
               key={index}
-              className={`list-group-item d-flex justify-content-between align-items-center ${index === currentIndex ? 'bg-primary text-white' : 'bg-dark text-light'}`}
+              className={`list-group-item d-flex justify-content-between align-items-center ${index === currentIndex ? 'bg-primary text-white' : ''}`}
               onClick={() => handlePlay(index)}
             >
               <div>
@@ -111,15 +111,21 @@ const PlaylistViewer = () => {
       )}
 
       {currentIndex !== null && matchedSongs[currentIndex] && (
-        <div id="audio-player" className="mt-5 p-4 bg-light text-dark rounded">
-          <h5>Now Playing: <span className="text-primary">{matchedSongs[currentIndex].song}</span></h5>
+        <div id="audio-player" className="mt-5 p-4 text-dark rounded">
+          <h5>
+            Now Playing: <span className="text-primary">{matchedSongs[currentIndex].song}</span>
+          </h5>
           <audio ref={audioRef} controls autoPlay onEnded={handleNext} className="w-100">
             <source src={matchedSongs[currentIndex].src} type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>
           <div className="mt-3 d-flex gap-2">
-            <button className="btn btn-secondary" onClick={handlePrev} disabled={currentIndex === 0}>⏮ Previous</button>
-            <button className="btn btn-secondary" onClick={handleNext} disabled={currentIndex === matchedSongs.length - 1}>⏭ Next</button>
+            <button className="btn btn-secondary" onClick={handlePrev} disabled={currentIndex === 0}>
+              ⏮ Previous
+            </button>
+            <button className="btn btn-secondary" onClick={handleNext} disabled={currentIndex === matchedSongs.length - 1}>
+              ⏭ Next
+            </button>
           </div>
         </div>
       )}
