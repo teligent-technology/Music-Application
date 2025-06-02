@@ -1,14 +1,43 @@
-/* SearchCategories.css */
+/* Page background with soft animated gradient */
+body, .search-page {
+  background: linear-gradient(-45deg, #1e1e2f, #2c2c54, #3a3a8c, #1f1f3f);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  min-height: 100vh;
+}
 
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Title animations */
+.animate-title {
+  font-weight: 700;
+  font-size: 2rem;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Search input styling with glass effect */
 .animated-input {
-  transition: box-shadow 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
   border-radius: 12px;
+}
+.animated-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
 }
 .animated-input:focus {
   box-shadow: 0 0 8px #1abc9c;
   border-color: #1abc9c;
+  background: rgba(255, 255, 255, 0.1);
 }
 
+/* Search card design */
 .search-card {
   display: flex;
   align-items: center;
@@ -21,12 +50,15 @@
   height: 200px;
   overflow: hidden;
   animation: fadeInUp 0.6s ease both;
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.08);
 }
 .search-card:hover {
   transform: scale(1.03);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* Artist image inside cards */
 .artist-img {
   width: 100px;
   height: 100px;
@@ -35,6 +67,7 @@
   animation: slideInLeft 0.6s ease both;
 }
 
+/* Text styling */
 .card-title-text {
   font-size: 1.6rem;
   font-weight: 700;
@@ -45,8 +78,15 @@
   opacity: 0.9;
 }
 
-.animate-title {
-  animation: fadeIn 0.5s ease forwards;
+/* Fade animation for empty results */
+.animated-fade {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+/* Footer bar for mobile */
+.footer-bar {
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.7) !important;
 }
 
 .footer-icon {
@@ -55,9 +95,12 @@
 .footer-icon:hover {
   transform: scale(1.15);
 }
-
-.animated-fade {
-  animation: fadeIn 0.8s ease forwards;
+.footer-icon i {
+  transition: transform 0.3s ease;
+}
+.footer-icon:hover i {
+  transform: scale(1.2);
+  color: #1abc9c !important;
 }
 
 /* Animations */

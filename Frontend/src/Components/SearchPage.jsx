@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Row, Col, Card, Form, Image } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 import { Songs } from "../data/song";
-import "./SearchCategories.css"; // ⬅️ Import custom styles
+import "./SearchCategories.css"; // ✅ Custom animation & style classes
 
 const colors = [
   "#e74c3c", "#e67e22", "#3498db", "#2ecc71", "#9b59b6",
@@ -26,8 +26,9 @@ const SearchCategories = () => {
 
   return (
     <>
-      <Container className="pt-4 pb-5">
+      <Container className="pt-4 pb-5 search-page">
         <h2 className="text-white mb-3 animate-title">🔍 Search Music</h2>
+
         <Form className="mb-4">
           <Form.Control
             type="search"
@@ -38,6 +39,7 @@ const SearchCategories = () => {
             className="animated-input"
           />
         </Form>
+
         <h5 className="text-white mb-4 animate-title">🎧 Start Browsing</h5>
 
         <Row className="g-4">
@@ -47,9 +49,7 @@ const SearchCategories = () => {
                 <Card
                   onClick={() => handleClick(song.artist)}
                   className="search-card"
-                  style={{
-                    backgroundColor: colors[idx % colors.length],
-                  }}
+                  style={{ backgroundColor: colors[idx % colors.length] }}
                 >
                   {idx >= 4 && (
                     <Image
@@ -60,8 +60,9 @@ const SearchCategories = () => {
                     />
                   )}
                   <div>
-                    <Card.Title className="card-title-text">{song.artist}</Card.Title>
-                    <Card.Text className="card-subtitle-text">{song.song}</Card.Text>
+                    <Card.Title className="card-title-text">
+                      {song.artist}
+                    </Card.Title>
                   </div>
                 </Card>
               </Col>
@@ -74,7 +75,8 @@ const SearchCategories = () => {
         </Row>
       </Container>
 
-      <div className="d-md-none position-fixed bottom-0 start-0 end-0 bg-dark text-white border-top border-secondary z-3 footer-bar">
+      {/* Mobile Footer Bar */}
+      <div className="d-md-none position-fixed bottom-0 start-0 end-0 text-white border-top border-secondary z-3 footer-bar">
         <div className="d-flex justify-content-around py-2">
           <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
           <FooterIcon to="/search" icon="bi-search" label="Search" />
