@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Card, Button, Image } from "react-bootstrap";
-import Songs from "../data/Songs";
+import Songs from "../data/song";
 
 const PlaylistViewer = () => {
   const { name } = useParams();
