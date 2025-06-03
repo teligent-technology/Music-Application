@@ -1,3 +1,4 @@
+// src/components/PlaylistSelector.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Playlist.css";
@@ -50,19 +51,18 @@ const PlaylistSelector = ({ selectedSongs = [] }) => {
   };
 
   return (
-    <div className="container playlist-selector-container glass-box text-white my-5 p-4 rounded animate-fade-in">
-      <h4 className="mb-4 border-bottom pb-2 playlist-selector-title">Manage Playlist</h4>
+    <div className="container glass-box text-white my-5">
+      <h4 className="mb-4 border-bottom pb-2">Manage Playlist</h4>
 
       {Object.keys(playlists).length === 0 ? (
-        <p className="fst-italic text-muted">No playlists available.</p>
+        <p className="fst-italic">No playlists available.</p>
       ) : (
         <div className="row g-3">
           <div className="col-md-6">
             <select
-              className="form-select playlist-select"
+              className="form-select"
               value={selected}
               onChange={handleSelect}
-              aria-label="Select playlist"
             >
               <option value="">-- Select Playlist --</option>
               {Object.keys(playlists).map((name, i) => (
@@ -74,20 +74,20 @@ const PlaylistSelector = ({ selectedSongs = [] }) => {
           </div>
           <div className="col-md-3 d-grid">
             <button
-              className="btn btn-outline-info playlist-btn"
+              className="btn btn-primary"
               onClick={handleOpenPlaylist}
               disabled={!selected}
             >
-              <i className="bi bi-folder2-open me-1"></i> Open
+              <i className="bi bi-folder2-open"></i> Open
             </button>
           </div>
           <div className="col-md-3 d-grid">
             <button
-              className="btn btn-outline-success playlist-btn"
+              className="btn btn-success"
               onClick={handleSave}
               disabled={!selected || selectedSongs.length === 0}
             >
-              <i className="bi bi-save me-1"></i> Save Songs
+              <i className="bi bi-save"></i> Save Songs
             </button>
           </div>
         </div>
