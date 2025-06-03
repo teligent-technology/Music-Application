@@ -26,13 +26,6 @@ const benefits = [
   },
 ];
 
-const FooterIcon = ({ to, icon, label }) => (
-  <Link to={to} className="text-white text-center text-decoration-none">
-    <i className={`bi ${icon} fs-4 d-block`} />
-    <small>{label}</small>
-  </Link>
-);
-
 const PremiumPage = () => {
   const [offer, setOffer] = useState("4 months of Premium Individual for free");
   const [user, setUser] = useState(null);
@@ -71,10 +64,9 @@ const PremiumPage = () => {
         order_id: orderData.id,
         handler: async function (response) {
           try {
-            await axios.post(
-              "https://music-application-backend.onrender.com/api/payment/person/upgrade",
-              { username: user.username }
-            );
+            await axios.post("https://music-application-backend.onrender.com/api/payment/person/upgrade", {
+              username: user.username,
+            });
 
             const updatedUser = { ...user, isPremium: true };
             localStorage.setItem("user", JSON.stringify(updatedUser));
@@ -105,7 +97,7 @@ const PremiumPage = () => {
   };
 
   return (
-    <div className="bg-black text-white min-vh-100 position-relative" style={{ paddingBottom: "120px" }}>
+    <div className="bg-black text-white pb-5" style={{ paddingBottom: "120px" }}>
       {/* Hero Cover Grid */}
       <div className="position-relative overflow-hidden" style={{ height: "220px" }}>
         <div
@@ -138,7 +130,7 @@ const PremiumPage = () => {
       </div>
 
       {/* Main Section */}
-      <div className="container mt-4 position-relative z-3">
+      <div className="container mt-4 position-relative" style={{ zIndex: 5 }}>
         <div className="d-flex align-items-center gap-2 mb-2">
           <img
             src="Jass.jpeg"
@@ -198,17 +190,6 @@ const PremiumPage = () => {
             Terms & conditions
           </Link>
         </p>
-      </div>
-
-      {/* Mobile Footer */}
-      <div className="d-md-none position-fixed bottom-0 start-0 end-0 bg-dark text-white border-top border-secondary z-3">
-        <div className="d-flex justify-content-around py-2">
-          <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
-          <FooterIcon to="/search" icon="bi-search" label="Search" />
-          <FooterIcon to="/punjabi" icon="bi-music-note-list" label="Library" />
-          <FooterIcon to="/create" icon="bi-plus-circle-fill" label="Create" />
-          <FooterIcon to="/premium" icon="bi-gem" label="Premium" />
-        </div>
       </div>
     </div>
   );

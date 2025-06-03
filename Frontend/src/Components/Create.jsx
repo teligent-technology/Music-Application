@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import FooterIcon from "./FooterIcon"; // Make sure this path is correct
 
 const CreatePlaylistPage = () => {
   const navigate = useNavigate();
@@ -96,15 +95,26 @@ const CreatePlaylistPage = () => {
         </div>
       </div>
 
-      {/* Mobile Footer using FooterIcon */}
+      {/* Mobile Footer */}
       <div className="d-md-none position-fixed bottom-0 start-0 end-0 bg-dark text-white border-top border-secondary z-3">
-        <nav className="mobile-footer d-md-none d-flex justify-content-around py-2 w-100">
-          <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
-          <FooterIcon to="/search" icon="bi-search" label="Search" />
-          <FooterIcon to="/punjabi" icon="bi-music-note-list" label="Library" />
-          <FooterIcon to="/create" icon="bi-plus-circle-fill" label="Create" />
-          <FooterIcon to="/premium" icon="bi-gem" label="Premium" />
-        </nav>
+        <div className="d-flex justify-content-around py-2">
+          {[
+            { to: "/home", icon: "bi-house-door-fill", label: "Home" },
+            { to: "/search", icon: "bi-search", label: "Search" },
+            { to: "/punjabi", icon: "bi-music-note-list", label: "Library" },
+            { to: "/create", icon: "bi-plus-circle-fill", label: "Create" },
+            { to: "/premium", icon: "bi-gem", label: "Premium" },
+          ].map((item, idx) => (
+            <Link
+              key={idx}
+              to={item.to}
+              className="text-white text-center text-decoration-none"
+            >
+              <i className={`bi ${item.icon} fs-4 d-block`} />
+              <small>{item.label}</small>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
