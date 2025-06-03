@@ -6,7 +6,7 @@ const PlaylistManager = () => {
   const [selectedSongs, setSelectedSongs] = useState([]);
 
   return (
-    <div>
+    <div style={{ backgroundColor: 'black', minHeight: '100vh', padding: '1rem' }}>
       <Playlist selectedSongs={selectedSongs} setSelectedSongs={setSelectedSongs} />
       <PlaylistSelector selectedSongs={selectedSongs} />
     </div>
