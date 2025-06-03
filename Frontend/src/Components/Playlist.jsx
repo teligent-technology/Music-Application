@@ -7,10 +7,6 @@ import "./Playlist.css";
 const Playlist = ({ selectedSongs, setSelectedSongs }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  if (!Array.isArray(selectedSongs)) {
-    return <p className="text-danger">Error: selectedSongs must be an array</p>;
-  }
-
   const filteredSongs = Songs.filter(
     (song) =>
       song.song.toLowerCase().includes(searchQuery.toLowerCase()) ||

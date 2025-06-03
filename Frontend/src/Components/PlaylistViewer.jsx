@@ -1,8 +1,9 @@
+// src/components/PlaylistViewer.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Songs } from '../data/song';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Button, Image } from 'react-bootstrap';
-import './Playlist.css';  // Aapka CSS file
+import './Playlist.css';
 
 const PlaylistViewer = () => {
   const { name } = useParams();
@@ -66,13 +67,9 @@ const PlaylistViewer = () => {
   return (
     <Container className="playlist-container animate-fade-in">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <Button variant="outline-primary" onClick={() => navigate('/playlist')}>
-          ← Back
-        </Button>
+        <Button variant="outline-primary" onClick={() => navigate('/playlist')}>← Back</Button>
         <h3 className="text-capitalize" style={{ color: '#1ed760' }}>{name} Playlist</h3>
-        <Button variant="outline-danger" onClick={handleDeletePlaylist}>
-          🗑 Delete
-        </Button>
+        <Button variant="outline-danger" onClick={handleDeletePlaylist}>🗑 Delete</Button>
       </div>
 
       <div className="song-list">
@@ -123,12 +120,8 @@ const PlaylistViewer = () => {
             Aapka browser audio support nahi karta.
           </audio>
           <div className="d-flex justify-content-center gap-2 mt-3">
-            <Button variant="outline-primary" onClick={handlePrev} disabled={currentIndex === 0}>
-              ⏮ Previous
-            </Button>
-            <Button variant="outline-primary" onClick={handleNext} disabled={currentIndex === matchedSongs.length - 1}>
-              ⏭ Next
-            </Button>
+            <Button variant="outline-primary" onClick={handlePrev} disabled={currentIndex === 0}>⏮ Previous</Button>
+            <Button variant="outline-primary" onClick={handleNext} disabled={currentIndex === matchedSongs.length - 1}>⏭ Next</Button>
           </div>
         </div>
       )}
