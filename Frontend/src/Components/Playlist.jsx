@@ -23,8 +23,15 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
   };
 
   return (
-    <div className="container playlist-container my-5 glass-box animate-fade-in">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+<div
+  className="container playlist-container my-5 glass-box animate-fade-in"
+  style={{
+    backgroundImage: "url(/artistbg/backgroundImage.jpg)",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+  }}
+>      <div className="d-flex justify-content-between align-items-center mb-3">
         <h3>All Songs</h3>
         <Link to="/home" className="btn btn-outline-light">
           <i className="bi bi-house-door-fill me-1"></i> Home
