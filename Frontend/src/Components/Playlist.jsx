@@ -23,8 +23,9 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
   };
 
   return (
-        <div style={{ backgroundColor: 'black', minHeight: '100vh', padding: '1rem' }}>
-
+<div className="bg-dark text-white w-100 min-vh-100 app-root"
+   style={{ color: "white" }}
+>
     <div className="container playlist-container my-5 glass-box animate-fade-in">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h3>All Songs</h3>

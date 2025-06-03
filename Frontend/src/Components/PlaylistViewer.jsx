@@ -59,8 +59,9 @@ const PlaylistViewer = () => {
   };
 
   return (
-        <div style={{ backgroundColor: 'black', minHeight: '100vh', padding: '1rem' }}>
-    <Container className="playlist-container animate-fade-in">
+<div className="bg-dark text-white w-100 min-vh-100 app-root"
+   style={{ color: "white" }}
+>    <Container className="playlist-container animate-fade-in">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <Button variant="outline-primary" onClick={() => navigate('/playlist')}>← Back</Button>
         <h3 className="text-capitalize" style={{ color: '#1ed760' }}>{name} Playlist</h3>
