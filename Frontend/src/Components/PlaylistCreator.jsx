@@ -21,9 +21,6 @@ const PlaylistCreator = ({ selectedSongs = [] }) => {
   };
 
   return (
-<div className="bg-dark text-white w-100 min-vh-100 app-root"
-   style={{ color: "white" }}
->
     <div className="container playlist-container glass-box text-white my-5">
       <h4 className="mb-3 fw-bold">
         <i className="bi bi-music-note-list me-2 text-info"></i>Create New Playlist
@@ -39,9 +36,7 @@ const PlaylistCreator = ({ selectedSongs = [] }) => {
         <i className="bi bi-plus-circle me-2"></i> Save Playlist
       </button>
     </div>
-  </div>
   );
-
 };
 
 export default PlaylistCreator;

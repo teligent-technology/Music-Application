@@ -51,9 +51,6 @@ const PlaylistSelector = ({ selectedSongs = [] }) => {
   };
 
   return (
-<div className="bg-dark text-white w-100 min-vh-100 app-root"
-   style={{ color: "white" }}
->
     <div className="container glass-box text-white my-5">
       <h4 className="mb-4 border-bottom pb-2">Manage Playlist</h4>
 
@@ -95,7 +92,6 @@ const PlaylistSelector = ({ selectedSongs = [] }) => {
           </div>
         </div>
       )}
-    </div>
     </div>
   );
 };
