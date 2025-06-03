@@ -1,8 +1,14 @@
 // src/components/PlaylistViewer.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Songs } from '../data/song';
-import { useParams, useNavigate } from 'react-router-dom';
-import "./Playlist.css";
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { Container, Card, Button, Row, Col, Image } from 'react-bootstrap';
+import './Playlist.css';
+
+const generateAccentColor = (index) => {
+  const hues = [180, 210, 240, 300, 330];
+  return `hsl(${hues[index % hues.length]}, 85%, 55%)`;
+};
 
 const PlaylistViewer = () => {
   const { name } = useParams();
@@ -64,54 +70,64 @@ const PlaylistViewer = () => {
   };
 
   return (
-    <div className="container playlist-viewer py-4 text-white">
-      <div className="mb-4">
-        <button className="btn btn-outline-light" onClick={() => navigate('/playlist')}>
-          ← Back to Playlists
-        </button>
-      </div>
-
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
-        <h3 className="text-capitalize">{name} Playlist</h3>
-        <button onClick={handleDeletePlaylist} className="btn btn-danger">
+    <Container className="playlist-viewer py-5 text-white">
+      <div className="mb-4 d-flex justify-content-between align-items-center">
+        <Button variant="outline-light" onClick={() => navigate('/playlist')}>
+          ← Back
+        </Button>
+        <h2 className="text-capitalize mb-0">{name} Playlist</h2>
+        <Button variant="danger" onClick={handleDeletePlaylist}>
           🗑 Delete Playlist
-        </button>
+        </Button>
       </div>
 
-      {matchedSongs.length > 0 ? (
-        <div className="list-group">
-          {matchedSongs.map((song, index) => (
-            <div
-              key={index}
-              className={`list-group-item d-flex justify-content-between align-items-center ${index === currentIndex ? 'bg-primary text-white' : ''}`}
-              onClick={() => handlePlay(index)}
-            >
-              <div>
-                <strong>{song.song}</strong> by <em>{song.artist}</em>
-              </div>
-              <div className="d-flex gap-2">
-                <button
-                  className="btn btn-sm btn-outline-light"
-                  onClick={(e) => { e.stopPropagation(); handlePlay(index); }}
+      <Row className="g-4">
+        {matchedSongs.length > 0 ? (
+          matchedSongs.map((song, index) => {
+            const accentColor = generateAccentColor(index);
+            return (
+              <Col xs={12} md={6} lg={4} key={index}>
+                <Card
+                  className="playlist-song-card h-100"
+                  style={{ '--accent-color': accentColor }}
                 >
-                  ▶ Play
-                </button>
-                <button
-                  className="btn btn-sm btn-outline-danger"
-                  onClick={(e) => { e.stopPropagation(); removeSong(song); }}
-                >
-                  ✖ Remove
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className="text-muted">No songs in this playlist.</p>
-      )}
+                  <Card.Body className="d-flex flex-column justify-content-between">
+                    <div onClick={() => handlePlay(index)} className="cursor-pointer">
+                      <Image
+                        src={song.img || "/default-img.jpg"}
+                        roundedCircle
+                        className="song-thumbnail mb-3"
+                        alt={song.song}
+                      />
+                      <Card.Title className="fw-bold">{song.song}</Card.Title>
+                      <Card.Text className="text-muted">{song.artist}</Card.Text>
+                    </div>
+                    <div className="d-flex justify-content-between mt-3">
+                      <Button
+                        variant="outline-light"
+                        onClick={() => handlePlay(index)}
+                      >
+                        ▶ Play
+                      </Button>
+                      <Button
+                        variant="outline-danger"
+                        onClick={() => removeSong(song)}
+                      >
+                        ✖ Remove
+                      </Button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            );
+          })
+        ) : (
+          <p className="text-muted">No songs in this playlist.</p>
+        )}
+      </Row>
 
       {currentIndex !== null && matchedSongs[currentIndex] && (
-        <div id="audio-player" className="mt-5 p-4 text-dark rounded">
+        <div id="audio-player" className="mt-5 p-4 rounded bg-light text-dark shadow-lg">
           <h5>
             Now Playing: <span className="text-primary">{matchedSongs[currentIndex].song}</span>
           </h5>
@@ -120,17 +136,37 @@ const PlaylistViewer = () => {
             Your browser does not support the audio element.
           </audio>
           <div className="mt-3 d-flex gap-2">
-            <button className="btn btn-secondary" onClick={handlePrev} disabled={currentIndex === 0}>
+            <Button variant="secondary" onClick={handlePrev} disabled={currentIndex === 0}>
               ⏮ Previous
-            </button>
-            <button className="btn btn-secondary" onClick={handleNext} disabled={currentIndex === matchedSongs.length - 1}>
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={handleNext}
+              disabled={currentIndex === matchedSongs.length - 1}
+            >
               ⏭ Next
-            </button>
+            </Button>
           </div>
         </div>
       )}
-    </div>
+
+      {/* Optional: Add mobile footer for consistency */}
+      <nav className="mobile-footer d-md-none mt-5">
+        <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
+        <FooterIcon to="/search" icon="bi-search" label="Search" />
+        <FooterIcon to="/library" icon="bi-music-note-list" label="Library" />
+        <FooterIcon to="/create" icon="bi-plus-circle-fill" label="Create" />
+        <FooterIcon to="/premium" icon="bi-gem" label="Premium" />
+      </nav>
+    </Container>
   );
 };
+
+const FooterIcon = ({ to, icon, label }) => (
+  <Link to={to} className="footer-icon" aria-label={label}>
+    <i className={`bi ${icon}`} />
+    <span>{label}</span>
+  </Link>
+);
 
 export default PlaylistViewer;

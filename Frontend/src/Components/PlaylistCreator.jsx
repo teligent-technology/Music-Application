@@ -20,12 +20,12 @@ const PlaylistCreator = ({ selectedSongs = [] }) => {
     alert("Playlist saved!");
     setPlaylistName("");
 
-    // Notify PlaylistSelector to refresh
     window.dispatchEvent(new Event("playlist-updated"));
   };
 
   return (
-    <div className="playlist-container animate-fade-in text-white mb-5"
+    <div
+      className="playlist-container animate-fade-in text-white mb-5"
       style={{
         background: "rgba(255,255,255,0.1)",
         backdropFilter: "blur(10px)",
@@ -36,7 +36,10 @@ const PlaylistCreator = ({ selectedSongs = [] }) => {
         boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
       }}
     >
-      <h4 className="mb-3 fw-bold text-white">Create a New Playlist</h4>
+      <h4 className="mb-3 fw-bold text-white" style={{ textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>
+        <i className="bi bi-music-note-list me-2 text-info"></i>
+        Create a New Playlist
+      </h4>
       <input
         type="text"
         className="form-control mb-3 bg-dark text-white border-0"
