@@ -92,7 +92,7 @@ const SearchCategories = () => {
         <nav className="mobile-footer d-md-none">
           <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
           <FooterIcon to="/search" icon="bi-search" label="Search" />
-          <FooterIcon to="/library" icon="bi-music-note-list" label="Library" />
+          <FooterIcon to="/punjabi" icon="bi-music-note-list" label="Library" />
           <FooterIcon to="/create" icon="bi-plus-circle-fill" label="Create" />
           <FooterIcon to="/premium" icon="bi-gem" label="Premium" />
         </nav>
