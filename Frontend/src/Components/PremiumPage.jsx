@@ -26,6 +26,13 @@ const benefits = [
   },
 ];
 
+const FooterIcon = ({ to, icon, label }) => (
+  <Link to={to} className="text-white text-center small text-decoration-none">
+    <i className={`bi ${icon} fs-5 d-block`} />
+    {label}
+  </Link>
+);
+
 const PremiumPage = () => {
   const [offer, setOffer] = useState("4 months of Premium Individual for free");
   const [user, setUser] = useState(null);
@@ -97,7 +104,7 @@ const PremiumPage = () => {
   };
 
   return (
-    <div className="bg-black text-white pb-5" style={{ paddingBottom: "120px" }}>
+    <div className="bg-black text-white min-vh-100 d-flex flex-column" style={{ paddingBottom: "120px" }}>
       {/* Hero Cover Grid */}
       <div className="position-relative overflow-hidden" style={{ height: "220px" }}>
         <div
@@ -129,7 +136,7 @@ const PremiumPage = () => {
         </div>
       </div>
 
-      {/* Main Section */}
+      {/* Main Content */}
       <div className="container mt-4 position-relative" style={{ zIndex: 5 }}>
         <div className="d-flex align-items-center gap-2 mb-2">
           <img
@@ -191,6 +198,15 @@ const PremiumPage = () => {
           </Link>
         </p>
       </div>
+
+      {/* Sticky Mobile Footer */}
+      <nav className="mobile-footer d-md-none d-flex justify-content-around py-2 w-100 bg-dark position-fixed bottom-0 start-0 z-3">
+        <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
+        <FooterIcon to="/search" icon="bi-search" label="Search" />
+        <FooterIcon to="/punjabi" icon="bi-music-note-list" label="Library" />
+        <FooterIcon to="/create" icon="bi-plus-circle-fill" label="Create" />
+        <FooterIcon to="/premium" icon="bi-gem" label="Premium" />
+      </nav>
     </div>
   );
 };
