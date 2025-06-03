@@ -1,147 +1,122 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { Container, Card, Button, Image } from "react-bootstrap";
-import Songs from "../data/song";
+// src/components/PlaylistViewer.jsx
+import React, { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Card, Button, Image } from 'react-bootstrap';
+import './Playlist.css';
 
 const PlaylistViewer = () => {
   const { name } = useParams();
+  const navigate = useNavigate();
   const [playlists, setPlaylists] = useState({});
   const [matchedSongs, setMatchedSongs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(null);
   const audioRef = useRef(null);
 
   useEffect(() => {
-    const storedPlaylists = JSON.parse(localStorage.getItem("playlists")) || {};
-    setPlaylists(storedPlaylists);
-    const currentPlaylist = storedPlaylists[name] || [];
-    const fullSongs = currentPlaylist
-      .map((savedSong) => Songs.find((s) => s.src === savedSong.src))
-      .filter((s) => s);
-    setMatchedSongs(fullSongs);
-  }, [name]);
+    const stored = JSON.parse(localStorage.getItem('playlists') || '{}');
+    setPlaylists(stored);
+  }, []);
 
-  const handlePlay = (index) => {
-    setCurrentIndex(index);
-    if (audioRef.current) {
+  useEffect(() => {
+    if (name && playlists[name]) {
+      setMatchedSongs(playlists[name]); // Now directly contains full song objects
+      setCurrentIndex(null);
+    }
+  }, [name, playlists]);
+
+  useEffect(() => {
+    if (audioRef.current && currentIndex !== null) {
       audioRef.current.load();
       audioRef.current.play();
+      document.getElementById("audio-player")?.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }, [currentIndex]);
 
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      handlePlay(currentIndex - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentIndex < matchedSongs.length - 1) {
-      handlePlay(currentIndex + 1);
-    }
-  };
+  const handlePlay = (index) => setCurrentIndex(index);
+  const handleNext = () => currentIndex < matchedSongs.length - 1 && setCurrentIndex(i => i + 1);
+  const handlePrev = () => currentIndex > 0 && setCurrentIndex(i => i - 1);
 
   const handleDeletePlaylist = () => {
-    const updated = { ...playlists };
-    delete updated[name];
-    localStorage.setItem("playlists", JSON.stringify(updated));
-    setPlaylists(updated);
-    setMatchedSongs([]);
+    if (!name) return;
+    if (window.confirm(`"${name}" playlist delete karna hai?`)) {
+      const updated = { ...playlists };
+      delete updated[name];
+      localStorage.setItem('playlists', JSON.stringify(updated));
+      navigate('/playlist');
+    }
   };
 
   const removeSong = (songToRemove) => {
-    const updatedList = matchedSongs.filter((song) => song.src !== songToRemove.src);
+    const updatedList = playlists[name].filter(s => s.src !== songToRemove.src);
     const updatedPlaylists = { ...playlists, [name]: updatedList };
-    localStorage.setItem("playlists", JSON.stringify(updatedPlaylists));
+    localStorage.setItem('playlists', JSON.stringify(updatedPlaylists));
     setPlaylists(updatedPlaylists);
-    setMatchedSongs(updatedList);
-    if (currentIndex !== null && updatedList.length <= currentIndex) {
-      setCurrentIndex(updatedList.length - 1);
-    }
+
+    const updatedSongs = matchedSongs.filter(s => s.src !== songToRemove.src);
+    setMatchedSongs(updatedSongs);
+    if (updatedSongs.length === 0) setCurrentIndex(null);
+    else if (currentIndex >= updatedSongs.length) setCurrentIndex(updatedSongs.length - 1);
   };
 
   return (
-    <Container className="playlist-container my-5 text-white glass-box">
+    <Container className="playlist-container animate-fade-in">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold">
-          <i className="bi bi-music-note-list me-2 text-info"></i>
-          {decodeURIComponent(name)} Playlist
-        </h2>
-        <Button variant="danger" onClick={handleDeletePlaylist}>
-          <i className="bi bi-trash3-fill me-1"></i> Delete Playlist
-        </Button>
+        <Button variant="outline-primary" onClick={() => navigate('/playlist')}>← Back</Button>
+        <h3 className="text-capitalize" style={{ color: '#1ed760' }}>{name} Playlist</h3>
+        <Button variant="outline-danger" onClick={handleDeletePlaylist}>🗑 Delete</Button>
       </div>
 
-      {matchedSongs.length === 0 ? (
-        <p className="fst-italic text-muted">No songs in this playlist.</p>
-      ) : (
-        matchedSongs.map((song, index) => (
-          <Card
-            key={index}
-            className={`mb-3 song-card ${currentIndex === index ? 'playing' : ''}`}
-            onClick={() => handlePlay(index)}
-          >
-            <Card.Body className="d-flex align-items-center justify-content-between">
-              <div className="d-flex align-items-center gap-3">
+      <div className="song-list">
+        {matchedSongs.length > 0 ? (
+          matchedSongs.map((song, index) => (
+            <Card
+              key={index}
+              className={`song-card ${currentIndex === index ? 'selected' : ''}`}
+              onClick={() => handlePlay(index)}
+            >
+              <div className="d-flex align-items-center">
                 <Image
-                  src={song.img || "/default-img.jpg"}
+                  src={song.img || '/default-img.jpg'}
                   alt={song.song}
-                  width={60}
-                  height={60}
+                  className="song-thumbnail me-3"
                   rounded
                 />
-                <div>
-                  <div className="fw-bold">{song.song}</div>
-                  <small className="text-light"> — {song.artist}</small>
+                <div className="song-card-content">
+                  <div className="song-title">{song.song}</div>
+                  <div className="song-artist">{song.artist}</div>
                 </div>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  className="ms-auto"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeSong(song);
+                  }}
+                >
+                  ✖
+                </Button>
               </div>
-              <Button
-                variant="outline-light"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeSong(song);
-                }}
-              >
-                <i className="bi bi-x-circle-fill"></i>
-              </Button>
-            </Card.Body>
-          </Card>
-        ))
-      )}
+            </Card>
+          ))
+        ) : (
+          <p className="text-center text-muted mt-4">Is playlist mein abhi koi gaane nahi hain.</p>
+        )}
+      </div>
 
       {currentIndex !== null && matchedSongs[currentIndex] && (
-        <div id="audio-player" className="mt-5">
-          <Card className="bg-dark text-white p-3">
-            <div className="d-flex align-items-center gap-4">
-              <Image
-                src={matchedSongs[currentIndex].img || "/default-img.jpg"}
-                alt="Now Playing"
-                width={80}
-                height={80}
-                rounded
-              />
-              <div className="flex-grow-1">
-                <h5>{matchedSongs[currentIndex].song}</h5>
-                <p className="mb-1">{matchedSongs[currentIndex].artist}</p>
-                <audio controls ref={audioRef} className="w-100">
-                  <source src={matchedSongs[currentIndex].src} type="audio/mpeg" />
-                  Your browser does not support the audio element.
-                </audio>
-              </div>
-              <div className="d-flex flex-column gap-2">
-                <Button variant="secondary" onClick={handlePrev} disabled={currentIndex === 0}>
-                  <i className="bi bi-skip-start-fill"></i>
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={handleNext}
-                  disabled={currentIndex === matchedSongs.length - 1}
-                >
-                  <i className="bi bi-skip-end-fill"></i>
-                </Button>
-              </div>
-            </div>
-          </Card>
+        <div id="audio-player" className="mt-4 p-4 rounded" style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(16px)' }}>
+          <h5 style={{ color: '#1ed760' }}>
+            Playing: {matchedSongs[currentIndex].song}
+          </h5>
+          <audio ref={audioRef} controls autoPlay className="w-100" onEnded={handleNext}>
+            <source src={matchedSongs[currentIndex].src} type="audio/mpeg" />
+            Aapka browser audio support nahi karta.
+          </audio>
+          <div className="d-flex justify-content-center gap-2 mt-3">
+            <Button variant="outline-primary" onClick={handlePrev} disabled={currentIndex === 0}>⏮ Previous</Button>
+            <Button variant="outline-primary" onClick={handleNext} disabled={currentIndex === matchedSongs.length - 1}>⏭ Next</Button>
+          </div>
         </div>
       )}
     </Container>
