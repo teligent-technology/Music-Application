@@ -11,10 +11,8 @@ const PlaylistCreator = ({ selectedSongs = [] }) => {
       return;
     }
 
-    const filenames = selectedSongs.map((song) => song.src.split("/").pop());
     const existing = JSON.parse(localStorage.getItem("playlists") || "{}");
-
-    existing[playlistName] = filenames;
+    existing[playlistName] = selectedSongs;
     localStorage.setItem("playlists", JSON.stringify(existing));
 
     alert("Playlist saved!");

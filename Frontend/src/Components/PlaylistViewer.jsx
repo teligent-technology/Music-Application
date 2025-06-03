@@ -1,6 +1,5 @@
 // src/components/PlaylistViewer.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import { Songs } from '../data/song';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Card, Button, Image } from 'react-bootstrap';
 import './Playlist.css';
@@ -20,11 +19,7 @@ const PlaylistViewer = () => {
 
   useEffect(() => {
     if (name && playlists[name]) {
-      const savedFilenames = playlists[name];
-      const matched = Songs.filter(song =>
-        savedFilenames.includes(song.src.split('/').pop())
-      );
-      setMatchedSongs(matched);
+      setMatchedSongs(playlists[name]); // Now directly contains full song objects
       setCurrentIndex(null);
     }
   }, [name, playlists]);
@@ -52,13 +47,12 @@ const PlaylistViewer = () => {
   };
 
   const removeSong = (songToRemove) => {
-    const filename = songToRemove.src.split('/').pop();
-    const updatedList = playlists[name].filter(f => f !== filename);
+    const updatedList = playlists[name].filter(s => s.src !== songToRemove.src);
     const updatedPlaylists = { ...playlists, [name]: updatedList };
     localStorage.setItem('playlists', JSON.stringify(updatedPlaylists));
     setPlaylists(updatedPlaylists);
 
-    const updatedSongs = matchedSongs.filter(song => song.src !== songToRemove.src);
+    const updatedSongs = matchedSongs.filter(s => s.src !== songToRemove.src);
     setMatchedSongs(updatedSongs);
     if (updatedSongs.length === 0) setCurrentIndex(null);
     else if (currentIndex >= updatedSongs.length) setCurrentIndex(updatedSongs.length - 1);

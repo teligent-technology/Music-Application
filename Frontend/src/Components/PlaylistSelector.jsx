@@ -32,14 +32,20 @@ const PlaylistSelector = ({ selectedSongs = [] }) => {
       return alert("No songs selected!");
 
     const stored = JSON.parse(localStorage.getItem("playlists") || "{}");
-    const existingSongs = stored[selected] || [];
-    const newSongs = selectedSongs.map((s) => s.src.split("/").pop());
 
-    const updated = [...new Set([...existingSongs, ...newSongs])];
+    // Get existing songs in the selected playlist or default to empty
+    const existingSongs = stored[selected] || [];
+
+    // Combine and remove duplicates by `src`
+    const updated = [...existingSongs, ...selectedSongs].filter(
+      (song, index, self) =>
+        index === self.findIndex((s) => s.src === song.src)
+    );
+
     stored[selected] = updated;
     localStorage.setItem("playlists", JSON.stringify(stored));
-
     setPlaylists({ ...stored });
+
     alert(`Added songs to "${selected}" playlist.`);
     window.dispatchEvent(new Event("playlist-updated"));
   };
