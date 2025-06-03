@@ -1,14 +1,8 @@
-// src/components/PlaylistViewer.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Songs } from '../data/song';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Container, Card, Button, Row, Col, Image } from 'react-bootstrap';
-import './Playlist.css';
-
-const generateAccentColor = (index) => {
-  const hues = [180, 210, 240, 300, 330];
-  return `hsl(${hues[index % hues.length]}, 85%, 55%)`;
-};
+import { Container, Card, Button, Image } from 'react-bootstrap';
+import './Playlist.css';  // Aapka CSS file
 
 const PlaylistViewer = () => {
   const { name } = useParams();
@@ -48,7 +42,7 @@ const PlaylistViewer = () => {
 
   const handleDeletePlaylist = () => {
     if (!name) return;
-    if (window.confirm(`Delete "${name}" playlist?`)) {
+    if (window.confirm(`"${name}" playlist delete karna hai?`)) {
       const updated = { ...playlists };
       delete updated[name];
       localStorage.setItem('playlists', JSON.stringify(updated));
@@ -70,103 +64,76 @@ const PlaylistViewer = () => {
   };
 
   return (
-    <Container className="playlist-viewer py-5 text-white">
-      <div className="mb-4 d-flex justify-content-between align-items-center">
-        <Button variant="outline-light" onClick={() => navigate('/playlist')}>
+    <Container className="playlist-container animate-fade-in">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <Button variant="outline-primary" onClick={() => navigate('/playlist')}>
           ← Back
         </Button>
-        <h2 className="text-capitalize mb-0">{name} Playlist</h2>
-        <Button variant="danger" onClick={handleDeletePlaylist}>
-          🗑 Delete Playlist
+        <h3 className="text-capitalize" style={{ color: '#1ed760' }}>{name} Playlist</h3>
+        <Button variant="outline-danger" onClick={handleDeletePlaylist}>
+          🗑 Delete
         </Button>
       </div>
 
-      <Row className="g-4">
+      <div className="song-list">
         {matchedSongs.length > 0 ? (
-          matchedSongs.map((song, index) => {
-            const accentColor = generateAccentColor(index);
-            return (
-              <Col xs={12} md={6} lg={4} key={index}>
-                <Card
-                  className="playlist-song-card h-100"
-                  style={{ '--accent-color': accentColor }}
+          matchedSongs.map((song, index) => (
+            <Card
+              key={index}
+              className={`song-card ${currentIndex === index ? 'selected' : ''}`}
+              onClick={() => handlePlay(index)}
+            >
+              <div className="d-flex align-items-center">
+                <Image
+                  src={song.img || '/default-img.jpg'}
+                  alt={song.song}
+                  className="song-thumbnail me-3"
+                  rounded
+                />
+                <div className="song-card-content">
+                  <div className="song-title">{song.song}</div>
+                  <div className="song-artist">{song.artist}</div>
+                </div>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  className="ms-auto"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeSong(song);
+                  }}
                 >
-                  <Card.Body className="d-flex flex-column justify-content-between">
-                    <div onClick={() => handlePlay(index)} className="cursor-pointer">
-                      <Image
-                        src={song.img || "/default-img.jpg"}
-                        roundedCircle
-                        className="song-thumbnail mb-3"
-                        alt={song.song}
-                      />
-                      <Card.Title className="fw-bold">{song.song}</Card.Title>
-                      <Card.Text className="text-muted">{song.artist}</Card.Text>
-                    </div>
-                    <div className="d-flex justify-content-between mt-3">
-                      <Button
-                        variant="outline-light"
-                        onClick={() => handlePlay(index)}
-                      >
-                        ▶ Play
-                      </Button>
-                      <Button
-                        variant="outline-danger"
-                        onClick={() => removeSong(song)}
-                      >
-                        ✖ Remove
-                      </Button>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-            );
-          })
+                  ✖
+                </Button>
+              </div>
+            </Card>
+          ))
         ) : (
-          <p className="text-muted">No songs in this playlist.</p>
+          <p className="text-center text-muted mt-4">Is playlist mein abhi koi gaane nahi hain.</p>
         )}
-      </Row>
+      </div>
 
       {currentIndex !== null && matchedSongs[currentIndex] && (
-        <div id="audio-player" className="mt-5 p-4 rounded bg-light text-dark shadow-lg">
-          <h5>
-            Now Playing: <span className="text-primary">{matchedSongs[currentIndex].song}</span>
+        <div id="audio-player" className="mt-4 p-4 rounded" style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(16px)' }}>
+          <h5 style={{ color: '#1ed760' }}>
+            Abhi baj raha hai: {matchedSongs[currentIndex].song}
           </h5>
-          <audio ref={audioRef} controls autoPlay onEnded={handleNext} className="w-100">
+          <audio ref={audioRef} controls autoPlay className="w-100" onEnded={handleNext}>
             <source src={matchedSongs[currentIndex].src} type="audio/mpeg" />
-            Your browser does not support the audio element.
+            Aapka browser audio support nahi karta.
           </audio>
-          <div className="mt-3 d-flex gap-2">
-            <Button variant="secondary" onClick={handlePrev} disabled={currentIndex === 0}>
-              ⏮ Previous
+          <div className="d-flex justify-content-center gap-2 mt-3">
+            <Button variant="outline-primary" onClick={handlePrev} disabled={currentIndex === 0}>
+              ⏮ Pichla
             </Button>
-            <Button
-              variant="secondary"
-              onClick={handleNext}
-              disabled={currentIndex === matchedSongs.length - 1}
-            >
-              ⏭ Next
+            <Button variant="outline-primary" onClick={handleNext} disabled={currentIndex === matchedSongs.length - 1}>
+              ⏭ Agla
             </Button>
           </div>
         </div>
       )}
-
-      {/* Optional: Add mobile footer for consistency */}
-      <nav className="mobile-footer d-md-none mt-5">
-        <FooterIcon to="/home" icon="bi-house-door-fill" label="Home" />
-        <FooterIcon to="/search" icon="bi-search" label="Search" />
-        <FooterIcon to="/library" icon="bi-music-note-list" label="Library" />
-        <FooterIcon to="/create" icon="bi-plus-circle-fill" label="Create" />
-        <FooterIcon to="/premium" icon="bi-gem" label="Premium" />
-      </nav>
     </Container>
   );
 };
-
-const FooterIcon = ({ to, icon, label }) => (
-  <Link to={to} className="footer-icon" aria-label={label}>
-    <i className={`bi ${icon}`} />
-    <span>{label}</span>
-  </Link>
-);
 
 export default PlaylistViewer;
