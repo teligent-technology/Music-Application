@@ -59,6 +59,15 @@ const PlaylistViewer = () => {
   };
 
   return (
+    <div
+  className="container playlist-container my-5 glass-box animate-fade-in"
+  style={{
+    backgroundImage: "url(/artistbg/backgroundImage.jpg)",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+  }}
+>   
     <Container className="playlist-container animate-fade-in">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <Button variant="outline-primary" onClick={() => navigate('/playlist')}>← Back</Button>
@@ -120,6 +129,7 @@ const PlaylistViewer = () => {
         </div>
       )}
     </Container>
+    </div>
   );
 };
 
