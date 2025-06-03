@@ -353,3 +353,138 @@ body {
   text-align: center;
 }
 
+
+.playlist-container {
+  background: linear-gradient(135deg, #121212, #1e1e1e);
+  min-height: 100vh;
+  color: #eee;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+.header {
+  border-bottom: 2px solid rgba(30, 215, 96, 0.6);
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.playlist-title {
+  font-weight: 700;
+  font-size: 2rem;
+  text-shadow: 0 0 8px #1ed760aa;
+  user-select: none;
+}
+
+.btn-back {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1ed760;
+  border-color: transparent;
+  background: transparent;
+  transition: transform 0.3s ease;
+}
+
+.btn-back:hover {
+  color: #1ed760cc;
+  transform: scale(1.1);
+}
+
+.song-list {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.song-card {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.05);
+  transition: background-color 0.4s ease, transform 0.3s ease;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 8px #00000088;
+  user-select: none;
+}
+
+.song-card:hover {
+  background: rgba(30, 215, 96, 0.1);
+  transform: translateX(8px);
+  box-shadow: 0 0 15px #1ed760aa;
+}
+
+.song-card.selected {
+  background: rgba(30, 215, 96, 0.2);
+  box-shadow: 0 0 25px #1ed760cc;
+  transform: scale(1.02);
+}
+
+.song-thumbnail {
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+  box-shadow: 0 0 6px #1ed760aa;
+}
+
+.song-card-content {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.song-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-artist {
+  font-size: 0.85rem;
+  color: #a3a3a3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.remove-btn {
+  transition: transform 0.3s ease;
+}
+
+.remove-btn:hover {
+  color: #ff4c4c;
+  transform: scale(1.2);
+}
+
+.no-songs-msg {
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+.audio-player {
+  max-width: 700px;
+  margin: 2rem auto 0 auto;
+  box-shadow: 0 0 20px #1ed760cc;
+  user-select: none;
+}
+
+.btn-control {
+  min-width: 100px;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+
+.btn-control:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 0 8px #1ed760cc;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
