@@ -26,14 +26,13 @@ body {
 
 /* === Containers === */
 .playlist-container {
-  max-width: 700px;
-  margin: 3rem auto;
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 20px;
-  backdrop-filter: blur(18px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  animation: fadeInUp 0.6s ease-in-out;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px; /* Limit max width for bigger screens */
+  margin: auto; /* Center horizontally */
+  box-sizing: border-box;
 }
 
 /* === Header & Buttons === */
@@ -81,15 +80,31 @@ body {
 
 /* === Song List Container === */
 .song-list {
-  max-height: 420px;
+  max-height: 450px;
+    flex-grow: 1;
   overflow-y: auto;
-  padding-right: 8px;
+    max-height: 450px;
+
+  padding-right: 10px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
   transition: box-shadow 0.3s ease;
+}
+
+@media (max-width: 576px) {
+  .playlist-container {
+    max-height: 500px;
+    padding: 1rem 1.25rem;
+    max-width: 100%; /* Use full width on small screens */
+  }
+
+  .song-list {
+    max-height: 350px;
+    padding-right: 5px;
+  }
 }
 
 .song-list:hover {
@@ -393,6 +408,8 @@ body {
   max-width: 700px;
   margin: 0 auto;
 }
+
+
 
 .song-card {
   cursor: pointer;

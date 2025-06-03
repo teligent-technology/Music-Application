@@ -22,8 +22,10 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
   };
 
   return (
-    <div className="container playlist-container glass-box text-white my-5 p-4 rounded animate-fade-in">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+<div
+  className="container playlist-container glass-box text-white my-5 p-4 rounded animate-fade-in"
+  style={{ maxHeight: "600px" }} // Just reinforce max height here if needed
+>      <div className="d-flex justify-content-between align-items-center mb-3">
         <h3 className="playlist-title">All Songs</h3>
         <Link to="/home" className="btn btn-outline-info btn-sm">
           <i className="bi bi-house-door-fill me-1"></i> Home
