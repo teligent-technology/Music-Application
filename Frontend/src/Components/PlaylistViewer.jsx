@@ -116,7 +116,7 @@ const PlaylistViewer = () => {
       {currentIndex !== null && matchedSongs[currentIndex] && (
         <div id="audio-player" className="mt-4 p-4 rounded" style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(16px)' }}>
           <h5 style={{ color: '#1ed760' }}>
-            Abhi baj raha hai: {matchedSongs[currentIndex].song}
+            Playing: {matchedSongs[currentIndex].song}
           </h5>
           <audio ref={audioRef} controls autoPlay className="w-100" onEnded={handleNext}>
             <source src={matchedSongs[currentIndex].src} type="audio/mpeg" />
@@ -124,10 +124,10 @@ const PlaylistViewer = () => {
           </audio>
           <div className="d-flex justify-content-center gap-2 mt-3">
             <Button variant="outline-primary" onClick={handlePrev} disabled={currentIndex === 0}>
-              ⏮ Pichla
+              ⏮ Previous
             </Button>
             <Button variant="outline-primary" onClick={handleNext} disabled={currentIndex === matchedSongs.length - 1}>
-              ⏭ Agla
+              ⏭ Next
             </Button>
           </div>
         </div>

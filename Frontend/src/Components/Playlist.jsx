@@ -27,16 +27,16 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
   };
 
   return (
-    <div className="playlist-container animate-fade-in">
+    <div className="container playlist-container my-5 glass-box animate-fade-in">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h3 className="text-primary fw-bold">All Songs</h3>
-        <Link to="/home" className="btn btn-outline-light playlist-btn">
+        <h3>All Songs</h3>
+        <Link to="/home" className="btn btn-outline-light">
           <i className="bi bi-house-door-fill me-1"></i> Home
         </Link>
       </div>
 
-      <div className="input-group mb-3">
-        <span className="input-group-text bg-primary text-white">
+      <div className="input-group mb-4">
+        <span className="input-group-text bg-success text-white">
           <i className="bi bi-search"></i>
         </span>
         <input
@@ -66,9 +66,9 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
                     onChange={() => toggleSelect(song)}
                     onClick={(e) => e.stopPropagation()}
                   />
-                  <div className="song-card-content">
-                    <span className="song-title">{song.song}</span>
-                    <span className="song-artist"> — {song.artist}</span>
+                  <div>
+                    <div className="fw-bold">{song.song}</div>
+                    <small className="text-light"> — {song.artist}</small>
                   </div>
                 </div>
               </div>

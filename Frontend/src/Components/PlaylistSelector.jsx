@@ -1,7 +1,7 @@
 // src/components/PlaylistSelector.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./PlaylistSelector.css";
+import "./Playlist.css";
 
 const PlaylistSelector = ({ selectedSongs = [] }) => {
   const [playlists, setPlaylists] = useState({});
@@ -44,30 +44,29 @@ const PlaylistSelector = ({ selectedSongs = [] }) => {
     window.dispatchEvent(new Event("playlist-updated"));
   };
 
-  const playlistNames = Object.keys(playlists);
-
   return (
-    <div className="playlist-selector-glass container my-5 p-4 text-white rounded shadow-lg">
-      <h4 className="mb-4 fw-bold border-bottom pb-2">Select Playlist to View</h4>
+    <div className="container glass-box text-white my-5">
+      <h4 className="mb-4 border-bottom pb-2">Manage Playlist</h4>
 
-      {playlistNames.length === 0 ? (
-        <p className="text-light fst-italic">No playlists yet.</p>
+      {Object.keys(playlists).length === 0 ? (
+        <p className="fst-italic">No playlists available.</p>
       ) : (
-        <div className="row g-3 align-items-center">
-          <div className="col-12 col-md-6">
+        <div className="row g-3">
+          <div className="col-md-6">
             <select
+              className="form-select"
               value={selected}
               onChange={handleSelect}
-              className="form-select playlist-dropdown"
             >
               <option value="">-- Select Playlist --</option>
-              {playlistNames.map((name, index) => (
-                <option key={index} value={name}>{name}</option>
+              {Object.keys(playlists).map((name, i) => (
+                <option key={i} value={name}>
+                  {name}
+                </option>
               ))}
             </select>
           </div>
-
-          <div className="col-6 col-md-3 d-grid">
+          <div className="col-md-3 d-grid">
             <button
               className="btn btn-primary"
               onClick={handleOpenPlaylist}
@@ -76,12 +75,11 @@ const PlaylistSelector = ({ selectedSongs = [] }) => {
               <i className="bi bi-folder2-open"></i> Open
             </button>
           </div>
-
-          <div className="col-6 col-md-3 d-grid">
+          <div className="col-md-3 d-grid">
             <button
               className="btn btn-success"
               onClick={handleSave}
-              disabled={!selected || !selectedSongs.length}
+              disabled={!selected || selectedSongs.length === 0}
             >
               <i className="bi bi-save"></i> Save Songs
             </button>

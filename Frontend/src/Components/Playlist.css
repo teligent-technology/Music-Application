@@ -232,3 +232,124 @@ body {
     font-size: 0.9rem;
   }
 }
+
+/* === Full Page Background === */
+body {
+  background: url('/images/vibrant-music-bg.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+}
+
+/* === Reusable Glass Effect === */
+.glass-box {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(14px);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  animation: fadeInUp 0.7s ease;
+}
+
+/* === Animations === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* === Playlist Container === */
+.playlist-container h3,
+.playlist-container h4 {
+  color: #1ed760;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+}
+
+/* === Song Card === */
+.song-list {
+  max-height: 400px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.song-card {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 12px;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.song-card:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateX(5px);
+  box-shadow: 0 4px 16px rgba(30, 215, 96, 0.1);
+}
+
+.song-card.selected {
+  background: rgba(30, 215, 96, 0.15);
+  border-color: rgba(30, 215, 96, 0.4);
+}
+
+/* === Form and Buttons === */
+.btn-outline-light {
+  border-color: #1ed760;
+  color: #1ed760;
+}
+
+.btn-outline-light:hover {
+  background: #1ed760;
+  color: #000;
+}
+
+.form-select,
+.form-control {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.form-select:focus,
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: #1ed760;
+  box-shadow: 0 0 10px rgba(30, 215, 96, 0.3);
+}
+
+/* === Mobile Footer if needed === */
+.mobile-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #000;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem 0;
+  z-index: 999;
+  border-top: 1px solid #333;
+  font-size: 0.85rem;
+}
+
+.footer-icon {
+  color: white;
+  text-decoration: none;
+  text-align: center;
+}
+
