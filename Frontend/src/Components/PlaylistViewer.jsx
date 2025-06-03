@@ -90,13 +90,9 @@ const PlaylistViewer = () => {
           matchedSongs.map((song, index) => (
             <Card
               key={index}
-              className={`song-card ${
-                currentIndex === index ? "selected" : ""
-              }`}
+              className={`song-card ${currentIndex === index ? "selected" : ""}`}
               style={{
-                borderLeft: `6px solid ${
-                  accentColors[index % accentColors.length]
-                }`,
+                borderLeft: `6px solid ${accentColors[index % accentColors.length]}`,
               }}
               onClick={() => handlePlay(index)}
               tabIndex={0}
@@ -113,18 +109,7 @@ const PlaylistViewer = () => {
                   <div className="song-title">{song.song}</div>
                   <div className="song-artist">{song.artist}</div>
                 </div>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  className="ms-auto remove-btn"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeSong(song);
-                  }}
-                  aria-label={`Remove ${song.song} from playlist`}
-                >
-                  ✖
-                </Button>
+                {/* Removed individual remove button from here */}
               </div>
             </Card>
           ))
@@ -134,6 +119,26 @@ const PlaylistViewer = () => {
           </p>
         )}
       </div>
+
+      {/* Single remove button container at bottom of song list */}
+      {matchedSongs.length > 0 && currentIndex !== null && (
+        <div className="text-end mt-3">
+          <Button
+            variant="outline-danger"
+            onClick={() => {
+              if (
+                window.confirm(
+                  `Remove "${matchedSongs[currentIndex].song}" from playlist?`
+                )
+              ) {
+                removeSong(matchedSongs[currentIndex]);
+              }
+            }}
+          >
+            ✖ Remove Current Song
+          </Button>
+        </div>
+      )}
 
       {currentIndex !== null && matchedSongs[currentIndex] && (
         <div
