@@ -20,7 +20,7 @@ const ArtistSongs = () => {
           margin: 0;
           padding: 0;
           overflow-x: hidden;
-          background: #0c0c22; /* fallback bg */
+          background: #0c0c22;
           font-family: 'Poppins', sans-serif;
         }
 
@@ -153,85 +153,76 @@ const ArtistSongs = () => {
           align-items: stretch;
         }
 
+        /* Updated song card */
         .song-card {
-          background: rgba(30, 30, 60, 0.7);
+          position: relative;
+          height: 280px;
           border-radius: 24px;
           overflow: hidden;
-          box-shadow: 0 8px 24px rgba(92, 131, 249, 0.3), inset 0 0 15px rgba(92, 131, 249, 0.1);
-          transition:
-            transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-            box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-            border-color 0.3s ease;
-          cursor: pointer;
-          backdrop-filter: blur(15px);
           border: 1.5px solid rgba(92, 131, 249, 0.15);
+          box-shadow: 0 15px 35px rgba(30, 50, 90, 0.4);
+          background: rgba(30, 30, 60, 0.7);
+          transition: transform 0.5s ease, box-shadow 0.5s ease;
+          cursor: pointer;
           display: flex;
           flex-direction: column;
-          will-change: transform, box-shadow;
+          justify-content: flex-end;
+          will-change: transform;
           animation: fadeInUp 0.7s ease forwards;
+          backdrop-filter: blur(12px);
         }
 
-        .song-card:hover, .song-card:focus-within {
-          transform: translateY(-12px) scale(1.07);
-          box-shadow:
-            0 38px 60px rgba(92, 131, 249, 0.5),
-            inset 0 0 35px rgba(92, 131, 249, 0.15);
+        .song-card:hover {
+          transform: scale(1.05) translateY(-10px);
+          box-shadow: 0 25px 55px rgba(92, 131, 249, 0.7);
           border-color: #5c83f9;
-          outline: none;
-          z-index: 1;
+          z-index: 2;
         }
 
-        .card-img-top {
-          height: 210px;
-          object-fit: cover;
-          border-top-left-radius: 24px;
-          border-top-right-radius: 24px;
-          filter: drop-shadow(0 4px 5px rgba(30, 50, 90, 0.3));
-          transition: filter 0.35s ease;
+        .song-card::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-image: var(--bg-img);
+          background-size: cover;
+          background-position: center;
+          filter: brightness(0.75) contrast(1.15) saturate(1.2);
+          transition: filter 0.3s ease;
+          z-index: 0;
         }
-        .song-card:hover .card-img-top {
-          filter: drop-shadow(0 8px 12px rgba(92, 131, 249, 0.5));
+
+        .song-card:hover::before {
+          filter: brightness(0.9) saturate(1.4);
         }
 
         .card-body {
-          flex-grow: 1;
-          padding: 18px 20px 20px;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          user-select: none;
+          position: relative;
+          z-index: 1;
+          padding: 20px;
+          background: rgba(15, 15, 40, 0.5);
+          backdrop-filter: blur(6px);
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 0 0 24px 24px;
         }
 
-        h6.mb-1 {
+        .song-card h6.mb-1 {
           font-weight: 700;
-          font-size: 1.15rem;
-          color: #d1dbff;
-          margin-bottom: 4px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          letter-spacing: 0.015em;
-          user-select: text;
-          text-shadow: 0 0 8px rgba(92, 131, 249, 0.7);
-          transition: color 0.3s ease;
+          font-size: 1.2rem;
+          color: #ffffff;
+          text-shadow: 0 0 8px rgba(92, 131, 249, 0.5);
+          margin-bottom: 5px;
         }
 
-        p.mb-0 {
+        .song-card p.mb-0 {
           font-size: 0.9rem;
-          color: #a0a8ce;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          letter-spacing: 0.02em;
-          user-select: text;
-          text-shadow: 0 0 6px rgba(92, 131, 249, 0.3);
-          transition: color 0.3s ease;
+          color: #c0c7ff;
+          font-style: italic;
+          text-shadow: 0 0 5px rgba(92, 131, 249, 0.25);
         }
 
-        .song-card:hover h6.mb-1,
-        .song-card:hover p.mb-0 {
-          color: #9bb7ff;
-          text-shadow: 0 0 14px #8fa8ff;
+        /* Hide old img tag */
+        .card-img-top {
+          display: none !important;
         }
 
         @keyframes fadeInUp {
@@ -250,14 +241,14 @@ const ArtistSongs = () => {
           .frosted-header h3 {
             font-size: 1.6rem;
           }
-          .card-img-top {
-            height: 160px;
+          .song-card {
+            height: 220px;
           }
-          h6.mb-1 {
+          .song-card h6.mb-1 {
             font-size: 1rem;
           }
-          p.mb-0 {
-            font-size: 0.85rem;
+          .song-card p.mb-0 {
+            font-size: 0.8rem;
           }
         }
 
@@ -301,14 +292,10 @@ const ArtistSongs = () => {
                     aria-label={`Play song ${song.song} by ${song.artist}`}
                     tabIndex={0}
                   >
-                    <Card className="text-white border-0 song-card h-100 bg-dark">
-                      <Card.Img
-                        variant="top"
-                        src={song.img}
-                        alt={`${song.song} cover art`}
-                        className="card-img-top"
-                        loading="lazy"
-                      />
+                    <Card
+                      className="text-white border-0 song-card h-100 bg-dark"
+                      style={{ "--bg-img": `url(${song.img})` }}
+                    >
                       <Card.Body>
                         <h6 className="mb-1">{song.song}</h6>
                         <p className="mb-0 text-muted">{song.artist}</p>
