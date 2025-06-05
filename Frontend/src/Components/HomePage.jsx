@@ -13,7 +13,7 @@ const getUniqueArtists = (songs) => {
   return Array.from(artistSet);
 };
 
-  const allArtists = [...new Set(Songs.map(song => song.artist))];
+const allArtists = [...new Set(Songs.map(song => song.artist))].slice(0, 30);
 
 const getTopArtists = (songs) => {
   const count = {};
@@ -356,54 +356,54 @@ const handleSearchClick = () => {
 
 
       {/* Top 7 Artists Section */}
-      {!showSearch && (
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-        >
-          <Container className="mt-3 all-artists-container">
-            <h5 className="text-info fw-bold mb-3">
-              <i className="bi bi-music-note-list me-2" />
-              All Artists
-            </h5>
+     {!showSearch && (
+  <motion.div
+    initial={{ opacity: 0, y: 40 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 1, ease: "easeOut" }}
+  >
+    <Container className="mt-3 all-artists-container">
+      <h5 className="text-info fw-bold mb-3">
+        <i className="bi bi-music-note-list me-2" />
+        All Artists
+      </h5>
 
-            <div className="d-flex overflow-auto gap-3 pb-2 px-1 position-relative artist-scroll-wrapper">
-              {allArtists.map((artist, index) => {
-                const artistImage =
-                  Songs.find(song => song.artist === artist)?.artistBg || "/default-img.jpg";
+      <div className="d-flex overflow-auto gap-3 pb-2 px-1 position-relative artist-scroll-wrapper">
+        {allArtists.map((artist, index) => {
+          const artistImage =
+            Songs.find(song => song.artist === artist)?.artistBg || "/default-img.jpg";
 
-                return (
-                  <motion.div
-                    key={index}
-                    whileHover={{ scale: 1.05, y: -4 }}
-                    transition={{ type: "spring", stiffness: 250 }}
-                  >
-                    <Link
-                      to={`/artist/${encodeURIComponent(artist)}`}
-                      className="text-decoration-none text-white"
-                      style={{ flex: "0 0 auto", width: "200px" }}
-                    >
-                      <div className="artist-card d-flex align-items-center rounded-pill px-3 py-2 shadow-sm glass-effect">
-                        <div className="artist-img-ring">
-                          <img
-                            src={artistImage}
-                            alt={artist}
-                            className="rounded-circle artist-img"
-                          />
-                        </div>
-                        <span className="ms-3 fw-semibold text-truncate artist-name">
-                          {artist}
-                        </span>
-                      </div>
-                    </Link>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </Container>
-        </motion.div>
-      )}
+          return (
+            <motion.div
+              key={index}
+              whileHover={{ scale: 1.05, y: -4 }}
+              transition={{ type: "spring", stiffness: 250 }}
+            >
+              <Link
+                to={`/artist/${encodeURIComponent(artist)}`}
+                className="text-decoration-none text-white"
+                style={{ flex: "0 0 auto", width: "200px" }}
+              >
+                <div className="artist-card d-flex align-items-center rounded-pill px-3 py-2 shadow-sm glass-effect">
+                  <div className="artist-img-ring">
+                    <img
+                      src={artistImage}
+                      alt={artist}
+                      className="rounded-circle artist-img"
+                    />
+                  </div>
+                  <span className="ms-3 fw-semibold text-truncate artist-name">
+                    {artist}
+                  </span>
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
+      </div>
+    </Container>
+  </motion.div>
+)}
 
 
 
