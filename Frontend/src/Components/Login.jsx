@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import './Login.css'; // ⬅️ External CSS for transitions
+import './Login.css';
 
 function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -28,13 +28,14 @@ function Login() {
 
       if (res.status === 200) {
         localStorage.setItem("token", res.data.token);
-        const user = {
+        localStorage.setItem("user", JSON.stringify({
           name: res.data.name,
           username: res.data.username,
           Mobile: res.data.Mobile,
           isPremium: res.data.isPremium,
-        };
-        localStorage.setItem("user", JSON.stringify(user));
+        }));
+        localStorage.setItem("isLoggedIn", "true");  // Add this line
+
         alert(res.data.message || "Login successful");
         navigate('/home');
       } else {

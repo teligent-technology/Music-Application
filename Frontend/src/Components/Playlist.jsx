@@ -23,22 +23,22 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
   };
 
   return (
-    <div className="container playlist-container my-5 glass-box animate-fade-in">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h3>All Songs</h3>
-        <Link to="/home" className="btn btn-outline-light">
+    <div className="container playlist-container neon-glow animate-fade-in">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="glow-text">✨ Curate Your Vibe</h2>
+        <Link to="/home" className="btn btn-glow">
           <i className="bi bi-house-door-fill me-1"></i> Home
         </Link>
       </div>
 
-      <div className="input-group mb-4">
-        <span className="input-group-text bg-success text-white">
-          <i className="bi bi-search"></i>
+      <div className="input-group search-box mb-4">
+        <span className="input-group-text search-icon">
+          <i className="bi bi-search-heart-fill"></i>
         </span>
         <input
           type="search"
-          className="form-control"
-          placeholder="Search songs or artists"
+          className="form-control search-input"
+          placeholder="Search your sonic universe..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -62,17 +62,17 @@ const Playlist = ({ selectedSongs, setSelectedSongs }) => {
                     onChange={() => toggleSelect(song)}
                     onClick={(e) => e.stopPropagation()}
                   />
-                  <div>
-                    <div className="fw-bold">{song.song}</div>
-                    <small className="text-light"> — {song.artist}</small>
+                  <div className="song-meta">
+                    <div className="song-title">{song.song}</div>
+                    <small className="song-artist">by {song.artist}</small>
                   </div>
                 </div>
               </div>
             );
           })
         ) : (
-          <p className="text-muted text-center fst-italic mt-4">
-            No songs found matching your search.
+          <p className="text-center empty-msg">
+            😔 No sonic matches found. Try something else!
           </p>
         )}
       </div>

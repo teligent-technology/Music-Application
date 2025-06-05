@@ -8,7 +8,6 @@ const LogoutButton = () => {
     const token = localStorage.getItem('token');
 
     try {
-      // Call backend logout API
       await fetch('https://music-application-backend.onrender.com/person/logout', {
         method: 'POST',
         headers: {
@@ -19,14 +18,13 @@ const LogoutButton = () => {
       console.error('Error during logout:', error);
     }
 
-    // Remove token and user from localStorage
+    // Clear all login related data
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('isLoggedIn');  // Clear this as well
 
-    // Blur active element to remove browser suggestions
     document.activeElement?.blur();
 
-    // Redirect to login page with form reset flag
     navigate('/login', { state: { clearForm: true } });
   };
 

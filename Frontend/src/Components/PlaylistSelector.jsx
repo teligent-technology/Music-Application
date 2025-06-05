@@ -32,14 +32,10 @@ const PlaylistSelector = ({ selectedSongs = [] }) => {
       return alert("No songs selected!");
 
     const stored = JSON.parse(localStorage.getItem("playlists") || "{}");
-
-    // Get existing songs in the selected playlist or default to empty
     const existingSongs = stored[selected] || [];
 
-    // Combine and remove duplicates by `src`
     const updated = [...existingSongs, ...selectedSongs].filter(
-      (song, index, self) =>
-        index === self.findIndex((s) => s.src === song.src)
+      (song, index, self) => index === self.findIndex((s) => s.src === song.src)
     );
 
     stored[selected] = updated;
@@ -50,44 +46,64 @@ const PlaylistSelector = ({ selectedSongs = [] }) => {
     window.dispatchEvent(new Event("playlist-updated"));
   };
 
+  const createDemoPlaylist = () => {
+    const demo = {
+      "My Favorite Songs": [
+        { title: "Demo Song 1", artist: "Demo Artist", src: "/demo/song1.mp3" },
+        { title: "Demo Song 2", artist: "Demo Artist", src: "/demo/song2.mp3" },
+      ],
+    };
+    localStorage.setItem("playlists", JSON.stringify(demo));
+    loadPlaylists();
+  };
+
   return (
-    <div className="container glass-box text-white my-5">
-      <h4 className="mb-4 border-bottom pb-2">Manage Playlist</h4>
+    <div className="container playlist-container glass-box text-white my-5">
+      <h4 className="mb-4 fw-bold text-info">
+        <i className="bi bi-folder-symlink-fill me-2"></i>Manage Playlists
+      </h4>
 
       {Object.keys(playlists).length === 0 ? (
-        <p className="fst-italic">No playlists available.</p>
+        <>
+          <p className="fst-italic">No playlists available.</p>
+          <button className="btn btn-outline-light" onClick={createDemoPlaylist}>
+            Create Demo Playlist
+          </button>
+        </>
       ) : (
-        <div className="row g-3">
+        <div className="row g-3 align-items-end">
           <div className="col-md-6">
             <select
-              className="form-select"
+              className="form-select input-glow text-white bg-dark border-info"
               value={selected}
               onChange={handleSelect}
             >
               <option value="">-- Select Playlist --</option>
-              {Object.keys(playlists).map((name, i) => (
-                <option key={i} value={name}>
+              {Object.keys(playlists).map((name) => (
+                <option key={name} value={name} className="text-white">
                   {name}
                 </option>
               ))}
             </select>
           </div>
+
           <div className="col-md-3 d-grid">
             <button
-              className="btn btn-primary"
+              className="btn btn-outline-info neon-button"
               onClick={handleOpenPlaylist}
               disabled={!selected}
             >
-              <i className="bi bi-folder2-open"></i> Open
+              <i className="bi bi-folder2-open me-1"></i> Open
             </button>
           </div>
+
           <div className="col-md-3 d-grid">
             <button
-              className="btn btn-success"
+              className="btn btn-success neon-button"
               onClick={handleSave}
               disabled={!selected || selectedSongs.length === 0}
             >
-              <i className="bi bi-save"></i> Save Songs
+              <i className="bi bi-save me-1"></i> Save Songs
             </button>
           </div>
         </div>

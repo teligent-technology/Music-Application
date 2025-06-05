@@ -11,7 +11,7 @@ import {
   faRing,
   faHome,
   faBars,
-  faPlus
+  faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 
 const CreatePlaylistPage = () => {
