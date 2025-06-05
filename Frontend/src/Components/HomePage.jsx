@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
 import {
-  Container, Row, Col, Form, Button, Card
+  Container, Row, Col, Form, Button
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { Songs } from "../data/song";
 import { motion } from "framer-motion";
 import "./HomePage.css";
-import "./NewReleases.css"; // optional for styling
+import "./NewReleases.css";
 
-
+// Get unique artists with proper casing and trimmed values
 const getUniqueArtists = (songs) => {
-  const artistSet = new Set();
-  songs.forEach(song => artistSet.add(song.artist.trim()));
-  return Array.from(artistSet);
+  const artistMap = new Map();
+  songs.forEach(song => {
+    const key = song.artist.trim().toLowerCase();
+    if (!artistMap.has(key)) {
+      artistMap.set(key, song.artist.trim());
+    }
+  });
+  return Array.from(artistMap.values());
 };
 
-const allArtists = [...new Set(Songs.map(song => song.artist))].slice(0, 30);
+const allArtists = getUniqueArtists(Songs).slice(0, 30); // Top 30 unique
 
 const getTopArtists = (songs) => {
   const count = {};
@@ -50,9 +55,7 @@ const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loaded, setLoaded] = useState(false);
 
-
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
   const username = localStorage.getItem("username");
 
   useEffect(() => {
@@ -61,33 +64,21 @@ const HomePage = () => {
   }, []);
 
   const saveToRecent = (value, username) => {
-  console.log("saveToRecent called with:", value, username);
-  if (!username || value.trim().length < 2) {
-    console.log("Invalid username or value, returning");
-    return;
-  }
-  let recent = JSON.parse(localStorage.getItem(`recentSearches_${username}`) || "[]");
-  console.log("Current recent searches:", recent);
-  if (!recent.includes(value)) {
-    recent.unshift(value);
-    if (recent.length > 10) recent = recent.slice(0, 10);
-    localStorage.setItem(`recentSearches_${username}`, JSON.stringify(recent));
-    console.log("Updated recent searches saved:", recent);
-  }
-};
+    if (!username || value.trim().length < 2) return;
+    let recent = JSON.parse(localStorage.getItem(`recentSearches_${username}`) || "[]");
+    if (!recent.includes(value)) {
+      recent.unshift(value);
+      if (recent.length > 10) recent = recent.slice(0, 10);
+      localStorage.setItem(`recentSearches_${username}`, JSON.stringify(recent));
+    }
+  };
 
-const handleSearchClick = () => {
-  console.log("handleSearchClick called with searchTerm:", searchTerm);
-  saveToRecent(searchTerm, username);
-  // navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
-};
-
-
-
-
+  const handleSearchClick = () => {
+    saveToRecent(searchTerm, username);
+  };
 
   const uniqueArtists = getUniqueArtists(Songs);
-  const topArtists = Array.from(new Set(Songs.map(song => song.artist))).slice(0, 7);
+  const topArtists = getTopArtists(Songs);
   const genres = getGenres(Songs);
 
   const filteredResults = Songs.filter(song =>
@@ -123,35 +114,10 @@ const handleSearchClick = () => {
 
   const topArtistChunks = chunkArray(topArtists, 3);
 
-  const jumpBackInItems = [
-    { img: "https://i.pravatar.cc/150?img=10", title: "Notes", artist: "Laddi Chahal" },
-    { img: "https://i.pravatar.cc/150?img=11", title: "Reflections", artist: "Gurdeep Singh" },
-    { img: "https://i.pravatar.cc/150?img=12", title: "Waves", artist: "Simran Kaur" },
-  ];
-
-  const jumpMoveInItems = [
-    { img: "/Images/image1.jpg", title: "Rich & Famous ", artist: "Diljit Dosjanj" },
-    { img: "/Images/image2.jpg", title: "Harnoor All songs", artist: "Karan Aujla" },
-    { img: "/Images/image3.jpg", title: "Jass Manak", artist: "karun nair" },
-  ];
-
-  const jumpRightInItems = [
-    { img: "/Images/image4.jpg", title: "Diljit Dosanjh, Shubh, Badshah, Jasleen Roy...", artist: "Laddi Chahal" },
-    { img: "/Images/image5.jpg", title: "Pritam, Anirudh Ravichandra, Sachet Tandon", artist: "Gurdeep Singh" },
-    { img: "/Images/image6.jpg", title: "Diljit Dosanjh", artist: "Simran Kaur" },
-  ];
-
-  const jumpLeftInItems = [
-    { img: "/Images/image7.jpg", title: "Lekh (Original Motion Picture)", artist: "Laddi Chahal" },
-    { img: "/Images/image8.jpg", title: "Roi na (From Siddhat)", artist: "Gurdeep Singh" },
-    { img: "/Images/image9.jpg", title: "Karan Aujla , Dj & Snake -P&D", artist: "Simran Kaur" },
-  ];
-
   return (
-    <div className="bg-dark text-white w-100 min-vh-100 app-root" style={{ color: "white" }}>
+    <div className="bg-dark text-white w-100 min-vh-100 app-root">
       <motion.div
         className="bg-dark text-white w-100 app-root"
-        style={{ color: "white" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
@@ -161,7 +127,7 @@ const handleSearchClick = () => {
           className="py-3 px-4 border-bottom border-secondary sticky-top bg-black z-3 animated-header"
         >
           <div className="d-flex flex-wrap justify-content-between align-items-center gap-3">
-            <Link to="/profile" aria-label="Profile">
+            <Link to="/profile">
               <motion.div
                 className="profile-circle"
                 whileHover={{ scale: 1.2, rotate: 5 }}
@@ -176,7 +142,6 @@ const handleSearchClick = () => {
                 className="btn btn-sm btn-dark rounded-pill px-4"
                 onClick={() => setShowSearch(false)}
                 whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 200 }}
               >
                 All
               </motion.button>
@@ -184,18 +149,11 @@ const handleSearchClick = () => {
                 className="btn btn-sm btn-dark rounded-pill px-4"
                 onClick={() => setShowSearch(true)}
                 whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 200 }}
               >
                 Search
               </motion.button>
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 200 }}
-              >
-                <Link
-                  to="/recent-search"
-                  className="btn btn-sm btn-dark rounded-pill px-4"
-                >
+              <motion.div whileHover={{ scale: 1.1 }}>
+                <Link to="/recent-search" className="btn btn-sm btn-dark rounded-pill px-4">
                   View Recent Searches
                 </Link>
               </motion.div>
@@ -206,206 +164,113 @@ const handleSearchClick = () => {
 
       {showSearch && (
         <Container className="mt-4">
-      <Form
-  className="d-flex gap-2"
-  onSubmit={e => {
-    e.preventDefault();
-    handleSearchClick();
-  }}
->
-  <Form.Control
-    type="text"
-    placeholder="Search songs, artists..."
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-    style={{
-      backgroundColor: "#121212",
-      color: "#fff",
-      border: "1px solid #444",
-      borderRadius: "30px",
-      padding: "12px 20px",
-      fontSize: "1rem",
-    }}
-  />
-  <Button variant="primary" type="submit">
-    Search
-  </Button>
-</Form>
-
-      {/* </Form> */}
-    {/* Search Results */}
-    <h5 className="text-info mb-3 animate-fade-slide-up">Search Results</h5>
-    {filteredResults.length === 0 ? (
-      <p className="text-muted fst-italic">No matching songs or artists found.</p>
-    ) : (
-      <Row className="g-3">
-        {filteredResults.map((song, index) => (
-          <Col
-            key={index}
-            xs={6}
-            sm={4}
-            md={3}
-            lg={2}
-            className="animate-fade-scale-up"
-            style={{ transitionDelay: `${index * 100}ms` }}
+          <Form
+            className="d-flex gap-2"
+            onSubmit={e => {
+              e.preventDefault();
+              handleSearchClick();
+            }}
           >
-            <Link
-              to={`/player/${song.artist}/${song.Id}`}
-              className="text-decoration-none"
-              style={{ color: "inherit" }}
-            >
-              <div
-                className="bg-black text-white p-3 rounded shadow-sm h-100 search-card d-flex flex-column align-items-center"
-                style={{ cursor: "pointer", transition: "transform 0.3s ease, box-shadow 0.3s ease" }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "scale(1.05)";
-                  e.currentTarget.style.boxShadow = "0 8px 20px rgba(29,185,84,0.7)";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                  e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.3)";
-                }}
-              >
-                <img
-                  src={song.img || "/default.jpg"}
-                  alt={song.title}
-                  className="img-fluid rounded mb-3"
-                  style={{ height: "160px", objectFit: "cover", width: "100%", borderRadius: "12px" }}
-                />
-                <div
-                  className="text-center w-100"
-                  style={{ flexGrow: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}
-                >
-                  <div
-                    className="song-title text-truncate"
-                    title={song.title}
-                    style={{
-                      fontWeight: "700",
-                      fontSize: "1.1rem",
-                      letterSpacing: "0.03em",
-                      marginBottom: "0.3rem",
-                      color: "#1DB954",
-                      transition: "color 0.3s ease",
-                    }}
+            <Form.Control
+              type="text"
+              placeholder="Search songs, artists..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                backgroundColor: "#121212",
+                color: "#fff",
+                border: "1px solid #444",
+                borderRadius: "30px",
+                padding: "12px 20px",
+                fontSize: "1rem",
+              }}
+            />
+            <Button variant="primary" type="submit">Search</Button>
+          </Form>
+
+          <h5 className="text-info mb-3 mt-4">Search Results</h5>
+          {filteredResults.length === 0 ? (
+            <p className="text-muted fst-italic">No matching songs or artists found.</p>
+          ) : (
+            <Row className="g-3">
+              {filteredResults.map((song, index) => (
+                <Col key={index} xs={6} sm={4} md={3} lg={2}>
+                  <Link
+                    to={`/player/${song.artist}/${song.Id}`}
+                    className="text-decoration-none text-white"
                   >
-                    {song.title}
-                  </div>
-                  <div
-                    className="song-artist text-truncate"
-                    title={song.artist}
-                    style={{
-                      fontWeight: "600",
-                      fontSize: "0.85rem",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.1em",
-                      color: "rgba(255,255,255,0.75)",
-                    }}
+                    <div
+                      className="bg-black text-white p-3 rounded shadow-sm h-100"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <img
+                        src={song.img || "/default.jpg"}
+                        alt={song.title}
+                        className="img-fluid rounded mb-3"
+                        style={{ height: "160px", objectFit: "cover", width: "100%" }}
+                      />
+                      <div className="text-center">
+                        <div className="fw-bold text-success">{song.title}</div>
+                        <div className="text-muted small">{song.artist}</div>
+                      </div>
+                    </div>
+                  </Link>
+                </Col>
+              ))}
+            </Row>
+          )}
+        </Container>
+      )}
+
+      {/* Top Artists Section */}
+      {!showSearch && (
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <Container className="mt-3 all-artists-container">
+            <h5 className="text-info fw-bold mb-3">
+              <i className="bi bi-music-note-list me-2" />
+              All Artists
+            </h5>
+
+            <div className="d-flex overflow-auto gap-3 pb-2 px-1 position-relative artist-scroll-wrapper">
+              {allArtists.map((artist, index) => {
+                const artistImage =
+                  Songs.find(song => song.artist.trim() === artist)?.artistBg || "/default-img.jpg";
+
+                return (
+                  <motion.div
+                    key={index}
+                    whileHover={{ scale: 1.05, y: -4 }}
+                    transition={{ type: "spring", stiffness: 250 }}
                   >
-                    {song.artist}
-                  </div>
-                  <div
-                    className="song-type text-truncate"
-                    title={song.song}
-                    style={{
-                      fontSize: "0.8rem",
-                      fontStyle: "italic",
-                      color: "rgba(255,255,255,0.5)",
-                      marginTop: "0.25rem",
-                    }}
-                  >
-                    {song.song}
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </Col>
-        ))}
-      </Row>
-    )}
-
-    {/* Animations and Hover Styles */}
-    <style>{`
-      .animate-fade-slide-up {
-        animation: fadeSlideUp 0.6s ease forwards;
-      }
-
-      .animate-fade-scale-up {
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-        animation: fadeScaleUp 0.5s forwards;
-      }
-
-      @keyframes fadeSlideUp {
-        0% { opacity: 0; transform: translateY(15px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-
-      @keyframes fadeScaleUp {
-        0% { opacity: 0; transform: translateY(20px) scale(0.95); }
-        100% { opacity: 1; transform: translateY(0) scale(1); }
-      }
-
-      .search-card:hover .song-title {
-        color: #1ed760;
-        text-decoration: underline;
-      }
-    `}</style>
-  </Container>
-)}
-
-
-
-
-
-      {/* Top 7 Artists Section */}
-     {!showSearch && (
-  <motion.div
-    initial={{ opacity: 0, y: 40 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 1, ease: "easeOut" }}
-  >
-    <Container className="mt-3 all-artists-container">
-      <h5 className="text-info fw-bold mb-3">
-        <i className="bi bi-music-note-list me-2" />
-        All Artists
-      </h5>
-
-      <div className="d-flex overflow-auto gap-3 pb-2 px-1 position-relative artist-scroll-wrapper">
-        {allArtists.map((artist, index) => {
-          const artistImage =
-            Songs.find(song => song.artist === artist)?.artistBg || "/default-img.jpg";
-
-          return (
-            <motion.div
-              key={index}
-              whileHover={{ scale: 1.05, y: -4 }}
-              transition={{ type: "spring", stiffness: 250 }}
-            >
-              <Link
-                to={`/artist/${encodeURIComponent(artist)}`}
-                className="text-decoration-none text-white"
-                style={{ flex: "0 0 auto", width: "200px" }}
-              >
-                <div className="artist-card d-flex align-items-center rounded-pill px-3 py-2 shadow-sm glass-effect">
-                  <div className="artist-img-ring">
-                    <img
-                      src={artistImage}
-                      alt={artist}
-                      className="rounded-circle artist-img"
-                    />
-                  </div>
-                  <span className="ms-3 fw-semibold text-truncate artist-name">
-                    {artist}
-                  </span>
-                </div>
-              </Link>
-            </motion.div>
-          );
-        })}
-      </div>
-    </Container>
-  </motion.div>
-)}
+                    <Link
+                      to={`/artist/${encodeURIComponent(artist)}`}
+                      className="text-decoration-none text-white"
+                      style={{ flex: "0 0 auto", width: "200px" }}
+                    >
+                      <div className="artist-card d-flex align-items-center rounded-pill px-3 py-2 shadow-sm glass-effect">
+                        <div className="artist-img-ring">
+                          <img
+                            src={artistImage}
+                            alt={artist}
+                            className="rounded-circle artist-img"
+                          />
+                        </div>
+                        <span className="ms-3 fw-semibold text-truncate artist-name">
+                          {artist}
+                        </span>
+                      </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </Container>
+        </motion.div>
+      )}
 
 
 
