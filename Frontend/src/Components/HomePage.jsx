@@ -411,46 +411,42 @@ const handleSearchClick = () => {
 
       {/* New Releases */}
      <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, ease: "easeOut" }}
-    >
-      <Container className="mt-5">
-        <h5 className="text-primary fw-bold mb-3">
-          <i className="bi bi-megaphone me-2" />
-          New Releases
-        </h5>
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1, ease: "easeOut" }}
+>
+  <Container className="mt-5">
+    <h5 className="text-primary fw-bold mb-3">
+      <i className="bi bi-megaphone me-2" />
+      New Releases
+    </h5>
 
-        <div className="d-flex overflow-auto gap-3 pb-2 px-1 new-release-scroll">
-          {newReleases.map((song, idx) => (
-            <motion.div
-              key={idx}
-              whileHover={{ scale: 1.05, y: -5 }}
-              transition={{ type: "spring", stiffness: 250 }}
-            >
-              <Link
-                to={`/song/${encodeURIComponent(song.song)}`}
-                className="text-decoration-none text-white"
-                style={{ flex: "0 0 auto", width: "140px" }}
-              >
-                <div className="new-release-card" aria-label={`New release: ${song.song} by ${song.artist}`}>
-                  <img
-                    src={song.img || "/default.jpg"}
-                    alt={song.song}
-                    className="release-img"
-                  />
-                  <div className="w-100 mt-2">
-                    <div className="release-artist text-truncate">{song.artist}</div>
-                    <div className="release-title text-truncate">{song.song}</div>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </Container>
-    </motion.div>
-
+    <div className="d-flex overflow-auto gap-3 pb-2 px-1 new-release-scroll">
+      {newReleases.map((song, idx) => (
+        <motion.div
+          key={idx}
+          whileHover={{ scale: 1.05, y: -5 }}
+          transition={{ type: "spring", stiffness: 250 }}
+          // --- REMOVE THE <Link> TAG AND ADD onClick HERE ---
+          onClick={() => openPlayer(song, idx, newReleases)} // Call openPlayer with the song, its index, and the newReleases array
+          style={{ flex: "0 0 auto", width: "140px", cursor: "pointer" }} // Add cursor pointer for better UX
+        >
+          <div className="new-release-card" aria-label={`New release: ${song.song} by ${song.artist}`}>
+            <img
+              src={song.img || "/default.jpg"}
+              alt={song.song}
+              className="release-img"
+            />
+            <div className="w-100 mt-2">
+              <div className="release-artist text-truncate">{song.artist}</div>
+              <div className="release-title text-truncate">{song.song}</div>
+            </div>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </Container>
+</motion.div>
 
       {/* Jump Back In Section */}
 
