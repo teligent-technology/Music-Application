@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Container, ListGroup, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { motion } from "framer-motion";
+
 import './RecentSearches.css';
 
 const RecentSearches = () => {
