@@ -7,6 +7,8 @@ import './RecentSearches.css';
 
 const RecentSearches = () => {
   const [recent, setRecent] = useState([]);
+    const [showSearch, setShowSearch] = useState(false);
+  
   const username = localStorage.getItem("username");
 
   const loadRecent = () => {
