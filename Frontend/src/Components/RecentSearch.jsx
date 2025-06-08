@@ -22,7 +22,13 @@ const RecentSearches = () => {
 
   return (
     <>
-    
+    <Link
+              to="/home"
+              className="position-absolute top-0 end-0 m-3 btn btn-outline-warning btn-sm z-3"
+              style={{ zIndex: 3 }}
+            >
+              🏠 Home
+            </Link>
         <Container className="mt-5 recent-searches-container">
       <h2 className="text-gradient mb-4 animate-title">Your Recent Searches</h2>
       <Button variant="secondary" onClick={loadRecent} className="mb-3">
