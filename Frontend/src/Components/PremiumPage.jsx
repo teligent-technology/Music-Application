@@ -58,7 +58,7 @@ const PremiumPage = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/payment/create-order"
+        "https://music-application-backend.onrender.com/api/payment/create-order"
       );
       const orderData = res.data;
 
@@ -71,7 +71,7 @@ const PremiumPage = () => {
         order_id: orderData.id,
         handler: async function (response) {
           try {
-            await axios.post("http://localhost:3000/api/payment/person/upgrade", {
+            await axios.post("https://music-application-backend.onrender.com/api/payment/person/upgrade", {
               username: user.username,
             });
 
